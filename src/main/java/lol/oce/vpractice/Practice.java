@@ -1,7 +1,49 @@
 package lol.oce.vpractice;
 
-public class Practice {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+import lol.oce.vpractice.arenas.ArenaManager;
+import lol.oce.vpractice.commands.ArenaCommand;
+import lol.oce.vpractice.commands.TestDuplicateCommand;
+import lol.oce.vpractice.kits.KitManager;
+import lol.oce.vpractice.players.UserManager;
+import lol.oce.vpractice.utils.ConfigFile;
+import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class Practice extends JavaPlugin {
+
+    @Getter
+    private static Practice instance;
+    @Getter
+    private static KitManager kitManager;
+    @Getter
+    private static UserManager userManager;
+    @Getter
+    private static ArenaManager arenaManager;
+
+    @Getter
+    private static ConfigFile arenasConfig;
+    @Getter
+    private static ConfigFile kitsConfig;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        arenasConfig = new ConfigFile("arenas");
+        kitsConfig = new ConfigFile("kits");
+
+        kitManager = new KitManager();
+        userManager = new UserManager();
+        arenaManager = new ArenaManager();
+
+        kitManager.load();
+        arenaManager.load();
+
+        getCommand("testduplicate").setExecutor(new TestDuplicateCommand());
+        getCommand("arena").setExecutor(new ArenaCommand());
+    }
+
+    @Override
+    public void onDisable() {
+        getLogger().info("vPractice has been disabled!");
     }
 }
