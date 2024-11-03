@@ -3,6 +3,8 @@ package lol.oce.vpractice;
 import lol.oce.vpractice.arenas.ArenaManager;
 import lol.oce.vpractice.commands.ArenaCommand;
 import lol.oce.vpractice.kits.KitManager;
+import lol.oce.vpractice.lobby.LobbyItemManager;
+import lol.oce.vpractice.lobby.LobbyManager;
 import lol.oce.vpractice.players.UserManager;
 import lol.oce.vpractice.utils.ConfigFile;
 import lombok.Getter;
@@ -19,14 +21,15 @@ public class Practice extends JavaPlugin {
     private static UserManager userManager;
     @Getter
     private static ArenaManager arenaManager;
+    @Getter
+    private static LobbyManager lobbyManager;
+    @Getter
+    private static LobbyItemManager lobbyItemManager;
 
     @Getter
     private static ConfigFile arenasConfig;
     @Getter
     private static ConfigFile kitsConfig;
-
-    @Getter
-    private static ChunkAPI chunkAPI;
 
     @Override
     public void onEnable() {
@@ -37,8 +40,8 @@ public class Practice extends JavaPlugin {
         kitManager = new KitManager();
         userManager = new UserManager();
         arenaManager = new ArenaManager();
-
-        chunkAPI = new ChunkAPI();
+        lobbyManager = new LobbyManager();
+        lobbyItemManager = new LobbyItemManager();
 
         kitManager.load();
         arenaManager.load();

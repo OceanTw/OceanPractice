@@ -1,6 +1,7 @@
 package lol.oce.vpractice.match;
 
 import lol.oce.vpractice.Practice;
+import lol.oce.vpractice.arenas.Arena;
 import lol.oce.vpractice.kits.Kit;
 import lol.oce.vpractice.players.User;
 import lol.oce.vpractice.players.UserStatus;
@@ -18,15 +19,18 @@ import java.util.List;
 @Builder(setterPrefix = "set")
 @Data
 public class Match {
-    private List<User> red;
-    private List<User> blue;
-    private List<User> players;
-    private List<User> spectators;
-    private boolean ranked;
-    private Kit kit;
-    private boolean started;
+    Arena arena;
+    List<User> red;
+    List<User> blue;
+    List<User> players;
+    List<User> spectators;
+    boolean ranked;
+    Kit kit;
+    boolean started;
 
     public void start() {
+        arena.takeChunkSnapshots();
+
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         final int[] countdown = {5};
         for (User user : players) {
@@ -67,5 +71,6 @@ public class Match {
         for (User user : players) {
             Practice.getUserManager().resetUser(user);
         }
+        arena.restore();
     }
 }

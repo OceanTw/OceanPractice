@@ -1,6 +1,7 @@
 package lol.oce.vpractice.players;
 
 import lol.oce.vpractice.Practice;
+import lol.oce.vpractice.lobby.LobbyManager;
 import lol.oce.vpractice.utils.ConsoleUtils;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class UserManager {
         user.getPlayer().setFoodLevel(20);
         user.getPlayer().setSaturation(20);
 
-        user.getPlayer().getInventory().setItem(0, Practice.getKitManager().getKitSelector());
+        Practice.getLobbyManager().giveItems(user.getPlayer());
     }
 
     public User getUser(UUID uuid) {

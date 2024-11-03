@@ -6,6 +6,8 @@ import lol.oce.vpractice.database.MongoDB;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 
+import javax.jws.soap.SOAPBinding;
+
 public class UserRepository {
     private MongoDatabase database;
     private MongoCollection<Document> collection;
@@ -31,6 +33,15 @@ public class UserRepository {
         user.player = Bukkit.getPlayer(doc.getString("player"));
         user.kitStats = new UserKitStats().deserialize(doc.getString("kitStats"));
         user.status = UserStatus.valueOf(doc.getString("status"));
+        return user;
+    }
+
+    public User createUser(String playerName) {
+        User user = new User();
+        user.player = Bukkit.getPlayer(playerName);
+        user.kitStats = new UserKitStats();
+        user.status = UserStatus.IN_LOBBY;
+        saveUser(user);
         return user;
     }
 }
