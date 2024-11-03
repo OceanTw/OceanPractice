@@ -2,12 +2,12 @@ package lol.oce.vpractice;
 
 import lol.oce.vpractice.arenas.ArenaManager;
 import lol.oce.vpractice.commands.ArenaCommand;
-import lol.oce.vpractice.commands.TestDuplicateCommand;
 import lol.oce.vpractice.kits.KitManager;
 import lol.oce.vpractice.players.UserManager;
 import lol.oce.vpractice.utils.ConfigFile;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.spigot.api.chunk.ChunkAPI;
 
 public class Practice extends JavaPlugin {
 
@@ -25,6 +25,9 @@ public class Practice extends JavaPlugin {
     @Getter
     private static ConfigFile kitsConfig;
 
+    @Getter
+    private static ChunkAPI chunkAPI;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -35,10 +38,11 @@ public class Practice extends JavaPlugin {
         userManager = new UserManager();
         arenaManager = new ArenaManager();
 
+        chunkAPI = new ChunkAPI();
+
         kitManager.load();
         arenaManager.load();
 
-        getCommand("testduplicate").setExecutor(new TestDuplicateCommand());
         getCommand("arena").setExecutor(new ArenaCommand());
     }
 

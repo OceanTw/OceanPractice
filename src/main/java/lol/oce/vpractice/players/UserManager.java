@@ -27,6 +27,8 @@ public class UserManager {
         user.getPlayer().setHealth(20);
         user.getPlayer().setFoodLevel(20);
         user.getPlayer().setSaturation(20);
+
+        user.getPlayer().getInventory().setItem(0, Practice.getKitManager().getKitSelector());
     }
 
     public User getUser(UUID uuid) {

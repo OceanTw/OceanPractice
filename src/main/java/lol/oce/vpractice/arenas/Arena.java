@@ -1,14 +1,11 @@
 package lol.oce.vpractice.arenas;
 
 import lol.oce.vpractice.Practice;
-import lol.oce.vpractice.kits.Kit;
 import lol.oce.vpractice.utils.LocationUtils;
-import lol.oce.vpractice.utils.SchematicUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -21,36 +18,40 @@ public class Arena {
     Location blueSpawn;
     Location corner1;
     Location corner2;
-    ArenaDuplicate[] duplicates;
+    final Chunk[] chunks = new Chunk[0];
 
-    public void duplicate() {
-        SchematicUtils schematicUtils = new SchematicUtils();
-        String filename = name + "_duplicate";
-
-        // Save the current arena as a schematic
-        schematicUtils.saveSchem(filename, corner1.getBlockX(), corner1.getBlockY(), corner1.getBlockZ(),
-                corner2.getBlockX(), corner2.getBlockY(), corner2.getBlockZ(), corner1.getWorld());
-
-        for (int i = 0; i < 10; i++) {
-            // Define the new location for the duplicated arena
-            Location newLocation = new Location(corner1.getWorld(), corner1.getX() + 100 * (i + 1), corner1.getY(), corner1.getZ());
-
-            // Create a new ArenaDuplicate object for the duplicated arena
-            ArenaDuplicate duplicatedArena = new ArenaDuplicate(name + "_duplicate_" + (i + 1), duplicates.length + 1, null, null, null, null, enabled);
-
-            // Paste the schematic at the new location and update the new arena's locations
-            schematicUtils.pasteSchem(filename, newLocation, duplicatedArena);
-
-            // Add the duplicated arena to the duplicates array
-            ArenaDuplicate[] newDuplicates = new ArenaDuplicate[duplicates.length + 1];
-            System.arraycopy(duplicates, 0, newDuplicates, 0, duplicates.length);
-            newDuplicates[duplicates.length] = duplicatedArena;
-            duplicates = newDuplicates;
+    public void duplicate(int amount, int offsetX, int offsetZ) {
+        // Ensure only SHARED arenas are duplicated
+        if (type != ArenaType.SHARED) {
+            throw new IllegalStateException("Cannot duplicate a SHARED arena");
         }
 
-        // Save the duplicated arenas to the config
-        save();
+        // Check how many arenas are already duplicated
+        int duplicated = 0;
+        for (Arena arena : Practice.getArenaManager().getArenas()) {
+            if (arena.getName().startsWith(name + "#")) {
+                duplicated++;
+            }
+        }
+
+        // Duplicate the arena
+        for (int i = 0; i < amount; i++) {
+            // Calculate offset for each duplicate
+            int currentOffsetX = offsetX * (duplicated + i + 1);
+            int currentOffsetZ = offsetZ * (duplicated + i + 1);
+
+            // Create new locations with the offset applied
+            Location newRedSpawn = redSpawn.clone().add(currentOffsetX, 0, currentOffsetZ);
+            Location newBlueSpawn = blueSpawn.clone().add(currentOffsetX, 0, currentOffsetZ);
+            Location newCorner1 = corner1.clone().add(currentOffsetX, 0, currentOffsetZ);
+            Location newCorner2 = corner2.clone().add(currentOffsetX, 0, currentOffsetZ);
+
+            String newName = name + "#" + (duplicated + i + 1);
+            Arena newArena = new Arena(newName, displayName, type, enabled, newRedSpawn, newBlueSpawn, newCorner1, newCorner2);
+            Practice.getArenaManager().addArena(newArena);
+        }
     }
+
 
     public void save() {
         // Save the arena to the config file
@@ -66,19 +67,29 @@ public class Arena {
         Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".corner1", corner1Loc);
         Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".corner2", corner2Loc);
 
-        // Save duplicates
-        for (int i = 0; i < duplicates.length; i++) {
-            ArenaDuplicate duplicate = duplicates[i];
-            String basePath = "arenas." + name + ".duplicates." + i;
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".originalName", duplicate.getOriginalName());
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".id", duplicate.getId());
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".redSpawn", LocationUtils.serialize(duplicate.getRedSpawn()));
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".blueSpawn", LocationUtils.serialize(duplicate.getBlueSpawn()));
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".corner1", LocationUtils.serialize(duplicate.getCorner1()));
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".corner2", LocationUtils.serialize(duplicate.getCorner2()));
-            Practice.getArenasConfig().getConfiguration().set(basePath + ".enabled", duplicate.isEnabled());
+        Practice.getArenasConfig().save();
+    }
+
+    public Chunk[] getChunks() {
+        // Get the chunks that the arena occupies
+        int minX = Math.min(corner1.getBlockX(), corner2.getBlockX());
+        int maxX = Math.max(corner1.getBlockX(), corner2.getBlockX());
+        int minZ = Math.min(corner1.getBlockZ(), corner2.getBlockZ());
+        int maxZ = Math.max(corner1.getBlockZ(), corner2.getBlockZ());
+
+        int minChunkX = minX >> 4;
+        int maxChunkX = maxX >> 4;
+        int minChunkZ = minZ >> 4;
+        int maxChunkZ = maxZ >> 4;
+
+        Chunk[] chunks = new Chunk[(maxChunkX - minChunkX + 1) * (maxChunkZ - minChunkZ + 1)];
+        int index = 0;
+        for (int x = minChunkX; x <= maxChunkX; x++) {
+            for (int z = minChunkZ; z <= maxChunkZ; z++) {
+                chunks[index++] = redSpawn.getWorld().getChunkAt(x, z);
+            }
         }
 
-        Practice.getArenasConfig().save();
+        return chunks;
     }
 }

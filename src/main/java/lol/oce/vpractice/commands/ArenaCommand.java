@@ -1,7 +1,6 @@
 package lol.oce.vpractice.commands;
 
 import lol.oce.vpractice.arenas.Arena;
-import lol.oce.vpractice.arenas.ArenaDuplicate;
 import lol.oce.vpractice.arenas.ArenaType;
 import lol.oce.vpractice.Practice;
 import org.bukkit.Location;
@@ -47,7 +46,7 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     type = ArenaType.STANDALONE;
                 }
-                Arena arena = new Arena(arenaName, displayName, type, true, null, null, null, null, new ArenaDuplicate[0]);
+                Arena arena = new Arena(arenaName, displayName, type, true, null, null, null, null);
                 arenaSetup.put(player.getName(), arena);
                 player.sendMessage("Arena " + displayName + " created with the type " + type.name() + ". Now set the locations using /arena set <red|blue|c1|c2>.");
                 break;
