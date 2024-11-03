@@ -50,6 +50,7 @@ public class Practice extends JavaPlugin {
         getCommand("arena").setExecutor(new ArenaCommand());
 
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override
