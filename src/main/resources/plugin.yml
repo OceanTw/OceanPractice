@@ -1,3 +1,5 @@
 name: vPractice
 version: 1.0
 main: lol.oce.vpractice.Practice
+commands:
+  arena:

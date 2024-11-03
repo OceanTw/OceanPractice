@@ -2,6 +2,7 @@ package lol.oce.vpractice.arenas;
 
 import lol.oce.vpractice.Practice;
 import lol.oce.vpractice.kits.Kit;
+import lol.oce.vpractice.utils.ConsoleUtils;
 import lol.oce.vpractice.utils.LocationUtils;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -62,6 +63,10 @@ public class ArenaManager {
     }
 
     public void load() {
+        if (Practice.getArenasConfig().getConfiguration().getConfigurationSection("arenas") == null) {
+            ConsoleUtils.info("&cNo kits found in kits.yml, skipping kit load process...");
+            return;
+        }
         // Load the arenas from the config file
         for (String key : Practice.getArenasConfig().getConfiguration().getConfigurationSection("arenas").getKeys(false)) {
             String displayName = Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".displayName");

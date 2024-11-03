@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 @Getter
 public class LobbyItemManager {
 
-    String queueItemName = StringUtils.handle("&9&lQueue &7(Right Click)");
+    String queueItemName = StringUtils.handle("&9&l1v1 Queue &7(Right Click)");
     String createPartyName = StringUtils.handle("&9&lCreate Party &7(Right Click)");
     String settingsName = StringUtils.handle("&9&lSettings &7(Right Click)");
 

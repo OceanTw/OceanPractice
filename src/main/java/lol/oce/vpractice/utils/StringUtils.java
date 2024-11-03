@@ -23,6 +23,6 @@ public class StringUtils {
     }
 
     public static String line(String color) {
-        return color + "&m-------------------------";
+        return handle(color + "&m-------------------------");
     }
 }

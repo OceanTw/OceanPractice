@@ -2,13 +2,16 @@ package lol.oce.vpractice.kits;
 
 import lol.oce.vpractice.Practice;
 import lol.oce.vpractice.arenas.Arena;
+import lol.oce.vpractice.utils.ConsoleUtils;
 import lol.oce.vpractice.utils.EffectUtils;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
 
+@Getter
 public class KitManager {
 
     List<Kit> enabledKits;
@@ -16,6 +19,10 @@ public class KitManager {
 
     public void load() {
         // Load kits from config
+        if (Practice.getKitsConfig().getConfiguration().getConfigurationSection("kits") == null) {
+            ConsoleUtils.info("&cNo kits found in kits.yml, skipping kit load process...");
+            return;
+        }
         for (String key : Practice.getKitsConfig().getConfiguration().getConfigurationSection("kits").getKeys(false)) {
             String displayName = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".displayName");
             String description = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".description");
@@ -33,12 +40,20 @@ public class KitManager {
             boolean bedfight = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".bedfight");
             boolean fireball = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".fireball");
             boolean enderpearlcd = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enderpearlcd");
+            boolean ranked = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".ranked");
 
-            Kit kit = new Kit(key, displayName, description, inventory, potionEffects, arenas, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd);
+            Kit kit = new Kit(key, displayName, description, inventory, potionEffects, arenas, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, ranked);
             kits.add(kit);
             if (enabled) {
                 enabledKits.add(kit);
             }
+        }
+    }
+
+    public void addKit(Kit kit) {
+        kits.add(kit);
+        if (kit.isEnabled()) {
+            enabledKits.add(kit);
         }
     }
 
@@ -57,5 +72,36 @@ public class KitManager {
             PotionEffect newPotionEffect = new PotionEffect(potionEffect.getType(), 99999, potionEffect.getAmplifier());
             player.addPotionEffect(newPotionEffect);
         }
+    }
+
+    public void updateSettings() {
+        for (Kit kit : kits) {
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".displayName", kit.getDisplayName());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".description", kit.getDescription());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".inventory", kit.getInventory());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".potionEffects", EffectUtils.serialize(kit.getPotionEffects()));
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".arenas", kit.getArenas());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".enabled", kit.isEnabled());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".editable", kit.isEditable());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".boxing", kit.isBoxing());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".build", kit.isBuild());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".sumo", kit.isSumo());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".mapDestroyable", kit.isMapDestroyable());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".hunger", kit.isHunger());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".healthRegen", kit.isHealthRegen());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".bedfight", kit.isBedfight());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".fireball", kit.isFireball());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".enderpearlcd", kit.isEnderpearlcd());
+            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".ranked", kit.isRanked());
+        }
+    }
+    public void removeKit(Kit kit) {
+        kits.remove(kit);
+        enabledKits.remove(kit);
+        Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName(), null);
+    }
+
+    public int getTotalKits() {
+        return kits.size();
     }
 }

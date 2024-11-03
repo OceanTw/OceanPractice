@@ -8,10 +8,7 @@ import org.bukkit.inventory.Inventory;
 public class Gui {
     public void open(Player player) {
         player.sendMessage(StringUtils.handle("&7&oOpening GUI..."));
-    }
-
-    public Inventory getInventory() {
-        return Bukkit.createInventory(null, 9, "GUI");
+        player.openInventory(getInventory(player));
     }
 
     public Inventory getInventory(Player player) {

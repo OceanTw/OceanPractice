@@ -29,6 +29,7 @@ public class Kit {
     boolean bedfight;
     boolean fireball;
     boolean enderpearlcd;
+    boolean ranked;
 
     public void save() {
         // Save the kit to the config file

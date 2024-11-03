@@ -3,6 +3,7 @@ package lol.oce.vpractice;
 import lol.oce.vpractice.arenas.ArenaManager;
 import lol.oce.vpractice.commands.ArenaCommand;
 import lol.oce.vpractice.kits.KitManager;
+import lol.oce.vpractice.listeners.ItemListener;
 import lol.oce.vpractice.listeners.PlayerListener;
 import lol.oce.vpractice.lobby.LobbyItemManager;
 import lol.oce.vpractice.lobby.LobbyManager;
@@ -10,6 +11,7 @@ import lol.oce.vpractice.players.UserManager;
 import lol.oce.vpractice.utils.ConfigFile;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.ItemList;
 import xyz.refinedev.spigot.api.chunk.ChunkAPI;
 
 public class Practice extends JavaPlugin {
@@ -49,7 +51,7 @@ public class Practice extends JavaPlugin {
 
         getCommand("arena").setExecutor(new ArenaCommand());
 
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
