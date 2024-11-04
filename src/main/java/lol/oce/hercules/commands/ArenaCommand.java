@@ -23,6 +23,11 @@ public class ArenaCommand implements CommandExecutor {
             return true;
         }
 
+        if (!sender.hasPermission("hercules.admin")) {
+            sender.sendMessage("You do not have permission to execute this command.");
+            return true;
+        }
+
         Player player = (Player) sender;
         if (args.length < 2) {
             player.sendMessage("/arena create <name> <displayname> <type>");

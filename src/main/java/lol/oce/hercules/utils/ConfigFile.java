@@ -15,7 +15,7 @@ public class ConfigFile {
 
 
     public ConfigFile(String name) {
-        File dataFolder = new File(plugin.getDataFolder().getParentFile(), "vPractice");
+        File dataFolder = new File(plugin.getDataFolder().getParentFile(), "Hercules");
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }

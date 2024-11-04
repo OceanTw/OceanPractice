@@ -72,6 +72,6 @@ public class Practice extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("vPractice has been disabled!");
+        getLogger().info("Hercules has been disabled!");
     }
 }

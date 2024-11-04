@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class KitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!commandSender.hasPermission("vpractice.admin")) {
+        if (!commandSender.hasPermission("hercules.admin")) {
             commandSender.sendMessage(StringUtils.handle("&cYou do not have permission to execute this command."));
             return true;
         }

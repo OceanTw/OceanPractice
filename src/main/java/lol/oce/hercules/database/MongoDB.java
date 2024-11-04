@@ -8,7 +8,7 @@ import lombok.Getter;
 
 public class MongoDB {
     private static final String CONNECTION_STRING = Practice.getDatabaseConfig().getConfiguration().getString( "connection-string");
-    private static final String DATABASE_NAME = "vpractice";
+    private static final String DATABASE_NAME = "hercules";
 
     private static MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
     @Getter
