@@ -8,7 +8,9 @@ import lombok.Getter;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public class ArenaManager {
@@ -93,5 +95,20 @@ public class ArenaManager {
             }
         }
         return null;
+    }
+
+    public Arena getRandomArena(Kit kit) {
+        List<Arena> availableArenas = new ArrayList<>();
+        List<Arena> kitAllowedArenas = Arrays.asList(kit.getArenas());
+        for (Arena arena : enabledArenas) {
+            if (kitAllowedArenas.contains(arena)) {
+                availableArenas.add(arena);
+            }
+        }
+        if (availableArenas.isEmpty()) {
+            return null;
+        }
+        Random random = new Random();
+        return availableArenas.get(random.nextInt(availableArenas.size()));
     }
 }

@@ -3,11 +3,13 @@ package lol.oce.vpractice;
 import lol.oce.vpractice.arenas.ArenaManager;
 import lol.oce.vpractice.commands.ArenaCommand;
 import lol.oce.vpractice.commands.KitCommand;
+import lol.oce.vpractice.duels.RequestManager;
 import lol.oce.vpractice.kits.KitManager;
 import lol.oce.vpractice.listeners.ItemListener;
 import lol.oce.vpractice.listeners.PlayerListener;
 import lol.oce.vpractice.lobby.LobbyItemManager;
 import lol.oce.vpractice.lobby.LobbyManager;
+import lol.oce.vpractice.match.MatchManager;
 import lol.oce.vpractice.match.QueueManager;
 import lol.oce.vpractice.players.UserManager;
 import lol.oce.vpractice.utils.ConfigFile;
@@ -32,6 +34,10 @@ public class Practice extends JavaPlugin {
     private static LobbyItemManager lobbyItemManager;
     @Getter
     private static QueueManager queueManager;
+    @Getter
+    private static RequestManager requestManager;
+    @Getter
+    private static MatchManager matchManager;
 
     @Getter
     private static ConfigFile databaseConfig;
@@ -53,6 +59,8 @@ public class Practice extends JavaPlugin {
         lobbyManager = new LobbyManager();
         lobbyItemManager = new LobbyItemManager();
         queueManager = new QueueManager();
+        matchManager = new MatchManager();
+        requestManager = new RequestManager();
 
         kitManager.load();
         arenaManager.load();

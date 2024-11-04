@@ -1,5 +1,6 @@
 package lol.oce.vpractice.match;
 
+import com.mojang.authlib.AuthenticationService;
 import lol.oce.vpractice.Practice;
 import lol.oce.vpractice.arenas.Arena;
 import lol.oce.vpractice.kits.Kit;
@@ -27,6 +28,7 @@ public class Match {
     boolean ranked;
     Kit kit;
     boolean started;
+    MatchType type;
 
     public void start() {
         arena.takeChunkSnapshots();
@@ -36,6 +38,8 @@ public class Match {
         for (User user : players) {
             user.setStatus(UserStatus.IN_MATCH);
         }
+        red.forEach(user -> user.getPlayer().teleport(arena.getRedSpawn()));
+        blue.forEach(user -> user.getPlayer().teleport(arena.getBlueSpawn()));
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
