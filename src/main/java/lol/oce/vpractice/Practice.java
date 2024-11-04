@@ -8,6 +8,7 @@ import lol.oce.vpractice.listeners.ItemListener;
 import lol.oce.vpractice.listeners.PlayerListener;
 import lol.oce.vpractice.lobby.LobbyItemManager;
 import lol.oce.vpractice.lobby.LobbyManager;
+import lol.oce.vpractice.match.QueueManager;
 import lol.oce.vpractice.players.UserManager;
 import lol.oce.vpractice.utils.ConfigFile;
 import lombok.Getter;
@@ -29,7 +30,11 @@ public class Practice extends JavaPlugin {
     private static LobbyManager lobbyManager;
     @Getter
     private static LobbyItemManager lobbyItemManager;
+    @Getter
+    private static QueueManager queueManager;
 
+    @Getter
+    private static ConfigFile databaseConfig;
     @Getter
     private static ConfigFile arenasConfig;
     @Getter
@@ -40,12 +45,14 @@ public class Practice extends JavaPlugin {
         instance = this;
         arenasConfig = new ConfigFile("arenas");
         kitsConfig = new ConfigFile("kits");
+        databaseConfig = new ConfigFile("database");
 
         kitManager = new KitManager();
         userManager = new UserManager();
         arenaManager = new ArenaManager();
         lobbyManager = new LobbyManager();
         lobbyItemManager = new LobbyItemManager();
+        queueManager = new QueueManager();
 
         kitManager.load();
         arenaManager.load();

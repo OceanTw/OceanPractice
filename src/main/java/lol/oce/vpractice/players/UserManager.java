@@ -17,7 +17,7 @@ public class UserManager {
         if (user != null) {
             users.add(user);
         } else {
-            ConsoleUtils.warn("Failed to load user with UUID " + uuid.toString());
+            ConsoleUtils.warn("Failed to load user with UUID " + uuid);
         }
     }
 

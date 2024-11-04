@@ -4,6 +4,7 @@ import lol.oce.vpractice.Practice;
 import lol.oce.vpractice.gui.Menu;
 import lol.oce.vpractice.gui.impl.QueueMenu;
 import lol.oce.vpractice.gui.impl.QueueUnrankedMenu;
+import lol.oce.vpractice.kits.Kit;
 import lol.oce.vpractice.utils.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
-    public void onMenuClick(InventoryClickEvent event) {
+    public void onQueueMenuClick(InventoryClickEvent event) {
         // TODO: If the player is in lobby, cancel the event
         Player player = (Player) event.getWhoClicked();
         if (event.getInventory().getName().equals("Select your queue")) {
@@ -53,7 +54,36 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
+    public void onQueueKitMenuClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (event.getInventory().getName().equals("Unranked Queue")) {
+            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
+                Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                if (kit != null) {
+                    player.sendMessage(StringUtils.handle("&9&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
+                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, false);
+                    player.closeInventory();
+                    event.setCancelled(true);
+                }
+            }
+            event.setCancelled(true);
+        } else if (event.getInventory().getName().equals("Ranked Queue")) {
+            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
+                Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                if (kit != null) {
+                    player.sendMessage(StringUtils.handle("&9&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
+                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, true);
+                    player.closeInventory();
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+
+    @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
+        event.getPlayer().sendMessage(StringUtils.handle("&cYou cannot drop items in your current stage."));
         event.setCancelled(true);
     }
 

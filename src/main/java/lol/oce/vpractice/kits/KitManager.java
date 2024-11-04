@@ -81,6 +81,15 @@ public class KitManager {
         return null;
     }
 
+    public Kit getKitByDisplayName(String displayName) {
+        for (Kit kit : kits) {
+            if (kit.getDisplayName().contains(displayName)) {
+                return kit;
+            }
+        }
+        return null;
+    }
+
     public void setKitInventory(Kit kit, Player player) {
         kit.setInventory(player.getInventory());
         for (PotionEffect potionEffect : kit.getPotionEffects()) {
