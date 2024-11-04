@@ -18,7 +18,7 @@ import java.util.List;
 public class QueueMenu extends Gui {
 
     @Override
-    public Inventory getInventory(Player player) {
+    public Inventory getInventory(Player player, Object... args) {
         Inventory queue = Bukkit.createInventory(null, 27, "Select your queue");
 
         for (int i = 0; i < 27; i++) {

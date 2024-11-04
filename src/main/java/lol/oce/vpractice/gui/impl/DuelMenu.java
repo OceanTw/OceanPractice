@@ -2,7 +2,6 @@ package lol.oce.vpractice.gui.impl;
 
 import lol.oce.vpractice.Practice;
 import lol.oce.vpractice.gui.Gui;
-import lol.oce.vpractice.gui.Menu;
 import lol.oce.vpractice.kits.Kit;
 import lol.oce.vpractice.kits.KitManager;
 import lol.oce.vpractice.utils.StringUtils;
@@ -16,14 +15,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueueUnrankedMenu extends Gui {
-
+public class DuelMenu extends Gui {
     @Override
     public Inventory getInventory(Player player, Object... args) {
-        Inventory unranked = Bukkit.createInventory(null, 27, "Unranked Queue");
+        Inventory duel = Bukkit.createInventory(player, 27, "Duel Request to " + args[0]);
 
         for (int i = 0; i < 27; i++) {
-            unranked.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
+            duel.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
         }
 
         KitManager kitManager = Practice.getKitManager();
@@ -32,7 +30,7 @@ public class QueueUnrankedMenu extends Gui {
                 37, 38, 39, 40, 41, 42, 43};
         if (kitManager.getEnabledKits().size() > 27) {
             // TODO: Handle more than 27 kits
-            return unranked;
+            return duel;
         }
         for (int i = 0; i < slots.length; i++) {
             if (i < Practice.getKitManager().getEnabledKits().size()) {
@@ -49,9 +47,9 @@ public class QueueUnrankedMenu extends Gui {
                 lore.add(StringUtils.handle("&7"));
                 meta.setLore(lore);
                 item.setItemMeta(meta);
-                unranked.setItem(slots[i], item);
+                duel.setItem(slots[i], item);
             }
         }
-        return unranked;
+        return duel;
     }
 }

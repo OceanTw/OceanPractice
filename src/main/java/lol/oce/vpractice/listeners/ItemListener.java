@@ -5,7 +5,9 @@ import lol.oce.vpractice.gui.Menu;
 import lol.oce.vpractice.gui.impl.QueueMenu;
 import lol.oce.vpractice.gui.impl.QueueUnrankedMenu;
 import lol.oce.vpractice.kits.Kit;
+import lol.oce.vpractice.players.User;
 import lol.oce.vpractice.utils.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -73,6 +75,18 @@ public class ItemListener implements Listener {
                 if (kit != null) {
                     player.sendMessage(StringUtils.handle("&9&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
                     Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, true);
+                    player.closeInventory();
+                    event.setCancelled(true);
+                }
+            }
+        } else if (event.getInventory().getName().contains("Duel Request to ")) {
+            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
+                Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                if (kit != null) {
+                    String targetName = event.getInventory().getName().replace("Duel Request to ", "");
+                    User target = Practice.getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
+                    player.sendMessage(StringUtils.handle("&9&oYou have sent a duel request"));
+                    Practice.getRequestManager().sendRequest(Practice.getUserManager().getUser(player.getUniqueId()), target, kit);
                     player.closeInventory();
                     event.setCancelled(true);
                 }
