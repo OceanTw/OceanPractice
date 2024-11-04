@@ -5,6 +5,7 @@ import lol.oce.vpractice.arenas.Arena;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 
@@ -30,6 +31,7 @@ public class Kit {
     boolean fireball;
     boolean enderpearlcd;
     boolean ranked;
+    Material icon;
 
     public void save() {
         // Save the kit to the config file

@@ -2,6 +2,7 @@ package lol.oce.vpractice;
 
 import lol.oce.vpractice.arenas.ArenaManager;
 import lol.oce.vpractice.commands.ArenaCommand;
+import lol.oce.vpractice.commands.KitCommand;
 import lol.oce.vpractice.kits.KitManager;
 import lol.oce.vpractice.listeners.ItemListener;
 import lol.oce.vpractice.listeners.PlayerListener;
@@ -50,6 +51,7 @@ public class Practice extends JavaPlugin {
         arenaManager.load();
 
         getCommand("arena").setExecutor(new ArenaCommand());
+        getCommand("kit").setExecutor(new KitCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

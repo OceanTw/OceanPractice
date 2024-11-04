@@ -14,6 +14,7 @@ public class LobbyItemManager {
     String queueItemName = StringUtils.handle("&9&l1v1 Queue &7(Right Click)");
     String createPartyName = StringUtils.handle("&9&lCreate Party &7(Right Click)");
     String settingsName = StringUtils.handle("&9&lSettings &7(Right Click)");
+    String leaveQueueName = StringUtils.handle("&c&lLeave Queue &7(Right Click)");
 
     public ItemStack getQueueItem() {
         ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
@@ -37,6 +38,14 @@ public class LobbyItemManager {
         skullMeta.setOwner(player.getName());
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(settingsName);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public ItemStack getLeaveQueueItem() {
+        ItemStack item = new ItemStack(Material.REDSTONE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(leaveQueueName);
         item.setItemMeta(meta);
         return item;
     }

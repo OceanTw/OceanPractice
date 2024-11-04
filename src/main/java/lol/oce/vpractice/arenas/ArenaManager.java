@@ -64,7 +64,7 @@ public class ArenaManager {
 
     public void load() {
         if (Practice.getArenasConfig().getConfiguration().getConfigurationSection("arenas") == null) {
-            ConsoleUtils.info("&cNo kits found in kits.yml, skipping kit load process...");
+            ConsoleUtils.info("&cNo arenas found in arenas.yml, skipping arena load process...");
             return;
         }
         // Load the arenas from the config file

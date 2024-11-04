@@ -36,6 +36,7 @@ public class QueueUnrankedMenu extends Gui {
         }
         for (int i = 0; i < slots.length; i++) {
             if (i < Practice.getKitManager().getEnabledKits().size()) {
+                // TODO: Show current in queue amount
                 Kit kit = Practice.getKitManager().getEnabledKits().get(i);
                 ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
                 ItemMeta meta = item.getItemMeta();

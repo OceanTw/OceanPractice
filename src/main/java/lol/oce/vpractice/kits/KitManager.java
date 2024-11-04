@@ -5,17 +5,19 @@ import lol.oce.vpractice.arenas.Arena;
 import lol.oce.vpractice.utils.ConsoleUtils;
 import lol.oce.vpractice.utils.EffectUtils;
 import lombok.Getter;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class KitManager {
 
-    List<Kit> enabledKits;
-    List<Kit> kits;
+    List<Kit> enabledKits = new ArrayList<>();
+    List<Kit> kits = new ArrayList<>();
 
     public void load() {
         // Load kits from config
@@ -41,8 +43,9 @@ public class KitManager {
             boolean fireball = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".fireball");
             boolean enderpearlcd = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enderpearlcd");
             boolean ranked = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".ranked");
+            Material icon = Material.getMaterial(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".icon"));
 
-            Kit kit = new Kit(key, displayName, description, inventory, potionEffects, arenas, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, ranked);
+            Kit kit = new Kit(key, displayName, description, inventory, potionEffects, arenas, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, ranked, icon);
             kits.add(kit);
             if (enabled) {
                 enabledKits.add(kit);
@@ -50,7 +53,19 @@ public class KitManager {
         }
     }
 
+    public void createKit(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Kit name cannot be null");
+        }
+        Kit kit = new Kit(name, name, "", null, new PotionEffect[0], new Arena[0], true, true, false, false, false, false, false, false, false, false, false, false, Material.DIAMOND_SWORD);
+        kits.add(kit);
+        enabledKits.add(kit);
+    }
+
     public void addKit(Kit kit) {
+        if (kit == null || kit.getName() == null) {
+            throw new IllegalArgumentException("Kit or Kit name cannot be null");
+        }
         kits.add(kit);
         if (kit.isEnabled()) {
             enabledKits.add(kit);
