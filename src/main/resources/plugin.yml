@@ -1,6 +1,6 @@
-name: vPractice
+name: Hercules
 version: 1.0
-main: lol.oce.vpractice.Practice
+main: lol.oce.hercules.Practice
 commands:
   arena:
   kit:
