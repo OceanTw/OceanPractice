@@ -3,6 +3,7 @@ package lol.oce.hercules;
 import lol.oce.hercules.arenas.ArenaManager;
 import lol.oce.hercules.commands.ArenaCommand;
 import lol.oce.hercules.commands.KitCommand;
+import lol.oce.hercules.database.MongoDB;
 import lol.oce.hercules.duels.RequestManager;
 import lol.oce.hercules.kits.KitManager;
 import lol.oce.hercules.listeners.ItemListener;
@@ -13,6 +14,7 @@ import lol.oce.hercules.match.MatchManager;
 import lol.oce.hercules.match.QueueManager;
 import lol.oce.hercules.players.UserManager;
 import lol.oce.hercules.utils.ConfigFile;
+import lol.oce.hercules.utils.ConsoleUtils;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -68,6 +70,8 @@ public class Practice extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+
+        ConsoleUtils.info("Testing MongoDB...");
     }
 
     @Override

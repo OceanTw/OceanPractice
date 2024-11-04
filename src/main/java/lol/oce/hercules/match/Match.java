@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder(setterPrefix = "set")
 @Data
@@ -55,8 +56,8 @@ public class Match {
     }
 
     public void end(Player winner) {
-        List<User> winningTeam = red.contains(Practice.getUserManager().getUser(winner.getUniqueId())) ? red : blue;
-        List<User> losingTeam = red.contains(Practice.getUserManager().getUser(winner.getUniqueId())) ? blue : red;
+        List<User> winningTeam = red.contains(Practice.getUserManager().getUser(UUID.fromString(winner.getUniqueId().toString()))) ? red : blue;
+        List<User> losingTeam = red.contains(Practice.getUserManager().getUser(UUID.fromString(winner.getUniqueId().toString()))) ? blue : red;
         for (User user : winningTeam) {
             user.getPlayer().sendTitle(StringUtils.handle("&a&lYOU WON!"), "");
         }

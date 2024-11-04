@@ -2,6 +2,7 @@ package lol.oce.hercules.players;
 
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.kits.Kit;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -9,9 +10,9 @@ import java.util.HashMap;
 @Data
 public class UserKitStats {
 
-    HashMap<Kit, Integer> elo = new HashMap<>();
-    HashMap<Kit, Integer> wins = new HashMap<>();
-    HashMap<Kit, Integer> losses = new HashMap<>();
+    final HashMap<Kit, Integer> elo = new HashMap<>();
+    final HashMap<Kit, Integer> wins = new HashMap<>();
+    final HashMap<Kit, Integer> losses = new HashMap<>();
 
     public int getElo(Kit kit) {
         return elo.get(kit);

@@ -12,6 +12,6 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Practice.getLobbyManager().giveItems(player);
-        Practice.getUserManager().load(player.getUniqueId());
+        Practice.getUserManager().load(player.getName());
     }
 }
