@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -18,7 +19,15 @@ public class ItemListener implements Listener {
     Menu menu = new Menu();
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void onItemRightClick(PlayerInteractEvent event) {
+        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            return;
+        }
+
+        if (event.getItem() == null || event.getItem().getItemMeta() == null) {
+            return;
+        }
+
         if (event.getItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&9&l1v1 Queue &7(Right Click)"))) {
             menu.getQueueMenu().open(event.getPlayer());
         }
