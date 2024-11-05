@@ -23,7 +23,7 @@ public class DuelMenu extends Gui {
         for (int i = 0; i < 27; i++) {
             ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(StringUtils.handle("&7"));
+            meta.setDisplayName(StringUtils.handle("&7 "));
             duel.setItem(i, item);
         }
 
