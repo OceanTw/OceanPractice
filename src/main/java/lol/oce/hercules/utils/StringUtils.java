@@ -25,4 +25,12 @@ public class StringUtils {
     public static String line(String color) {
         return handle(color + "&m-------------------------");
     }
+
+    public static String line(String color, int length) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            builder.append("-");
+        }
+        return handle(color + "&m" + builder.toString());
+    }
 }
