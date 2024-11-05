@@ -17,6 +17,12 @@ public class InventoryUtils {
         StringBuilder builder = new StringBuilder();
         for (ItemStack item : inventory.getContents()) {
             String serialized = ItemUtils.serialize(item);
+            if (item == null) {
+                continue;
+            }
+            if (item.getType() == Material.AIR) {
+                continue;
+            }
             if (!serialized.isEmpty()) {
                 builder.append(serialized).append(",");
             }

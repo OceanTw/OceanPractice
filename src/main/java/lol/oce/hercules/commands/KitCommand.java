@@ -66,6 +66,10 @@ public class KitCommand implements CommandExecutor {
             // Set the kit inventory
             Kit kit = Practice.getKitManager().getKit(strings[1]);
             Practice.getKitManager().setKitInventory(kit, player);
+            kit.setHelmet(player.getInventory().getHelmet());
+            kit.setChestplate(player.getInventory().getChestplate());
+            kit.setLeggings(player.getInventory().getLeggings());
+            kit.setBoots(player.getInventory().getBoots());
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
             return true;
         }

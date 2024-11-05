@@ -63,6 +63,7 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".helmet", ItemUtils.serialize(helmet));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".chestplate", ItemUtils.serialize(chestplate));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".leggings", ItemUtils.serialize(leggings));
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".boots", ItemUtils.serialize(boots));
         Practice.getKitsConfig().save();
     }
 
