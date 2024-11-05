@@ -6,6 +6,7 @@ import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,11 +46,10 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onQueueMenuClick(InventoryClickEvent event) {
-        // TODO: If the player is in lobby, cancel the event
         Player player = (Player) event.getWhoClicked();
         if (event.getInventory().getName().equals("Select your queue")) {
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                if (event.getCurrentItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&9&lUnranked"))) {
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(StringUtils.handle("&9&lUnranked"))) {
                     menu.getQueueUnrankedMenu().open(player);
                     event.setCancelled(true);
                 } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&9&lRanked"))) {

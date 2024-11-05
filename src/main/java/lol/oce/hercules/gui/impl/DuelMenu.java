@@ -21,7 +21,10 @@ public class DuelMenu extends Gui {
         Inventory duel = Bukkit.createInventory(player, 27, "Duel Request to " + args[0]);
 
         for (int i = 0; i < 27; i++) {
-            duel.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
+            ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(StringUtils.handle("&7"));
+            duel.setItem(i, item);
         }
 
         KitManager kitManager = Practice.getKitManager();

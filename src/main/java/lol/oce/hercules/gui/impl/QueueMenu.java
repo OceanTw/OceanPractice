@@ -20,7 +20,11 @@ public class QueueMenu extends Gui {
         Inventory queue = Bukkit.createInventory(null, 27, "Select your queue");
 
         for (int i = 0; i < 27; i++) {
-            queue.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
+            ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(StringUtils.handle("&7"));
+            item.setItemMeta(meta);
+            queue.setItem(i, item);
         }
 
         ItemStack unranked = new ItemStack(Material.IRON_SWORD);
