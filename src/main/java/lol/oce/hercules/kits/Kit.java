@@ -4,6 +4,7 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.utils.EffectUtils;
 import lol.oce.hercules.utils.InventoryUtils;
+import lol.oce.hercules.utils.ItemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,6 +58,11 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".bedfight", bedfight);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".fireball", fireball);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enderpearlcd", enderpearlcd);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".ranked", ranked);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".icon", icon.name());
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".helmet", ItemUtils.serialize(helmet));
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".chestplate", ItemUtils.serialize(chestplate));
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".leggings", ItemUtils.serialize(leggings));
         Practice.getKitsConfig().save();
     }
 

@@ -67,7 +67,6 @@ public class KitCommand implements CommandExecutor {
             Kit kit = Practice.getKitManager().getKit(strings[1]);
             Practice.getKitManager().setKitInventory(kit, player);
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
-            kit.save();
             return true;
         }
 
@@ -84,6 +83,22 @@ public class KitCommand implements CommandExecutor {
 
             Practice.getKitManager().getKit(strings[1]).addArena(arena);
             player.sendMessage(StringUtils.handle("&aArena added to kit successfully"));
+        }
+
+        if (strings[0].equalsIgnoreCase("save")) {
+            if (length < 2) {
+                commandSender.sendMessage(StringUtils.handle("&cInvalid usage"));
+                return true;
+            }
+
+            if (Practice.getKitManager().getKit(strings[1]) == null) {
+                commandSender.sendMessage(StringUtils.handle("&cKit not found"));
+                return true;
+            }
+            // Save the kit
+            Practice.getKitManager().getKit(strings[1]).save();
+            player.sendMessage(StringUtils.handle("&aKit saved successfully"));
+            return true;
         }
 
         if (strings[0].equalsIgnoreCase("set")) {
@@ -166,7 +181,6 @@ public class KitCommand implements CommandExecutor {
                     commandSender.sendMessage(StringUtils.handle("&cInvalid usage"));
                     return true;
             }
-            Practice.getKitManager().updateSettings();
             return true;
         }
         return false;

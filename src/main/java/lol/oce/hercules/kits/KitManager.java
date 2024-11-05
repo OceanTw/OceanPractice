@@ -102,11 +102,6 @@ public class KitManager {
         }
     }
 
-    public void updateSettings() {
-        for (Kit kit : kits) {
-            kit.save();
-        }
-    }
     public void removeKit(Kit kit) {
         kits.remove(kit);
         enabledKits.remove(kit);
