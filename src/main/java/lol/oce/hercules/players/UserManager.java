@@ -15,7 +15,7 @@ public class UserManager {
     private static final List<User> users = new ArrayList<>();
     private static final UserData userRepository = new UserData();
 
-    public static void load(String playerName) {
+    public void load(String playerName) {
         ConsoleUtils.info("Loading user: " + playerName);
         MongoCollection<Document> collection = MongoDB.getCollection("users");
         if (collection == null) {

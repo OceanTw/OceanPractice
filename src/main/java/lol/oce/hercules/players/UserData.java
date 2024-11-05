@@ -20,8 +20,7 @@ public class UserData {
     public void saveUser(User user) {
         Document original = collection.find(new Document("player", user.player.getUniqueId().toString())).first();
         Document doc = new Document("player", user.player.getUniqueId().toString())
-                .append("kitStats", user.kitStats.serialize())
-                .append("status", user.status.toString());
+                .append("kitStats", user.kitStats.serialize());
 
         if (original == null) {
             collection.insertOne(doc);
@@ -38,7 +37,7 @@ public class UserData {
         return User.builder()
                 .setMatch(null)
                 .setPlayer(Bukkit.getPlayer(doc.getString("player")))
-                .setStatus(UserStatus.valueOf(doc.getString("status")))
+                .setStatus(UserStatus.IN_LOBBY)
                 .setKitStats(new UserKitStats().deserialize(doc.getString("kitStats")))
                 .build();
     }
