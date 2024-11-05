@@ -46,10 +46,7 @@ public class KitManager {
             Material icon = Material.getMaterial(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".icon"));
 
             Kit kit = new Kit(key, displayName, description, inventory, potionEffects, arenas, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, ranked, icon);
-            kits.add(kit);
-            if (enabled) {
-                enabledKits.add(kit);
-            }
+            addKit(kit);
         }
     }
 

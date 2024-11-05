@@ -35,6 +35,7 @@ public class KitCommand implements CommandExecutor {
             Practice.getKitManager().createKit(strings[1]);
             commandSender.sendMessage(StringUtils.handle("&aKit created successfully"));
             Practice.getKitManager().updateSettings();
+            Practice.getKitManager().getKit(strings[1]).save();
             return true;
         }
 
@@ -60,7 +61,8 @@ public class KitCommand implements CommandExecutor {
                 return true;
             }
             // Set the kit inventory
-            Practice.getKitManager().getKit(strings[1]).setInventory(player.getInventory());
+            Kit kit = Practice.getKitManager().getKit(strings[1]);
+            Practice.getKitManager().setKitInventory(kit, player);
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
             Practice.getKitManager().updateSettings();
             return true;

@@ -2,6 +2,7 @@ package lol.oce.hercules.kits;
 
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
+import lol.oce.hercules.utils.EffectUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +39,7 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".displayName", displayName);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".description", description);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".inventory", inventory);
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".potionEffects", potionEffects);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".potionEffects", EffectUtils.serialize(potionEffects));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enabled", enabled);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".editable", editable);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".boxing", boxing);

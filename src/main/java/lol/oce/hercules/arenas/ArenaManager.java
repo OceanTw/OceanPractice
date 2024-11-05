@@ -15,8 +15,8 @@ import java.util.Random;
 @Getter
 public class ArenaManager {
 
-    List<Arena> arenas;
-    List<Arena> enabledArenas;
+    List<Arena> arenas = new ArrayList<>();
+    List<Arena> enabledArenas = new ArrayList<>();
 
     public void save() {
         // Save the arenas to the config file
