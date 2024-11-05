@@ -31,7 +31,7 @@ public class KitManager {
         for (String key : Practice.getKitsConfig().getConfiguration().getConfigurationSection("kits").getKeys(false)) {
             String displayName = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".displayName");
             String description = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".description");
-            Inventory inventory = (Inventory) Practice.getKitsConfig().getConfiguration().get("kits." + key + ".inventory");
+            Inventory inventory = InventoryUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".inventory"));
             PotionEffect[] potionEffects = EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects"));
             Arena[] arenas = Practice.getArenasConfig().getConfiguration().getStringList("kits." + key + ".arenas").stream().map(Practice.getArenaManager()::getArena).toArray(Arena[]::new);
             boolean enabled = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enabled");

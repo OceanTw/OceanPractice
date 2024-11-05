@@ -25,8 +25,8 @@ public class ItemUtils {
         Material material = Material.getMaterial(parts[0]);
         int amount = Integer.parseInt(parts[1]);
         ItemStack item = new ItemStack(material, amount);
-        Enchantment enchantment = Enchantment.getByName(parts[3]);
-        int level = Integer.parseInt(parts[4]);
+        Enchantment enchantment = Enchantment.getByName(parts[2]);
+        int level = Integer.parseInt(parts[3]);
         item.addEnchantment(enchantment, level);
         return item;
     }
