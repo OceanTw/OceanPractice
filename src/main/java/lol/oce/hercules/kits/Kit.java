@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 @AllArgsConstructor
@@ -19,6 +20,10 @@ public class Kit {
     String displayName;
     String description;
     Inventory inventory;
+    ItemStack helmet;
+    ItemStack chestplate;
+    ItemStack leggings;
+    ItemStack boots;
     PotionEffect[] potionEffects;
     Arena[] arenas;
     boolean enabled;

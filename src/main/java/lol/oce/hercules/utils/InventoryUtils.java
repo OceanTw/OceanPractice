@@ -1,8 +1,14 @@
 package lol.oce.hercules.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryUtils {
 
@@ -10,8 +16,9 @@ public class InventoryUtils {
         // Serialize an inventory
         StringBuilder builder = new StringBuilder();
         for (ItemStack item : inventory.getContents()) {
-            if (item != null) {
-                builder.append(item.getType().name()).append(":").append(item.getAmount()).append(",");
+            String serialized = ItemUtils.serialize(item);
+            if (!serialized.isEmpty()) {
+                builder.append(serialized).append(",");
             }
         }
         return builder.toString();
@@ -19,14 +26,12 @@ public class InventoryUtils {
 
     public static Inventory deserialize(String serialized) {
         // Deserialize an inventory
-        Inventory inventory = null;
-        for (String item : serialized.split(",")) {
-            String[] parts = item.split(":");
-            Material material = Material.getMaterial(parts[0]);
-            int amount = Integer.parseInt(parts[1]);
-            inventory.addItem(new ItemStack(material, amount));
+        Inventory inventory = Bukkit.createInventory(null, 54);
+        String[] parts = serialized.split(",");
+        for (String part : parts) {
+            ItemStack item = ItemUtils.deserialize(part);
+            inventory.addItem(item);
         }
         return inventory;
     }
-
 }

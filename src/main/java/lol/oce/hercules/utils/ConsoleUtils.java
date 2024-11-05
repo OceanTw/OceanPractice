@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 public class ConsoleUtils {
 
     public static void info(String message) {
-        log(ChatColor.GREEN + "[INFO] " + message);
+        log(ChatColor.BLUE + "[INFO] " + message);
     }
 
     public static void warn(String message) {
