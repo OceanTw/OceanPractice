@@ -4,6 +4,7 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.EffectUtils;
+import lol.oce.hercules.utils.InventoryUtils;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -91,29 +92,13 @@ public class KitManager {
         kit.setInventory(player.getInventory());
         for (PotionEffect potionEffect : kit.getPotionEffects()) {
             PotionEffect newPotionEffect = new PotionEffect(potionEffect.getType(), 99999, potionEffect.getAmplifier());
-            player.addPotionEffect(newPotionEffect);
+            addPotionEffect(kit, newPotionEffect);
         }
     }
 
     public void updateSettings() {
         for (Kit kit : kits) {
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".displayName", kit.getDisplayName());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".description", kit.getDescription());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".inventory", kit.getInventory());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".potionEffects", EffectUtils.serialize(kit.getPotionEffects()));
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".arenas", kit.getArenas());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".enabled", kit.isEnabled());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".editable", kit.isEditable());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".boxing", kit.isBoxing());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".build", kit.isBuild());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".sumo", kit.isSumo());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".mapDestroyable", kit.isMapDestroyable());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".hunger", kit.isHunger());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".healthRegen", kit.isHealthRegen());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".bedfight", kit.isBedfight());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".fireball", kit.isFireball());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".enderpearlcd", kit.isEnderpearlcd());
-            Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName() + ".ranked", kit.isRanked());
+            kit.save();
         }
     }
     public void removeKit(Kit kit) {
@@ -122,7 +107,10 @@ public class KitManager {
         Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName(), null);
     }
 
-    public int getTotalKits() {
-        return kits.size();
+    private void addPotionEffect(Kit kit, PotionEffect potionEffect) {
+        PotionEffect[] newPotionEffects = new PotionEffect[kit.getPotionEffects().length + 1];
+        System.arraycopy(kit.getPotionEffects(), 0, newPotionEffects, 0, kit.getPotionEffects().length);
+        newPotionEffects[kit.getPotionEffects().length] = potionEffect;
+        kit.setPotionEffects(newPotionEffects);
     }
 }

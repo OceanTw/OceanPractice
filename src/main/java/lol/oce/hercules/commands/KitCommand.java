@@ -34,7 +34,8 @@ public class KitCommand implements CommandExecutor {
             // Create a new kit
             Practice.getKitManager().createKit(strings[1]);
             commandSender.sendMessage(StringUtils.handle("&aKit created successfully"));
-            Practice.getKitManager().updateSettings();
+            Kit kit = Practice.getKitManager().getKit(strings[1]);
+            kit.save();
             Practice.getKitManager().getKit(strings[1]).save();
             return true;
         }
@@ -60,11 +61,16 @@ public class KitCommand implements CommandExecutor {
                 commandSender.sendMessage(StringUtils.handle("&cInvalid usage"));
                 return true;
             }
+
+            if (Practice.getKitManager().getKit(strings[1]) == null) {
+                commandSender.sendMessage(StringUtils.handle("&cKit not found"));
+                return true;
+            }
             // Set the kit inventory
             Kit kit = Practice.getKitManager().getKit(strings[1]);
             Practice.getKitManager().setKitInventory(kit, player);
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
-            Practice.getKitManager().updateSettings();
+            kit.save();
             return true;
         }
 
@@ -74,6 +80,11 @@ public class KitCommand implements CommandExecutor {
                 commandSender.sendMessage(StringUtils.handle("&cArena not found"));
                 return true;
             }
+            if (Practice.getKitManager().getKit(strings[1]) == null) {
+                commandSender.sendMessage(StringUtils.handle("&cKit not found"));
+                return true;
+            }
+
             Practice.getKitManager().getKit(strings[1]).addArena(arena);
             player.sendMessage(StringUtils.handle("&aArena added to kit successfully"));
         }
@@ -81,6 +92,11 @@ public class KitCommand implements CommandExecutor {
         if (strings[0].equalsIgnoreCase("set")) {
             if (length < 3) {
                 commandSender.sendMessage(StringUtils.handle("&cInvalid usage"));
+                return true;
+            }
+
+            if (Practice.getKitManager().getKit(strings[1]) == null) {
+                commandSender.sendMessage(StringUtils.handle("&cKit not found"));
                 return true;
             }
             // Set the kit properties
@@ -94,7 +110,11 @@ public class KitCommand implements CommandExecutor {
                     player.sendMessage(StringUtils.handle("&aKit display name set successfully"));
                     break;
                 case "description":
-                    Practice.getKitManager().getKit(strings[1]).setDescription(strings[3]);
+                    StringBuilder description = new StringBuilder();
+                    for (int i = 3; i < strings.length; i++) {
+                        description.append(strings[i]).append(" ");
+                    }
+                    Practice.getKitManager().getKit(strings[1]).setDescription(description.toString());
                     player.sendMessage(StringUtils.handle("&aKit description set successfully"));
                     break;
                 case "enabled":
@@ -150,7 +170,6 @@ public class KitCommand implements CommandExecutor {
                     return true;
             }
             Practice.getKitManager().updateSettings();
-            ConsoleUtils.info("Kit settings updated");
             return true;
         }
         return false;

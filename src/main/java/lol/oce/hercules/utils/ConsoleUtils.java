@@ -24,6 +24,6 @@ public class ConsoleUtils {
     }
 
     private static void log(String message) {
-        Bukkit.getLogger().info(StringUtils.handle(message));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 }
