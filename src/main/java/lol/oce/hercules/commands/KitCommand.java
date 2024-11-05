@@ -35,7 +35,6 @@ public class KitCommand implements CommandExecutor {
             Practice.getKitManager().createKit(strings[1]);
             commandSender.sendMessage(StringUtils.handle("&aKit created successfully"));
             Kit kit = Practice.getKitManager().getKit(strings[1]);
-            kit.save();
             Practice.getKitManager().getKit(strings[1]).save();
             return true;
         }
