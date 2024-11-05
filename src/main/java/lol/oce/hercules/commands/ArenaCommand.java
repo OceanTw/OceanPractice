@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class ArenaCommand implements CommandExecutor {
 
-    private final Map<String, Arena> arenaSetup = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -52,7 +51,8 @@ public class ArenaCommand implements CommandExecutor {
                     type = ArenaType.STANDALONE;
                 }
                 Arena arena = new Arena(arenaName, displayName, type, true, null, null, null, null);
-                arenaSetup.put(player.getName(), arena);
+                Practice.getArenaManager().addArena(arena);
+                arena.save();
                 player.sendMessage("Arena " + displayName + " created with the type " + type.name() + ". Now set the locations using /arena set <red|blue|c1|c2>.");
                 break;
 
@@ -61,9 +61,9 @@ public class ArenaCommand implements CommandExecutor {
                     player.sendMessage("Usage: /arena set <red|blue|c1|c2> <name>");
                     return true;
                 }
-                Arena setupArena = arenaSetup.get(player.getName());
-                if (setupArena == null || !setupArena.getName().equals(arenaName)) {
-                    player.sendMessage("No arena setup found with the name " + arenaName + ". Create it first using /arena create.");
+                Arena setupArena = Practice.getArenaManager().getArena(arenaName);
+                if (setupArena == null) {
+                    player.sendMessage("No arena found with the name " + arenaName + ". Create it first using /arena create.");
                     return true;
                 }
                 Location location = player.getLocation();
@@ -91,7 +91,6 @@ public class ArenaCommand implements CommandExecutor {
                 if (setupArena.getRedSpawn() != null && setupArena.getBlueSpawn() != null && setupArena.getCorner1() != null && setupArena.getCorner2() != null) {
                     Practice.getArenaManager().addArena(setupArena);
                     setupArena.save();
-                    arenaSetup.remove(player.getName());
                     player.sendMessage("Arena " + setupArena.getDisplayName() + " setup complete and saved.");
                 }
                 break;

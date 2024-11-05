@@ -1,6 +1,7 @@
 package lol.oce.hercules.commands;
 
 import lol.oce.hercules.Practice;
+import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.kits.KitManager;
 import lol.oce.hercules.utils.ConsoleUtils;
@@ -63,6 +64,16 @@ public class KitCommand implements CommandExecutor {
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
             Practice.getKitManager().updateSettings();
             return true;
+        }
+
+        if (strings[0].equalsIgnoreCase("addarena")) {
+            Arena arena = Practice.getArenaManager().getArena(strings[2]);
+            if (arena == null) {
+                commandSender.sendMessage(StringUtils.handle("&cArena not found"));
+                return true;
+            }
+            Practice.getKitManager().getKit(strings[1]).addArena(arena);
+            player.sendMessage(StringUtils.handle("&aArena added to kit successfully"));
         }
 
         if (strings[0].equalsIgnoreCase("set")) {

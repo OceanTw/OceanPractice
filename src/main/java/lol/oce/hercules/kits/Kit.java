@@ -52,4 +52,12 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enderpearlcd", enderpearlcd);
         Practice.getKitsConfig().save();
     }
+
+    public void addArena(Arena arena) {
+        // Add an arena to the kit
+        Arena[] newArenas = new Arena[arenas.length + 1];
+        System.arraycopy(arenas, 0, newArenas, 0, arenas.length);
+        newArenas[arenas.length] = arena;
+        arenas = newArenas;
+    }
 }

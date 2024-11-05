@@ -3,6 +3,7 @@ package lol.oce.hercules.listeners;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.gui.Menu;
 import lol.oce.hercules.kits.Kit;
+import lol.oce.hercules.lobby.LobbyItemManager;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.Bukkit;
@@ -29,7 +30,11 @@ public class ItemListener implements Listener {
             return;
         }
 
-        if (event.getItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&9&l1v1 Queue &7(Right Click)"))) {
+        if (event.getItem().getItemMeta().getDisplayName() == null) {
+            return;
+        }
+
+        if (event.getItem().getItemMeta().getDisplayName().equals(Practice.getLobbyItemManager().getQueueItemName())) {
             menu.getQueueMenu().open(event.getPlayer());
         }
 

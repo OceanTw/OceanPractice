@@ -2,6 +2,7 @@ package lol.oce.hercules;
 
 import lol.oce.hercules.arenas.ArenaManager;
 import lol.oce.hercules.commands.ArenaCommand;
+import lol.oce.hercules.commands.DuelCommand;
 import lol.oce.hercules.commands.KitCommand;
 import lol.oce.hercules.database.MongoDB;
 import lol.oce.hercules.duels.RequestManager;
@@ -67,11 +68,10 @@ public class Practice extends JavaPlugin {
 
         getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("kit").setExecutor(new KitCommand());
+        getCommand("duel").setExecutor(new DuelCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-
-        ConsoleUtils.info("Testing MongoDB...");
     }
 
     @Override

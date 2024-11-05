@@ -4,3 +4,5 @@ main: lol.oce.hercules.Practice
 commands:
   arena:
   kit:
+  duel:
+    aliases: [d]
