@@ -27,6 +27,8 @@ public class Match {
     Arena arena;
     List<User> red;
     List<User> blue;
+    List<User> redAlive;
+    List<User> blueAlive;
     List<User> players;
     List<User> spectators;
     boolean ranked;
@@ -85,18 +87,25 @@ public class Match {
     public void playerKilled(User killer, User killed) {
         if (red.contains(killed)) {
             red = new ArrayList<>(red); // Ensure the list is modifiable
-            red.remove(killed);
+            redAlive.remove(killed);
         } else {
             blue = new ArrayList<>(blue); // Ensure the list is modifiable
-            blue.remove(killed);
+            blueAlive.remove(killed);
         }
         spectators = new ArrayList<>(spectators); // Ensure the list is modifiable
         spectators.add(killed);
         killed.getPlayer().sendMessage(StringUtils.handle("&cYou have been eliminated!"));
         // TODO: Add coins to the killer
-        if (red.isEmpty()) {
+
+        // Hide player from all other in game players
+        for (User user : players) {
+            if (user.getPlayer().getUniqueId() != killed.getPlayer().getUniqueId()) {
+                user.getPlayer().hidePlayer(killed.getPlayer());
+            }
+        }
+        if (redAlive.isEmpty()) {
             end(blue.get(0));
-        } else if (blue.isEmpty()) {
+        } else if (blueAlive.isEmpty()) {
             end(red.get(0));
         }
     }

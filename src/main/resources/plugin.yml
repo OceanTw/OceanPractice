@@ -9,3 +9,4 @@ commands:
   duel:
     aliases: [d]
   debug:
+  drop:

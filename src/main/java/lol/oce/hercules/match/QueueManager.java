@@ -67,6 +67,8 @@ public class QueueManager {
                 stopQueueTimer(queue);
                 queues.remove(q);
                 queues.remove(queue);
+                user.setQueue(null);
+                q.getUser().setQueue(null);
 
                 Practice.getMatchManager().startMatch(MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
                 break;

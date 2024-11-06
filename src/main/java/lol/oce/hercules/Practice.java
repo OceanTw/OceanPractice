@@ -5,6 +5,7 @@ import lol.oce.hercules.commands.ArenaCommand;
 import lol.oce.hercules.commands.DebugCommand;
 import lol.oce.hercules.commands.DuelCommand;
 import lol.oce.hercules.commands.KitCommand;
+import lol.oce.hercules.commands.troll.DropCommand;
 import lol.oce.hercules.duels.RequestManager;
 import lol.oce.hercules.kits.KitManager;
 import lol.oce.hercules.listeners.ItemListener;
@@ -81,6 +82,7 @@ public class Practice extends JavaPlugin {
         getCommand("kit").setExecutor(new KitCommand());
         getCommand("duel").setExecutor(new DuelCommand());
         getCommand("debug").setExecutor(new DebugCommand());
+        getCommand("drop").setExecutor(new DropCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

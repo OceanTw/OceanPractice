@@ -22,6 +22,8 @@ public class MatchManager {
             .setArena(Practice.getArenaManager().getEnabledArenas().get(0))
             .setRed(Arrays.asList(red))
             .setBlue(Arrays.asList(blue))
+            .setRedAlive(new ArrayList<>(Arrays.asList(red)))
+            .setBlueAlive(new ArrayList<>(Arrays.asList(blue)))
             .setPlayers(players)
             .setSpectators(new ArrayList<>())
             .setRanked(ranked)
