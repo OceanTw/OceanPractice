@@ -32,7 +32,7 @@ public class InventoryUtils {
 
     public static Inventory deserialize(String serialized) {
         // Deserialize an inventory
-        Inventory inventory = Bukkit.createInventory(null, 54);
+        Inventory inventory = Bukkit.createInventory(null, 36);
         String[] parts = serialized.split(",");
         for (String part : parts) {
             ItemStack item = ItemUtils.deserialize(part);
