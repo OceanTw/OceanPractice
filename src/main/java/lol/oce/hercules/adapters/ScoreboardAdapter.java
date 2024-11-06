@@ -62,10 +62,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getLobbyLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&b&lServer"));
-        lines.add(StringUtils.handle("&f  Online: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&f  Playing: &b" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&f  In Queue: &b" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fOnline: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
+        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
         lines.add(StringUtils.handle("&baether.rip"));
         lines.add(StringUtils.line("&7", 15));
@@ -75,10 +74,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getInQueueLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&b&lServer"));
-        lines.add(StringUtils.handle("&f  Online: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&f  Playing: &b" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&f  In Queue: &b" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fOnline: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
+        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
         lines.add(StringUtils.handle("&b&lQueue"));
         lines.add(StringUtils.handle("&f  Kit: &b" + user.getQueue().getKit().getDisplayName()));
