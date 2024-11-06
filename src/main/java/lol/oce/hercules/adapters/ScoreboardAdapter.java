@@ -25,7 +25,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
     @Override
     public String getTitle(Player player) {
-        return StringUtils.handle("&b&lAether &f&lPractice");
+        return StringUtils.handle("&5&lPractice &7[NA]");
     }
 
     @Override
@@ -62,11 +62,11 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getLobbyLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&fOnline: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fOnline: &5" + user.getPlayer().getServer().getOnlinePlayers().size()));
+        lines.add(StringUtils.handle("&fPlaying: &5" + Practice.getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &5" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&baether.rip"));
+        lines.add(StringUtils.handle("&5aether.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
     }
@@ -74,15 +74,15 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getInQueueLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&fOnline: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fOnline: &5" + user.getPlayer().getServer().getOnlinePlayers().size()));
+        lines.add(StringUtils.handle("&fPlaying: &5" + Practice.getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &5" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&b&lQueue"));
-        lines.add(StringUtils.handle("&f  Kit: &b" + user.getQueue().getKit().getDisplayName()));
-        lines.add(StringUtils.handle("&f  Type: &b" + (user.getQueue().isRanked() ? "Ranked" : "Unranked")));
-        lines.add(StringUtils.handle("&f  Duration: &b" + TimeUtils.formatTime(user.getQueue().getQueueTime())));
-        lines.add(StringUtils.handle("&baether.rip"));
+        lines.add(StringUtils.handle("&5&lQueue"));
+        lines.add(StringUtils.handle("&f  Kit: &5" + user.getQueue().getKit().getDisplayName()));
+        lines.add(StringUtils.handle("&f  Type: &5" + (user.getQueue().isRanked() ? "Ranked" : "Unranked")));
+        lines.add(StringUtils.handle("&f  Duration: &5" + TimeUtils.formatTime(user.getQueue().getQueueTime())));
+        lines.add(StringUtils.handle("&5aether.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
     }

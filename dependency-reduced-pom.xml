@@ -50,12 +50,6 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>xyz.refinedev.spigot</groupId>
-      <artifactId>CarbonSpigotAPI</artifactId>
-      <version>1.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.paperspigot</groupId>
       <artifactId>PaperSpigot</artifactId>
       <version>1.8.8</version>

@@ -53,4 +53,21 @@ public class UserManager {
                 .findFirst()
                 .orElse(null);
     }
+
+    public void unload(UUID uuid) {
+        User user = getUser(uuid);
+        if (user != null) {
+            userRepository.saveUser(user);
+            users.remove(user);
+            ConsoleUtils.info("User unloaded and removed from list: " + uuid);
+            if (user.getStatus() == UserStatus.IN_MATCH) {
+                user.getMatch().forfeit(user);
+            }
+            if (user.getQueue() != null) {
+                Practice.getQueueManager().leaveQueue(user);
+            }
+        } else {
+            ConsoleUtils.warn("Failed to unload user: " + uuid);
+        }
+    }
 }

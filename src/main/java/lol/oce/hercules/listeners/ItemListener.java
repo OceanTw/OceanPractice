@@ -6,6 +6,7 @@ import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.lobby.LobbyItemManager;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
+import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,10 +56,10 @@ public class ItemListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (event.getInventory().getName().equals("Select your queue")) {
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(StringUtils.handle("&9&lUnranked"))) {
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(StringUtils.handle("&5&lUnranked"))) {
                     menu.getQueueUnrankedMenu().open(player);
                     event.setCancelled(true);
-                } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&9&lRanked"))) {
+                } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&5&lRanked"))) {
                     player.sendMessage(StringUtils.handle("&7&oYou have selected the ranked queue"));
                     player.closeInventory();
                     event.setCancelled(true);
@@ -71,37 +72,44 @@ public class ItemListener implements Listener {
     @EventHandler
     public void onQueueKitMenuClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
+        if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null) {
+            return;
+        }
+        if (event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
+            event.setCancelled(true);
+            return;
+        }
         if (event.getInventory().getName().equals("Unranked Queue")) {
+            player.closeInventory();
+            event.setCancelled(true);
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
                 Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                player.closeInventory();
                 if (kit != null) {
-                    player.sendMessage(StringUtils.handle("&9&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
+                    player.sendMessage(StringUtils.handle("&5&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
                     Practice.getQueueManager().joinQueue(UserManager.getUser(player.getUniqueId()), kit, false);
-                    player.closeInventory();
-                    event.setCancelled(true);
                 }
             }
             event.setCancelled(true);
         } else if (event.getInventory().getName().equals("Ranked Queue")) {
+            player.closeInventory();
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
                 Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                player.closeInventory();
                 if (kit != null) {
-                    player.sendMessage(StringUtils.handle("&9&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, true);
-                    player.closeInventory();
-                    event.setCancelled(true);
+                    player.sendMessage(StringUtils.handle("&5&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
+                    Practice.getQueueManager().joinQueue(UserManager.getUser(player.getUniqueId()), kit, true);
                 }
             }
         } else if (event.getInventory().getName().contains("Duel Request to ")) {
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
                 Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                player.closeInventory();
                 if (kit != null) {
                     String targetName = event.getInventory().getName().replace("Duel Request to ", "");
-                    User target = Practice.getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
-                    player.sendMessage(StringUtils.handle("&9&oYou have sent a duel request"));
-                    Practice.getRequestManager().sendRequest(Practice.getUserManager().getUser(player.getUniqueId()), target, kit);
-                    player.closeInventory();
-                    event.setCancelled(true);
+                    User target = UserManager.getUser(Bukkit.getPlayer(targetName).getUniqueId());
+                    player.sendMessage(StringUtils.handle("&5&oYou have sent a duel request"));
+                    Practice.getRequestManager().sendRequest(UserManager.getUser(player.getUniqueId()), target, kit);
                 }
             }
         }

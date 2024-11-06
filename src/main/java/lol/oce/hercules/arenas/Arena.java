@@ -25,10 +25,14 @@ public class Arena {
     Location corner2;
     final List<ChunkSnapshot> snapshots = new ArrayList<>();
 
+    final ChunkAPI chunkAPI = ChunkAPI.getInstance();
+
     public void restore() {
         for (ChunkSnapshot snapshot : snapshots) {
             for (Chunk chunk : getChunks()) {
-                ChunkAPI.getInstance().restoreSnapshot(chunk, snapshot);
+                if (chunk != null) {
+                    ChunkAPI.getInstance().restoreSnapshot(chunk, snapshot);
+                }
             }
         }
     }
@@ -51,6 +55,10 @@ public class Arena {
     }
 
     public Chunk[] getChunks() {
+        if (corner1 == null || corner2 == null) {
+            return new Chunk[0];
+        }
+
         int minX = Math.min(corner1.getBlockX(), corner2.getBlockX());
         int maxX = Math.max(corner1.getBlockX(), corner2.getBlockX());
         int minZ = Math.min(corner1.getBlockZ(), corner2.getBlockZ());
@@ -60,17 +68,32 @@ public class Arena {
         int maxChunkX = maxX >> 4;
         int minChunkZ = minZ >> 4;
         int maxChunkZ = maxZ >> 4;
-        return new Chunk[(maxChunkX - minChunkX + 1) * (maxChunkZ - minChunkZ + 1)];
+
+        List<Chunk> chunks = new ArrayList<>();
+        for (int x = minChunkX; x <= maxChunkX; x++) {
+            for (int z = minChunkZ; z <= maxChunkZ; z++) {
+                Chunk chunk = corner1.getWorld().getChunkAt(x, z);
+                chunks.add(chunk);
+            }
+        }
+        return chunks.toArray(new Chunk[0]);
     }
 
     public void takeChunkSnapshots() {
-        // Get the chunks that the arena occupies
+        if (chunkAPI == null) {
+            throw new IllegalStateException("ChunkAPI instance is not initialized.");
+        }
+
+        if (corner1 == null || corner2 == null) {
+            throw new IllegalStateException("Corner locations are not set for the arena.");
+        }
+
         Chunk[] chunks = getChunks();
         for (Chunk chunk : chunks) {
-            ChunkSnapshot snapshot = ChunkAPI.getInstance().takeSnapshot(chunk);
-            snapshots.add(snapshot);
+            if (chunk != null) {
+                ChunkSnapshot snapshot = chunkAPI.takeSnapshot(chunk);
+                snapshots.add(snapshot);
+            }
         }
     }
-
-
 }

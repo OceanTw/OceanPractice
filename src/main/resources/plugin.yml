@@ -6,3 +6,4 @@ commands:
   kit:
   duel:
     aliases: [d]
+  debug:

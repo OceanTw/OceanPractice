@@ -18,9 +18,9 @@ public class RequestManager implements Listener {
 
     public void sendRequest(User sender, User receiver, Kit kit) {
         Request request = new Request(sender, receiver, kit);
-        TextComponent accept = new TextComponent(StringUtils.handle("&9&lClick to Accept"));
+        TextComponent accept = new TextComponent(StringUtils.handle("&5&lClick to Accept"));
         accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/accept " + sender.getPlayer().getName()));
-        receiver.getPlayer().sendMessage(StringUtils.handle("&9&lDuel Request"));
+        receiver.getPlayer().sendMessage(StringUtils.handle("&5&lDuel Request"));
         receiver.getPlayer().sendMessage(StringUtils.handle("&f- Sender: " + sender.getPlayer().getName()));
         receiver.getPlayer().sendMessage(StringUtils.handle("&f- Kit: " + kit.getName()));
         receiver.getPlayer().spigot().sendMessage(accept);

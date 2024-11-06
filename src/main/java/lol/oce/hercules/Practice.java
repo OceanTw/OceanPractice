@@ -2,6 +2,7 @@ package lol.oce.hercules;
 
 import lol.oce.hercules.arenas.ArenaManager;
 import lol.oce.hercules.commands.ArenaCommand;
+import lol.oce.hercules.commands.DebugCommand;
 import lol.oce.hercules.commands.DuelCommand;
 import lol.oce.hercules.commands.KitCommand;
 import lol.oce.hercules.duels.RequestManager;
@@ -18,6 +19,7 @@ import lol.oce.hercules.adapters.ScoreboardAdapter;
 import lol.oce.hercules.utils.scoreboards.Assemble;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.spigot.api.chunk.ChunkAPI;
 
 public class Practice extends JavaPlugin {
 
@@ -48,12 +50,16 @@ public class Practice extends JavaPlugin {
     private static ConfigFile kitsConfig;
 
     @Getter
+    private static ChunkAPI chunkAPI;
+
+    @Getter
     private static JavaPlugin plugin;
 
     @Override
     public void onEnable() {
         instance = this;
         plugin = this;
+        chunkAPI = ChunkAPI.getInstance();
         arenasConfig = new ConfigFile("arenas");
         kitsConfig = new ConfigFile("kits");
         databaseConfig = new ConfigFile("database");
@@ -73,6 +79,7 @@ public class Practice extends JavaPlugin {
         getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("kit").setExecutor(new KitCommand());
         getCommand("duel").setExecutor(new DuelCommand());
+        getCommand("debug").setExecutor(new DebugCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

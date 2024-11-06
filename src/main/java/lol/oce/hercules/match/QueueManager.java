@@ -3,6 +3,8 @@ package lol.oce.hercules.match;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.players.User;
+import lol.oce.hercules.players.UserStatus;
+import lol.oce.hercules.utils.StringUtils;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,6 +21,16 @@ public class QueueManager {
     Map<Queue, BukkitTask> queueTimeMap = new HashMap<>();
 
     public void joinQueue(User user, Kit kit, boolean ranked) {
+        if (user.getStatus() == UserStatus.IN_MATCH) {
+            user.getPlayer().sendMessage(StringUtils.handle("&cYou are already in a match!"));
+            return;
+        }
+
+        if (user.getQueue() != null) {
+            user.getPlayer().sendMessage(StringUtils.handle("&cYou are already in a queue!"));
+            return;
+        }
+
         Queue queue;
         if (ranked) {
             queue = Queue.builder()
@@ -35,34 +47,46 @@ public class QueueManager {
                     .setQueueRange(0)
                     .build();
         }
+
         queues.add(queue);
         user.setQueue(queue);
+
         startQueueTimer(queue);
-        queues.stream().forEach(q -> {
-            if (q.kit == kit && q.ranked == ranked) {
-                // Matchmaking logic
-                if (ranked) {
-                    // Ranked matchmaking logic
-                    // the elo range is the user's elo - elo range and the user's elo + elo range;
-                    int eloRange = queue.queueRange;
-                    int userElo = 1000;
-                    int minElo = userElo - eloRange;
-                    int maxElo = userElo + eloRange;
-                    if (1000 >= minElo && 1000 <= maxElo) {
-                        // Match found
-                    }
-                } else {
-                    // Match found
+
+        if (queues.size() == 1) {
+            return;
+        }
+
+        for (Queue q : queues) {
+            if (q.getKit() == kit && q.isRanked() == ranked) {
+                if (q.getUser().getPlayer().getUniqueId() == user.getPlayer().getUniqueId()) {
+                    continue;
                 }
+
+                stopQueueTimer(q);
+                stopQueueTimer(queue);
+                queues.remove(q);
+                queues.remove(queue);
+
+                Practice.getMatchManager().startMatch(MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
+                break;
             }
-        });
+        }
     }
+
+
 
     public void leaveQueue(User user) {
-    }
+        if (user.getQueue() == null) {
+            user.getPlayer().sendMessage(StringUtils.handle("&cYou are not in a queue!"));
+            return;
+        }
 
-    public Queue getQueue(Player player) {
-        return queues.stream().filter(q -> q.user.getPlayer().equals(player)).findFirst().orElse(null);
+        Queue queue = user.getQueue();
+        stopQueueTimer(queue);
+        queues.remove(queue);
+        user.setQueue(null);
+        user.getPlayer().sendMessage(StringUtils.handle("&aYou have left the queue!"));
     }
 
     public void startQueueTimer(Queue queue) {
