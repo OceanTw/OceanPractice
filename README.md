@@ -1,6 +1,6 @@
-# 🛡️ OceanSkyblock
+# ☁️ Hercules
 
-A Skyblock plugin that replicates a big server's Skyblock minigame
+The Practice plugin for Aether.rip
 
 ## Information
 This plugin is not done yet, if you want to join the development, DM "oceaning" on Discord
