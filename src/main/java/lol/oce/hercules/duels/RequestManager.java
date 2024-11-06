@@ -5,6 +5,7 @@ import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.match.MatchType;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.utils.StringUtils;
+import lombok.Getter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class RequestManager implements Listener {
 
+    @Getter
     List<Request> requests;
 
     public void sendRequest(User sender, User receiver, Kit kit) {

@@ -51,6 +51,12 @@ public class PlayerListener implements Listener {
         if (dead.getMatch().getPlayers().contains(killer)) {
             dead.getMatch().playerKilled(dead, killer);
         }
+
+        if (dead.getMatch().getPlayers().size() >=  3) {
+            return;
+        }
+
+        event.getDrops().clear();
     }
 
     @EventHandler

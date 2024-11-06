@@ -1,6 +1,8 @@
 name: Hercules
 version: 1.0
 main: lol.oce.hercules.Practice
+depend:
+  - TitleAPI
 commands:
   arena:
   kit:

@@ -1,5 +1,6 @@
 package lol.oce.hercules.match;
 
+import com.connorlinfoot.titleapi.TitleAPI;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.arenas.ArenaType;
@@ -14,9 +15,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,31 +65,32 @@ public class Match {
         List<User> winningTeam = red.contains(UserManager.getUser(UUID.fromString(winner.getUuid().toString()))) ? red : blue;
         List<User> losingTeam = red.contains(UserManager.getUser(UUID.fromString(winner.getUuid().toString()))) ? blue : red;
         for (User user : winningTeam) {
-            user.getPlayer().sendTitle(StringUtils.handle("&a&lYOU WON!"), "");
+            TitleAPI.sendTitle(user.getPlayer(), 5, 40, 5, StringUtils.handle("&a&lYOU WON!"), "");
         }
         for (User user : losingTeam) {
-            user.getPlayer().sendTitle(StringUtils.handle("&c&lYOU LOST!"), "");
+            TitleAPI.sendTitle(user.getPlayer(), 5, 40, 5, StringUtils.handle("&c&lYOU LOST!"), "");
         }
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
                 for (User user : players) {
                     user.setStatus(UserStatus.IN_LOBBY);
+                    Practice.getUserManager().resetUser(user);
                 }
             }
-        }.runTaskTimer(Practice.getInstance(), 0, 20 * 5);
-        for (User user : players) {
-            Practice.getUserManager().resetUser(user);
-        }
+        }.runTaskLater(Practice.getInstance(), 20 * 5);
         arena.restore();
     }
 
     public void playerKilled(User killer, User killed) {
         if (red.contains(killed)) {
+            red = new ArrayList<>(red); // Ensure the list is modifiable
             red.remove(killed);
         } else {
+            blue = new ArrayList<>(blue); // Ensure the list is modifiable
             blue.remove(killed);
         }
+        spectators = new ArrayList<>(spectators); // Ensure the list is modifiable
         spectators.add(killed);
         killed.getPlayer().sendMessage(StringUtils.handle("&cYou have been eliminated!"));
         // TODO: Add coins to the killer
@@ -104,11 +106,21 @@ public class Match {
         end(winningTeam.get(0));
     }
 
+    public void voidMatch() {
+        for (User user : players) {
+            user.getPlayer().sendMessage(StringUtils.handle("&cMatch voided! No stats will be recorded."));
+            user.setStatus(UserStatus.IN_LOBBY);
+            Practice.getUserManager().resetUser(user);
+        }
+        if (arena.getType() == ArenaType.STANDALONE) {
+            arena.restore();
+        }
+    }
+
     public void giveKit() {
         for (User user : players) {
             user.getPlayer().getInventory().clear();
             user.getPlayer().getInventory().setArmorContents(null);
-            Inventory kitinv = getKit().getInventory();
             user.getPlayer().getInventory().setContents(kit.getInventory().getContents());
             user.getPlayer().getInventory().setHelmet(kit.getHelmet());
             user.getPlayer().getInventory().setChestplate(kit.getChestplate());

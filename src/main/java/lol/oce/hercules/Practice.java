@@ -11,6 +11,7 @@ import lol.oce.hercules.listeners.ItemListener;
 import lol.oce.hercules.listeners.PlayerListener;
 import lol.oce.hercules.lobby.LobbyItemManager;
 import lol.oce.hercules.lobby.LobbyManager;
+import lol.oce.hercules.match.Match;
 import lol.oce.hercules.match.MatchManager;
 import lol.oce.hercules.match.QueueManager;
 import lol.oce.hercules.players.UserManager;
@@ -92,5 +93,8 @@ public class Practice extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Hercules has been disabled!");
+        matchManager.getMatches().forEach(Match::voidMatch);
+        queueManager.getQueues().removeAll(queueManager.getQueues());
+        queueManager.getQueueTimeMap().forEach((queue, task) -> task.cancel());
     }
 }
