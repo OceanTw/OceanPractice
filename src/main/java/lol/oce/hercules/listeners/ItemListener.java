@@ -5,6 +5,7 @@ import lol.oce.hercules.gui.Menu;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.lobby.LobbyItemManager;
 import lol.oce.hercules.players.User;
+import lol.oce.hercules.players.UserManager;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -75,7 +76,7 @@ public class ItemListener implements Listener {
                 Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
                 if (kit != null) {
                     player.sendMessage(StringUtils.handle("&9&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, false);
+                    Practice.getQueueManager().joinQueue(UserManager.getUser(player.getUniqueId()), kit, false);
                     player.closeInventory();
                     event.setCancelled(true);
                 }
@@ -109,7 +110,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
-        event.getPlayer().sendMessage(StringUtils.handle("&cYou cannot drop items in your current stage."));
         event.setCancelled(true);
     }
 

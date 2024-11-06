@@ -87,7 +87,7 @@ public class KitManager {
 
     public Kit getKitByDisplayName(String displayName) {
         for (Kit kit : kits) {
-            if (kit.getDisplayName().contains(displayName)) {
+            if (kit.getDisplayName().equals(displayName)) {
                 return kit;
             }
         }
