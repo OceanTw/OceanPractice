@@ -12,4 +12,5 @@ public class Queue {
     boolean ranked;
     Kit kit;
     int queueRange;
+    int queueTime;
 }

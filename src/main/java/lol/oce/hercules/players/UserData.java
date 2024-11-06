@@ -3,24 +3,23 @@ package lol.oce.hercules.players;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import lol.oce.hercules.database.MongoDB;
+import lol.oce.hercules.utils.ConsoleUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 
-import javax.print.Doc;
+import java.util.UUID;
 
 public class UserData {
-    private MongoDatabase database;
     private MongoCollection<Document> collection;
 
     public UserData() {
-        this.database = MongoDB.getDatabase();
+        MongoDatabase database = MongoDB.getDatabase();
         this.collection = MongoDB.getCollection("users");
     }
 
     public void saveUser(User user) {
-        Document original = collection.find(new Document("player", user.player.getUniqueId().toString())).first();
-        Document doc = new Document("player", user.player.getUniqueId().toString())
-                .append("kitStats", user.kitStats.serialize());
+        Document original = collection.find(new Document("player", user.getUuid().toString())).first();
+        Document doc = new Document("player", user.getUuid().toString());
 
         if (original == null) {
             collection.insertOne(doc);
@@ -29,28 +28,27 @@ public class UserData {
         }
     }
 
-    public User loadUser(String playerName) {
-        Document doc = collection.find(new Document("player", playerName)).first();
+    public User loadUser(UUID uuid) {
+        Document doc = collection.find(new Document("player", uuid.toString())).first();
         if (doc == null) {
-            return createUser(playerName);
+            return createUser(uuid);
         }
         return User.builder()
                 .setMatch(null)
-                .setPlayer(Bukkit.getPlayer(doc.getString("player")))
+                .setUuid(uuid)
                 .setStatus(UserStatus.IN_LOBBY)
-                .setKitStats(new UserKitStats().deserialize(doc.getString("kitStats")))
+//                .setKitStats(new UserKitStats().deserialize(doc.getString("kitStats")))
                 .build();
     }
 
-    public User createUser(String playerName) {
+    public User createUser(UUID uuid) {
         User user = User.builder()
-                .setPlayer(Bukkit.getPlayer(playerName))
+                .setUuid(uuid)
                 .setMatch(null)
                 .setStatus(UserStatus.IN_LOBBY)
-                .setKitStats(new UserKitStats())
+//                .setKitStats(new UserKitStats())
                 .build();
-        user.player = Bukkit.getPlayer(playerName);
-        user.kitStats = new UserKitStats();
+//        user.kitStats = new UserKitStats();
         user.status = UserStatus.IN_LOBBY;
         saveUser(user);
         return user;

@@ -3,11 +3,13 @@ package lol.oce.hercules.match;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.players.User;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class MatchManager {
 
     List<Match> matches = new ArrayList<>();

@@ -3,6 +3,7 @@ package lol.oce.hercules.players;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.kits.Kit;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -36,6 +37,9 @@ public class UserKitStats {
 
     public UserKitStats deserialize(String data) {
         String[] kitData = data.split(",");
+        if (kitData.length == 0) {
+            return this;
+        }
         for (String kit : kitData) {
             String[] kitStats = kit.split(":");
             Kit kitObj = Practice.getKitManager().getKit(kitStats[0]);

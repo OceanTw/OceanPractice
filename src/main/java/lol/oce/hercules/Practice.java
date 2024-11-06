@@ -14,7 +14,8 @@ import lol.oce.hercules.match.MatchManager;
 import lol.oce.hercules.match.QueueManager;
 import lol.oce.hercules.players.UserManager;
 import lol.oce.hercules.utils.ConfigFile;
-import lol.oce.hercules.utils.scoreboards.assemble.Assemble;
+import lol.oce.hercules.adapters.ScoreboardAdapter;
+import lol.oce.hercules.utils.scoreboards.Assemble;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,9 +47,13 @@ public class Practice extends JavaPlugin {
     @Getter
     private static ConfigFile kitsConfig;
 
+    @Getter
+    private static JavaPlugin plugin;
+
     @Override
     public void onEnable() {
         instance = this;
+        plugin = this;
         arenasConfig = new ConfigFile("arenas");
         kitsConfig = new ConfigFile("kits");
         databaseConfig = new ConfigFile("database");
@@ -72,10 +77,9 @@ public class Practice extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
-        Assemble assemble = new Assemble(this, new ExampleAssembleAdapter());
-
-        // Set Interval (Tip: 20 ticks = 1 second).
+        Assemble assemble = new Assemble(this, new ScoreboardAdapter());
         assemble.setTicks(2);
+        assemble.setup();
     }
 
     @Override
