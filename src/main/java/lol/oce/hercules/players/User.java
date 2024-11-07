@@ -1,5 +1,6 @@
 package lol.oce.hercules.players;
 
+import com.mongodb.lang.Nullable;
 import lol.oce.hercules.match.Match;
 import lol.oce.hercules.match.Queue;
 import lombok.Builder;
@@ -34,6 +35,7 @@ public class User {
         return status == UserStatus.IN_KIT_EDITOR;
     }
 
+    @Nullable
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
     }

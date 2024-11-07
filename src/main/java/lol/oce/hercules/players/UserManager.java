@@ -11,7 +11,7 @@ import java.util.*;
 
 public class UserManager {
 
-    private static final List<User> users = new ArrayList<>();
+    private final HashMap<UUID, User> users = new HashMap<>();
     private static final UserData userRepository = new UserData();
 
     public void load(UUID uuid) {
@@ -23,11 +23,15 @@ public class UserManager {
 
         User user = userRepository.loadUser(uuid);
         if (user != null) {
-            users.add(user);
+            users.put(uuid, user);
             ConsoleUtils.info("User loaded and added to list: " + uuid);
         } else {
             ConsoleUtils.warn("Failed to load user: " + uuid);
         }
+    }
+
+    public User getUser(UUID uuid) {
+        return users.get(uuid);
     }
 
     public void resetUser(User user) {
@@ -39,19 +43,6 @@ public class UserManager {
         user.getPlayer().setSaturation(20);
 
         Practice.getLobbyManager().giveItems(user.getPlayer());
-    }
-
-    public static User getUser(UUID uuid) {
-        return users.stream()
-                .filter(user -> {
-                    if (user.getPlayer() == null) {
-                        ConsoleUtils.warn("Player object is null for user: " + user);
-                        return false;
-                    }
-                    return user.getPlayer().getUniqueId().equals(uuid);
-                })
-                .findFirst()
-                .orElse(null);
     }
 
     public void unload(UUID uuid) {

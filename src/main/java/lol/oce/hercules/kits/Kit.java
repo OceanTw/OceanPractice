@@ -20,11 +20,8 @@ public class Kit {
     String name;
     String displayName;
     String description;
-    Inventory inventory;
-    ItemStack helmet;
-    ItemStack chestplate;
-    ItemStack leggings;
-    ItemStack boots;
+    ItemStack[] contents;
+    ItemStack[] armour;
     PotionEffect[] potionEffects;
     Arena[] arenas;
     boolean enabled;
