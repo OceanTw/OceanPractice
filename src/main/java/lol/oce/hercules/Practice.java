@@ -99,6 +99,5 @@ public class Practice extends JavaPlugin {
         getLogger().info("Hercules has been disabled!");
         matchManager.getMatches().forEach(Match::voidMatch);
         queueManager.getQueues().removeAll(queueManager.getQueues());
-        queueManager.getQueueTimeMap().forEach((queue, task) -> task.cancel());
     }
 }

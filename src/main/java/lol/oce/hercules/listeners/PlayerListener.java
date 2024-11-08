@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,6 +43,11 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             return;
@@ -66,14 +72,6 @@ public class PlayerListener implements Listener {
                     damager.getMatch().onDeath(killer, killed);
                     player.setHealth(20);
                     VisualUtils.playDeathAnimation(player, (Player) entityEvent.getDamager());
-
-                    // drop the items from the player
-                    for (ItemStack item : player.getInventory().getContents()) {
-                        if (item == null) {
-                            continue;
-                        }
-                        player.getWorld().dropItemNaturally(player.getLocation(), item);
-                    }
                 }
 
             }
@@ -88,15 +86,6 @@ public class PlayerListener implements Listener {
                     event.setCancelled(true);
                     user.getMatch().onDeath(null, killed);
                     player.setHealth(20);
-                    VisualUtils.playDeathAnimation(player, null);
-
-                    // drop the items from the player
-                    for (ItemStack item : player.getInventory().getContents()) {
-                        if (item == null) {
-                            continue;
-                        }
-                        player.getWorld().dropItemNaturally(player.getLocation(), item);
-                    }
                 }
             }
         }

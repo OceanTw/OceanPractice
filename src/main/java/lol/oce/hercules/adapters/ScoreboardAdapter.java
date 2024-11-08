@@ -1,6 +1,7 @@
 package lol.oce.hercules.adapters;
 
 import lol.oce.hercules.Practice;
+import lol.oce.hercules.match.Participant;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
 import lol.oce.hercules.utils.StringUtils;
@@ -46,9 +47,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
             case IN_QUEUE:
                 lines = getInQueueLines(user);
                 break;
-//            case IN_MATCH:
-//                lines = getMatchLines(user);
-//                break;
+            case IN_MATCH:
+                lines = getMatchLines(user);
+                break;
             default:
                 lines.add("Error loading scoreboard");
                 lines.add("Invalid user status");
@@ -89,8 +90,22 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getMatchLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&f  Opponent: &5" + user.getMatch().getP().getPlayer().getName()));
-        lines.add(StringUtils.handle("&f  Duration: &5" + TimeUtils.formatTime(user.getMatch().getMatchTime())));
+        Participant self = user.getMatch().getParticipant(user);
+        Participant opponent = null;
+        for (Participant participant : user.getMatch().getParticipants()) {
+            if (!participant.getUuid().equals(user.getUuid())) {
+                opponent = participant;
+                break;
+            }
+        }
+        if (opponent == null) {
+            lines.add("Error loading scoreboard");
+            lines.add("Opponent is null");
+            lines.add("Please contact an admin");
+            return lines;
+        }
+        lines.add(StringUtils.handle("Opponent: &5" + opponent.getPlayer().getName()));
+        lines.add(StringUtils.handle("&fDuration: &5" + TimeUtils.formatTime(user.getMatch().getTime())));
         lines.add(StringUtils.handle("&7"));
         lines.add(StringUtils.handle("&5aether.rip"));
         lines.add(StringUtils.line("&7", 15));

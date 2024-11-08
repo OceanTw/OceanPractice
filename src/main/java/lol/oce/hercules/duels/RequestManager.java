@@ -1,6 +1,7 @@
 package lol.oce.hercules.duels;
 
 import lol.oce.hercules.Practice;
+import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.match.MatchType;
 import lol.oce.hercules.players.User;
@@ -43,7 +44,14 @@ public class RequestManager implements Listener {
         if (request != null) {
             request.getSender().getPlayer().sendMessage(StringUtils.handle("&7&oYour request has been accepted"));
             request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&7&oYou have accepted the request"));
-            Practice.getMatchManager().startSolo(MatchType.DUEL, request.getKit(), new User[]{request.getSender(), request.getReceiver()}, new User[]{request.getReceiver(), request.getSender()}, false);
+            Arena arena = Practice.getArenaManager().getRandomArena(request.getKit());
+            if (arena == null) {
+                request.getSender().getPlayer().sendMessage(StringUtils.handle("&cNo arenas available"));
+                request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&cNo arenas available"));
+                requests.remove(request);
+                return;
+            }
+            Practice.getMatchManager().startSolo(arena, MatchType.DUEL, request.getKit(), new User[]{request.getSender(), request.getReceiver()}, new User[]{request.getReceiver(), request.getSender()}, false);
             requests.remove(request);
         }
     }

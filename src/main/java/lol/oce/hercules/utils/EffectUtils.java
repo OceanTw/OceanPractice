@@ -4,9 +4,12 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @UtilityClass
 public class EffectUtils {
-    public String serialize(PotionEffect[] effects) {
+    public String serialize(List<PotionEffect> effects) {
         StringBuilder serialized = new StringBuilder();
         for (PotionEffect effect : effects) {
             serialized.append(effect.getType().getName()).append(":").append(effect.getDuration()).append(":").append(effect.getAmplifier()).append(",");
@@ -14,27 +17,25 @@ public class EffectUtils {
         return serialized.toString();
     }
 
-    public static PotionEffect[] deserialize(String serializedEffects) {
+    public static List<PotionEffect> deserialize(String serializedEffects) {
         if (serializedEffects == null || serializedEffects.isEmpty()) {
-            return new PotionEffect[0];
+            return null;
         }
 
-        String[] effects = serializedEffects.split(";");
-        PotionEffect[] potionEffects = new PotionEffect[effects.length];
+        List<PotionEffect> potionEffects = new ArrayList<>();
+        String[] effects = serializedEffects.split(",");
 
-        for (int i = 0; i < effects.length; i++) {
-            String[] parts = effects[i].split(":");
+        for (String effect : effects) {
+            String[] parts = effect.split(":");
             if (parts.length < 2) {
-                throw new IllegalArgumentException("Invalid potion effect format: " + effects[i]);
+                throw new IllegalArgumentException("Invalid potion effect format: " + effect);
             }
 
             PotionEffectType type = PotionEffectType.getByName(parts[0]);
             int duration = Integer.parseInt(parts[1]);
             int amplifier = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
 
-            if (type != null) {
-                potionEffects[i] = new PotionEffect(type, duration, amplifier);
-            }
+            potionEffects.add(new PotionEffect(type, duration, amplifier));
         }
 
         return potionEffects;

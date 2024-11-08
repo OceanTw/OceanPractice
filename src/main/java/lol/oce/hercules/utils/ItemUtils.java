@@ -4,6 +4,9 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemUtils {
 
     public static String serialize(ItemStack item) {
@@ -22,10 +25,29 @@ public class ItemUtils {
         return builder.toString();
     }
 
+    public static String serialize(List<ItemStack> items) {
+        // Serialize an array of items
+        StringBuilder builder = new StringBuilder();
+        for (ItemStack item : items) {
+            if (item == null) {
+                continue;
+            }
+            builder.append(serialize(item)).append(";");
+        }
+        // Remove the trailing semicolon if there are items
+        if (builder.charAt(builder.length() - 1) == ';') {
+            builder.setLength(builder.length() - 1);
+        }
+        return builder.toString();
+    }
+
     public static String serialize(ItemStack[] items) {
         // Serialize an array of items
         StringBuilder builder = new StringBuilder();
         for (ItemStack item : items) {
+            if (item == null) {
+                continue;
+            }
             builder.append(serialize(item)).append(";");
         }
         // Remove the trailing semicolon if there are items
@@ -73,12 +95,12 @@ public class ItemUtils {
         return item;
     }
 
-    public static ItemStack[] deserializeArray(String serialized) {
+    public static List<ItemStack> deserializeArray(String serialized) {
         // Deserialize an array of items
+        List<ItemStack> items = new ArrayList<>();
         String[] parts = serialized.split(";");
-        ItemStack[] items = new ItemStack[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            items[i] = deserialize(parts[i]);
+        for (String part : parts) {
+            items.add(deserialize(part));
         }
         return items;
     }

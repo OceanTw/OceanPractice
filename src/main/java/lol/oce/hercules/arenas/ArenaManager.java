@@ -99,7 +99,7 @@ public class ArenaManager {
 
     public Arena getRandomArena(Kit kit) {
         List<Arena> availableArenas = new ArrayList<>();
-        List<Arena> kitAllowedArenas = Arrays.asList(kit.getArenas());
+        List<Arena> kitAllowedArenas = kit.getArenas();
         for (Arena arena : enabledArenas) {
             if (kitAllowedArenas.contains(arena)) {
                 availableArenas.add(arena);

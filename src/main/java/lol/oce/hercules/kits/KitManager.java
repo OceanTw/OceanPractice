@@ -6,11 +6,13 @@ import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.EffectUtils;
 import lol.oce.hercules.utils.ItemUtils;
 import lombok.Getter;
+import net.minecraft.server.v1_8_R3.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,6 @@ public class KitManager {
         for (String key : Practice.getKitsConfig().getConfiguration().getConfigurationSection("kits").getKeys(false)) {
             String displayName = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".displayName");
             String description = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".description");
-            ItemStack[] inventory = ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".inventory"));
-            PotionEffect[] potionEffects = EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects"));
-            Arena[] arenas = Practice.getArenasConfig().getConfiguration().getStringList("kits." + key + ".arenas").stream().map(Practice.getArenaManager()::getArena).toArray(Arena[]::new);
             boolean enabled = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enabled");
             boolean editable = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".editable");
             boolean boxing = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".boxing");
@@ -47,10 +46,30 @@ public class KitManager {
             boolean ranked = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".ranked");
             boolean freezeOnStart = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".freezeOnStart");
             Material icon = Material.getMaterial(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".icon"));
-            ItemStack[] armor = ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".armor"));
+            List<ItemStack> armor = ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".armor"));
 
-            Kit kit = new Kit(key, displayName, description, inventory, armor, potionEffects, arenas, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, freezeOnStart, ranked, icon);
+            Kit kit = new Kit(key, displayName, description, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, freezeOnStart, ranked, icon);
             addKit(kit);
+            if (EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects")) != null) {
+                for (PotionEffect potionEffect : EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects"))) {
+                    kit.getPotionEffects().add(potionEffect);
+                }
+            }
+            if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas") != null) {
+                for (String arena : Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
+                    kit.getArenas().add(Practice.getArenaManager().getArena(arena));
+                }
+            }
+            if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".contents") != null) {
+                for (ItemStack item : ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".contents"))) {
+                    kit.getContents().add(item);
+                }
+            }
+            if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".armor") != null) {
+                for (ItemStack item : ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".armor"))) {
+                    kit.getArmor().add(item);
+                }
+            }
         }
     }
 
@@ -58,7 +77,7 @@ public class KitManager {
         if (name == null) {
             throw new IllegalArgumentException("Kit name cannot be null");
         }
-        Kit kit = new Kit(name, name, "", null, null, new PotionEffect[0], new Arena[0], true, true, false, false, false, false, false, false, false, false, false, false, false, Material.DIAMOND_SWORD);
+        Kit kit = new Kit(name, name, "", true, true, false, false, false, false, false, false, false, false, false, false, false, Material.DIAMOND_SWORD);
         kits.add(kit);
         enabledKits.add(kit);
     }
@@ -92,10 +111,15 @@ public class KitManager {
     }
 
     public void setKitInventory(Kit kit, Player player) {
-        kit.setContents(player.getInventory().getContents());
+        for (ItemStack item : player.getInventory().getContents()) {
+            kit.addContents(item);
+        }
         for (PotionEffect potionEffect : kit.getPotionEffects()) {
             PotionEffect newPotionEffect = new PotionEffect(potionEffect.getType(), 99999, potionEffect.getAmplifier());
-            addPotionEffect(kit, newPotionEffect);
+            kit.addPotionEffect(newPotionEffect);
+        }
+        for (ItemStack item : player.getInventory().getArmorContents()) {
+            kit.addArmor(item);
         }
     }
 
@@ -103,12 +127,5 @@ public class KitManager {
         kits.remove(kit);
         enabledKits.remove(kit);
         Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName(), null);
-    }
-
-    private void addPotionEffect(Kit kit, PotionEffect potionEffect) {
-        PotionEffect[] newPotionEffects = new PotionEffect[kit.getPotionEffects().length + 1];
-        System.arraycopy(kit.getPotionEffects(), 0, newPotionEffects, 0, kit.getPotionEffects().length);
-        newPotionEffects[kit.getPotionEffects().length] = potionEffect;
-        kit.setPotionEffects(newPotionEffects);
     }
 }

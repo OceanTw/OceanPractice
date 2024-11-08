@@ -1,5 +1,6 @@
 package lol.oce.hercules.match.modes;
 
+import com.connorlinfoot.titleapi.TitleAPI;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerHealthChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -56,6 +58,7 @@ public class OneVersusOneMatch extends Match {
                 }
                 if (countdown[0] == 0) {
                     setStarted(true);
+                    startTime();
                     cancel();
                 }
                 countdown[0]--;
@@ -65,6 +68,14 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void end(Participant winner) {
+        for (Participant participant : getParticipants()) {
+            if (participant.equals(winner)) {
+                TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&a&lYOU WON", "&a" + winner.getPlayer().getName() + " &fhas won the match!");
+            } else {
+                TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&c&lYOU LOST", "&a" + winner.getPlayer().getName() + " &fhas won the match!");
+            }
+        }
+
         if (winner == null) {
             for (Participant participant : getParticipants()) {
                 participant.getPlayer().sendMessage(StringUtils.handle("&fMatch has been voided!"));
@@ -89,8 +100,11 @@ public class OneVersusOneMatch extends Match {
     public void onDeath(Participant killer, Participant killed) {
         if (killer == null) {
             killer = killed.equals(red) ? blue : red;
-            for (Participant participant : getParticipants()) {
-                participant.getPlayer().sendMessage(StringUtils.handle("&f" + killed.getPlayer().getName() + " &7was killed by" + killer.getPlayer().getName() + "!"));
+        }
+        for (Participant participant : getParticipants()) {
+            participant.getPlayer().sendMessage(StringUtils.handle("&f" + killed.getPlayer().getName() + " &7was killed by" + killer.getPlayer().getName() + "!"));
+            if (participant.isAlive()) {
+                participant.getPlayer().hidePlayer(killed.getPlayer());
             }
         }
         end(killer);
@@ -119,11 +133,17 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void giveKits() {
-        red.getPlayer().getInventory().setContents(getKit().getContents());
-        blue.getPlayer().getInventory().setContents(getKit().getContents());
+        red.getPlayer().getInventory().setContents(getKit().getContent());
+        blue.getPlayer().getInventory().setContents(getKit().getContent());
+        red.getPlayer().getInventory().setArmorContents(getKit().getArmorContent());
+        blue.getPlayer().getInventory().setArmorContents(getKit().getArmorContent());
+        red.getPlayer().updateInventory();
+        blue.getPlayer().updateInventory();
 
-        red.getPlayer().getInventory().setContents(getKit().getContents());
-        red.getPlayer().getInventory().setArmorContents(getKit().getArmor());
+        for (PotionEffect effect : getKit().getPotionEffects()) {
+            red.getPlayer().addPotionEffect(effect);
+            blue.getPlayer().addPotionEffect(effect);
+        }
     }
 
 

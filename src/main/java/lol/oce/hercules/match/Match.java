@@ -1,8 +1,10 @@
 package lol.oce.hercules.match;
 
+import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.players.User;
+import lol.oce.hercules.players.UserStatus;
 import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -11,7 +13,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerHealthChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -24,12 +29,14 @@ public abstract class Match {
     private final boolean ranked;
     private final Kit kit;
     private final MatchType type;
+    private int time = 0;
     private boolean started = false;
 
     public void start() {
         if (getKit().isBuild()) getArena().takeChunkSnapshots();
         teleportAll();
         giveKits();
+        forEachParticipant(participant -> participant.getUser().setStatus(UserStatus.IN_MATCH));
 
         onStart();
     }
@@ -41,6 +48,15 @@ public abstract class Match {
                 action.accept(participant);
             }
         }
+    }
+
+    public void startTime() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                time++;
+            }
+        }.runTaskTimer(Practice.getInstance(), 0, 20);
     }
 
     public abstract List<Participant> getParticipants();

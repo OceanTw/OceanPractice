@@ -5,6 +5,8 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.database.MongoDB;
 import lol.oce.hercules.utils.ConsoleUtils;
 import org.bson.Document;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -41,6 +43,14 @@ public class UserManager {
         user.getPlayer().setHealth(20);
         user.getPlayer().setFoodLevel(20);
         user.getPlayer().setSaturation(20);
+        user.getPlayer().setFireTicks(0);
+        user.setStatus(UserStatus.IN_LOBBY);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            // TODO: If player is vanished, do nothing
+            user.getPlayer().showPlayer(player);
+            player.showPlayer(user.getPlayer());
+        }
 
         Practice.getLobbyManager().giveItems(user.getPlayer());
     }

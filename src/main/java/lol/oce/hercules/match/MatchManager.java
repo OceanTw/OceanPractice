@@ -1,5 +1,6 @@
 package lol.oce.hercules.match;
 
+import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.match.modes.OneVersusOneMatch;
 import lol.oce.hercules.players.User;
@@ -14,11 +15,11 @@ public class MatchManager {
 
     List<Match> matches = new ArrayList<>();
 
-    public void startSolo(MatchType type, Kit kit, User[] red, User[] blue, boolean ranked) {
+    public void startSolo(Arena arena, MatchType type, Kit kit, User[] red, User[] blue, boolean ranked) {
         List<User> players = new ArrayList<>();
         players.addAll(Arrays.asList(red));
         players.addAll(Arrays.asList(blue));
-        OneVersusOneMatch match = new OneVersusOneMatch(players.get(0), players.get(1), null, null, ranked, kit, type);
+        OneVersusOneMatch match = new OneVersusOneMatch(players.get(0), players.get(1), arena, null, ranked, kit, type);
         matches.add(match);
         match.start();
         for (User user : players) {

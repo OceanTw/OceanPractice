@@ -1,6 +1,7 @@
 package lol.oce.hercules.match;
 
 import lol.oce.hercules.Practice;
+import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserStatus;
@@ -69,7 +70,14 @@ public class QueueManager {
                 user.setQueue(null);
                 q.getUser().setQueue(null);
 
-                Practice.getMatchManager().startSolo(MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
+                Arena arena = Practice.getArenaManager().getRandomArena(kit);
+                if (arena == null) {
+                    user.getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
+                    q.getUser().getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
+                    return;
+                }
+
+                Practice.getMatchManager().startSolo(arena, MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
                 break;
             }
         }

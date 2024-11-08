@@ -65,10 +65,6 @@ public class KitCommand implements CommandExecutor {
             // Set the kit inventory
             Kit kit = Practice.getKitManager().getKit(strings[1]);
             Practice.getKitManager().setKitInventory(kit, player);
-            kit.setHelmet(player.getInventory().getHelmet());
-            kit.setChestplate(player.getInventory().getChestplate());
-            kit.setLeggings(player.getInventory().getLeggings());
-            kit.setBoots(player.getInventory().getBoots());
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
             return true;
         }
@@ -115,6 +111,10 @@ public class KitCommand implements CommandExecutor {
                 return true;
             }
             // Set the kit properties
+            if (!strings[3].equalsIgnoreCase("true") && !strings[3].equalsIgnoreCase("false")) {
+                commandSender.sendMessage(StringUtils.handle("&cInvalid value"));
+                return true;
+            }
             switch (strings[2]) {
                 case "name":
                     Practice.getKitManager().getKit(strings[1]).setName(strings[3]);
@@ -165,7 +165,7 @@ public class KitCommand implements CommandExecutor {
                     player.sendMessage(StringUtils.handle("&aKit health regen set successfully"));
                     break;
                 case "bedfight":
-                    Practice.getKitManager().getKit(strings[1]).setBedfight(Boolean.parseBoolean(strings[3]));
+                    Practice.getKitManager().getKit(strings[1]).setBedFight(Boolean.parseBoolean(strings[3]));
                     player.sendMessage(StringUtils.handle("&aKit bedfight set successfully"));
                     break;
                 case "fireball":
@@ -173,7 +173,7 @@ public class KitCommand implements CommandExecutor {
                     player.sendMessage(StringUtils.handle("&aKit fireball set successfully"));
                     break;
                 case "enderpearlcd":
-                    Practice.getKitManager().getKit(strings[1]).setEnderpearlcd(Boolean.parseBoolean(strings[3]));
+                    Practice.getKitManager().getKit(strings[1]).setEnderPearlCd(Boolean.parseBoolean(strings[3]));
                     player.sendMessage(StringUtils.handle("&aKit enderpearlcd set successfully"));
                     break;
                 case "ranked":
