@@ -176,7 +176,9 @@ public class OneVersusOneMatch extends Match {
             damager.sendMessage(StringUtils.handle("&fHits: &5" + hits.get(damager)));
             event.setDamage(0);
             if (hits.get(damager) >= 100) {
-                end(getParticipant(Practice.getUserManager().getUser(damager.getUniqueId())));
+                Participant killer = getParticipant(Practice.getUserManager().getUser(damager.getUniqueId()));
+                Participant killed = getParticipant(Practice.getUserManager().getUser(event.getEntity().getUniqueId()));
+                onDeath(killer, killed);
                 event.setCancelled(true);
             }
         }
