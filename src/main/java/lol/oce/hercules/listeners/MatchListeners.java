@@ -4,6 +4,7 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
 import lol.oce.hercules.players.UserStatus;
+import lol.oce.hercules.utils.ConsoleUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -51,17 +52,6 @@ public class MatchListeners implements Listener {
             User user = Practice.getUserManager().getUser(player.getUniqueId());
             if (user.getStatus() == UserStatus.IN_MATCH) {
                 user.getMatch().onHit(event);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onRegen(PlayerHealthChangeEvent event) {
-        Player player = event.getPlayer();
-        User user = Practice.getUserManager().getUser(player.getUniqueId());
-        if (user.getStatus() == UserStatus.IN_MATCH) {
-            if (event.getNewHealth() > event.getPreviousHealth()) {
-                user.getMatch().onRegen(event);
             }
         }
     }

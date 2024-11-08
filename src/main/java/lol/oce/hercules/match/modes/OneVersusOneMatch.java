@@ -8,6 +8,8 @@ import lol.oce.hercules.match.Match;
 import lol.oce.hercules.match.MatchType;
 import lol.oce.hercules.match.Participant;
 import lol.oce.hercules.players.User;
+import lol.oce.hercules.players.UserStatus;
+import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -69,7 +71,8 @@ public class OneVersusOneMatch extends Match {
     @Override
     public void end(Participant winner) {
         for (Participant participant : getParticipants()) {
-            if (participant.equals(winner)) {
+            participant.getUser().setStatus(UserStatus.IN_POST_MATCH);
+            if (participant.getColor().equals(winner.getColor())) {
                 TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&a&lYOU WON", "&a" + winner.getPlayer().getName() + " &fhas won the match!");
             } else {
                 TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&c&lYOU LOST", "&a" + winner.getPlayer().getName() + " &fhas won the match!");
@@ -90,16 +93,17 @@ public class OneVersusOneMatch extends Match {
                     // TODO: Post match inventory
                     participant.getPlayer().sendMessage(StringUtils.handle("&fMatch has ended!"));
                     Practice.getUserManager().resetUser(participant.getUser());
+                    Practice.getMatchManager().endMatch(OneVersusOneMatch.this);
                 }
                 cancel();
             }
-        }.runTaskTimer(Practice.getInstance(), 0, 20 * 5);
+        }.runTaskLater(Practice.getPlugin(), 20 * 5);
     }
 
     @Override
     public void onDeath(Participant killer, Participant killed) {
         if (killer == null) {
-            killer = killed.equals(red) ? blue : red;
+            killer = killed.getColor().equals(Color.RED) ? blue : red;
         }
         for (Participant participant : getParticipants()) {
             participant.getPlayer().sendMessage(StringUtils.handle("&f" + killed.getPlayer().getName() + " &7was killed by" + killer.getPlayer().getName() + "!"));
@@ -161,12 +165,15 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void onHit(EntityDamageByEntityEvent event) {
+        ConsoleUtils.debug("Hit event");
         if (!isStarted()) {
             event.setCancelled(true);
+            return;
         }
         if (getKit().isBoxing()) {
             Player damager = (Player) event.getDamager();
             hits.put((Player) event.getDamager(), hits.getOrDefault(damager, 0) + 1);
+            damager.sendMessage(StringUtils.handle("&fHits: &5" + hits.get(damager)));
             event.setDamage(0);
             if (hits.get(damager) >= 100) {
                 end(getParticipant(Practice.getUserManager().getUser(damager.getUniqueId())));

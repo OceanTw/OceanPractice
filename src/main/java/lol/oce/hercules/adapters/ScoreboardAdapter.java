@@ -50,6 +50,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
             case IN_MATCH:
                 lines = getMatchLines(user);
                 break;
+            case IN_POST_MATCH:
+                lines = getPostMatchLines();
+                break;
             default:
                 lines.add("Error loading scoreboard");
                 lines.add("Invalid user status");
@@ -107,6 +110,16 @@ public class ScoreboardAdapter implements AssembleAdapter {
         lines.add(StringUtils.handle("Opponent: &5" + opponent.getPlayer().getName()));
         lines.add(StringUtils.handle("&fDuration: &5" + TimeUtils.formatTime(user.getMatch().getTime())));
         lines.add(StringUtils.handle("&7"));
+        lines.add(StringUtils.handle("&5aether.rip"));
+        lines.add(StringUtils.line("&7", 15));
+        return lines;
+    }
+
+    private List<String> getPostMatchLines() {
+        List<String> lines = new ArrayList<>();
+        lines.add(StringUtils.line("&7", 15));
+        lines.add("Match has ended");
+        lines.add("&7");
         lines.add(StringUtils.handle("&5aether.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;

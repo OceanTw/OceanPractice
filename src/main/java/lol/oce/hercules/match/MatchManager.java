@@ -27,6 +27,10 @@ public class MatchManager {
         }
     }
 
+    public void endMatch(Match match) {
+        matches.remove(match);
+    }
+
     // TODO: Team matches
 //    public void startTeam(MatchType type, Kit kit, User[] red, User[] blue, boolean ranked) {
 //        List<User> players = new ArrayList<>();
