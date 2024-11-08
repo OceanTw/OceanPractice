@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 public class DropCommand implements CommandExecutor {
@@ -23,6 +22,7 @@ public class DropCommand implements CommandExecutor {
             if (item == null) {
                 continue;
             }
+            player.getInventory().remove(item);
             player.getWorld().dropItemNaturally(player.getLocation(), item);
         }
         return false;

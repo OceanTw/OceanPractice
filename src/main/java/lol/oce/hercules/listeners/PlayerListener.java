@@ -1,21 +1,22 @@
 package lol.oce.hercules.listeners;
 
 import lol.oce.hercules.Practice;
+import lol.oce.hercules.match.Participant;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
-import lol.oce.hercules.players.UserStatus;
 import lol.oce.hercules.utils.VisualUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-
-import static sun.audio.AudioPlayer.player;
 
 public class PlayerListener implements Listener {
 
@@ -46,38 +47,60 @@ public class PlayerListener implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        User user = UserManager.getUser(player.getUniqueId());
+        User user = Practice.getUserManager().getUser(player.getUniqueId());
         User damager;
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
             if (!(entityEvent.getDamager() instanceof Player)) {
                 return;
             }
-            damager = UserManager.getUser(((Player) entityEvent.getDamager()).getUniqueId());
+            damager = Practice.getUserManager().getUser(((Player) entityEvent.getDamager()).getUniqueId());
             if (damager.getMatch() == null || user.getMatch() == null) {
                 return;
             }
-            if (damager.getMatch().getPlayers().contains(user)) {
+            Participant killer = damager.getMatch().getParticipant(damager);
+            Participant killed = user.getMatch().getParticipant(user);
+            if (damager.getMatch().getParticipants().contains(killed)) {
                 if (player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    damager.getMatch().playerKilled(user, damager);
+                    damager.getMatch().onDeath(killer, killed);
                     player.setHealth(20);
                     VisualUtils.playDeathAnimation(player, (Player) entityEvent.getDamager());
 
-                    if (user.getMatch().getPlayers().size() >=  3) {
-                        // drop the items from the player
-                        for (ItemStack item : player.getInventory().getContents()) {
-                            if (item == null) {
-                                continue;
-                            }
-                            player.getWorld().dropItemNaturally(player.getLocation(), item);
+                    // drop the items from the player
+                    for (ItemStack item : player.getInventory().getContents()) {
+                        if (item == null) {
+                            continue;
                         }
+                        player.getWorld().dropItemNaturally(player.getLocation(), item);
                     }
+                }
 
+            }
+        }
+        if (event instanceof EntityDamageByBlockEvent) {
+            if (user.getMatch() == null) {
+                return;
+            }
+            Participant killed = user.getMatch().getParticipant(user);
+            if (user.getMatch().getParticipants().contains(killed)) {
+                if (player.getHealth() - event.getFinalDamage() <= 0) {
+                    event.setCancelled(true);
+                    user.getMatch().onDeath(null, killed);
+                    player.setHealth(20);
+                    VisualUtils.playDeathAnimation(player, null);
+
+                    // drop the items from the player
+                    for (ItemStack item : player.getInventory().getContents()) {
+                        if (item == null) {
+                            continue;
+                        }
+                        player.getWorld().dropItemNaturally(player.getLocation(), item);
+                    }
                 }
             }
-
         }
+
     }
 
     @EventHandler
@@ -87,32 +110,20 @@ public class PlayerListener implements Listener {
         if (killerPlayer == null) {
             return;
         }
-        User dead = UserManager.getUser(deadPlayer.getUniqueId());
-        User killer = UserManager.getUser(killerPlayer.getUniqueId());
+        User dead = Practice.getUserManager().getUser(deadPlayer.getUniqueId());
+        User killer = Practice.getUserManager().getUser(killerPlayer.getUniqueId());
         if (dead.getMatch() == null || killer.getMatch() == null) {
             return;
         }
-        if (dead.getMatch().getPlayers().contains(killer)) {
-            dead.getMatch().playerKilled(killer, dead);
+        Participant killerParticipant = killer.getMatch().getParticipant(killer);
+        Participant deadParticipant = dead.getMatch().getParticipant(dead);
+        if (dead.getMatch().getParticipants().contains(killerParticipant)) {
+            dead.getMatch().onDeath(killerParticipant, deadParticipant);
         }
 
         deadPlayer.spigot().respawn();
 
-        if (dead.getMatch().getPlayers().size() >=  3) {
-            return;
-        }
-
         event.getDrops().clear();
     }
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        User user = UserManager.getUser(player.getUniqueId());
-        if (user.getStatus() == UserStatus.IN_MATCH) {
-            if (!user.getMatch().isStarted()) {
-                event.setCancelled(true);
-            }
-        }
-    }
 }

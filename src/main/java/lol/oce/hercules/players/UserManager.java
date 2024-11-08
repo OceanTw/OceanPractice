@@ -5,9 +5,9 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.database.MongoDB;
 import lol.oce.hercules.utils.ConsoleUtils;
 import org.bson.Document;
-import sun.audio.AudioStreamSequence;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class UserManager {
 
@@ -49,7 +49,7 @@ public class UserManager {
         User user = getUser(uuid);
         if (user != null) {
             if (user.getStatus() == UserStatus.IN_MATCH) {
-                user.getMatch().forfeit(user);
+                user.getMatch().forfeit(user.getMatch().getParticipant(user));
             }
             if (user.getQueue() != null) {
                 Practice.getQueueManager().leaveQueue(user);

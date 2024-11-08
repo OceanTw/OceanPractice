@@ -3,14 +3,12 @@ package lol.oce.hercules.players;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import lol.oce.hercules.database.MongoDB;
-import lol.oce.hercules.utils.ConsoleUtils;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
 public class UserData {
-    private MongoCollection<Document> collection;
+    private final MongoCollection<Document> collection;
 
     public UserData() {
         MongoDatabase database = MongoDB.getDatabase();

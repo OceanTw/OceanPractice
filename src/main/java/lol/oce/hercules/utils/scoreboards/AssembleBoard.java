@@ -1,9 +1,5 @@
 package lol.oce.hercules.utils.scoreboards;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import lol.oce.hercules.utils.scoreboards.events.AssembleBoardCreatedEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -12,6 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class AssembleBoard {

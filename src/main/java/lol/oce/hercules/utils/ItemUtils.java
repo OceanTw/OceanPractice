@@ -22,6 +22,19 @@ public class ItemUtils {
         return builder.toString();
     }
 
+    public static String serialize(ItemStack[] items) {
+        // Serialize an array of items
+        StringBuilder builder = new StringBuilder();
+        for (ItemStack item : items) {
+            builder.append(serialize(item)).append(";");
+        }
+        // Remove the trailing semicolon if there are items
+        if (builder.charAt(builder.length() - 1) == ';') {
+            builder.setLength(builder.length() - 1);
+        }
+        return builder.toString();
+    }
+
     public static ItemStack deserialize(String serialized) {
         // Deserialize an inventory
         String[] parts = serialized.split(":");
@@ -59,4 +72,15 @@ public class ItemUtils {
         }
         return item;
     }
+
+    public static ItemStack[] deserializeArray(String serialized) {
+        // Deserialize an array of items
+        String[] parts = serialized.split(";");
+        ItemStack[] items = new ItemStack[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            items[i] = deserialize(parts[i]);
+        }
+        return items;
+    }
+
 }

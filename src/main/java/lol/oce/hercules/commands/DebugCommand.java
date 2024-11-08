@@ -19,7 +19,7 @@ public class DebugCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player) commandSender;
-        User user = UserManager.getUser(player.getUniqueId());
+        User user = Practice.getUserManager().getUser(player.getUniqueId());
         switch (strings[0]) {
             case "leavequeue":
                 // Leave the queue

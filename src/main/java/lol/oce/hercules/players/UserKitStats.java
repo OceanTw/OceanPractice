@@ -2,8 +2,6 @@ package lol.oce.hercules.players;
 
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.kits.Kit;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashMap;

@@ -3,25 +3,31 @@ package lol.oce.hercules.match;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.players.User;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerHealthChangeEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-@Builder(setterPrefix = "set")
-@Data
+@RequiredArgsConstructor
+@Getter
+@Setter
 public abstract class Match {
     private final Arena arena;
     private final List<User> spectators;
     private final boolean ranked;
     private final Kit kit;
     private final MatchType type;
+    private boolean started = false;
 
     public void start() {
         if (getKit().isBuild()) getArena().takeChunkSnapshots();
-        checkRules();
         teleportAll();
         giveKits();
 
@@ -39,6 +45,8 @@ public abstract class Match {
 
     public abstract List<Participant> getParticipants();
 
+    public abstract Participant getParticipant(User user);
+
     public abstract void onStart();
 
     public abstract void end(Participant winner);
@@ -55,5 +63,15 @@ public abstract class Match {
 
     public abstract void giveKits();
 
-    public abstract void checkRules();
+    public abstract void onMove(PlayerMoveEvent event);
+
+    public abstract void onHit(EntityDamageByEntityEvent event);
+
+    public abstract void onBlockPlace(BlockPlaceEvent event);
+
+    public abstract void onBlockBreak(BlockBreakEvent event);
+
+    public abstract void onRegen(PlayerHealthChangeEvent event);
+
+    public abstract void onEat(PlayerItemConsumeEvent event);
 }

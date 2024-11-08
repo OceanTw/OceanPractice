@@ -1,16 +1,13 @@
 package lol.oce.hercules.commands;
 
+import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.arenas.ArenaType;
-import lol.oce.hercules.Practice;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ArenaCommand implements CommandExecutor {
 

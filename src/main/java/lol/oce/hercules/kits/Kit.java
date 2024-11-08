@@ -3,13 +3,11 @@ package lol.oce.hercules.kits;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.utils.EffectUtils;
-import lol.oce.hercules.utils.InventoryUtils;
 import lol.oce.hercules.utils.ItemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -21,7 +19,7 @@ public class Kit {
     String displayName;
     String description;
     ItemStack[] contents;
-    ItemStack[] armour;
+    ItemStack[] armor;
     PotionEffect[] potionEffects;
     Arena[] arenas;
     boolean enabled;
@@ -32,9 +30,10 @@ public class Kit {
     boolean mapDestroyable;
     boolean hunger;
     boolean healthRegen;
-    boolean bedfight;
+    boolean bedFight;
     boolean fireball;
-    boolean enderpearlcd;
+    boolean enderPearlCd;
+    boolean freezeOnStart;
     boolean ranked;
     Material icon;
 
@@ -42,7 +41,7 @@ public class Kit {
         // Save the kit to the config file
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".displayName", displayName);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".description", description);
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".inventory", InventoryUtils.serialize(inventory));
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".inventory", ItemUtils.serialize(contents));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".potionEffects", EffectUtils.serialize(potionEffects));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enabled", enabled);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".editable", editable);
@@ -52,15 +51,13 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".mapDestroyable", mapDestroyable);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".hunger", hunger);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".healthRegen", healthRegen);
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".bedfight", bedfight);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".bedfight", bedFight);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".fireball", fireball);
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enderpearlcd", enderpearlcd);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enderpearlcd", enderPearlCd);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".freezeOnStart", freezeOnStart);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".ranked", ranked);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".icon", icon.name());
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".helmet", ItemUtils.serialize(helmet));
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".chestplate", ItemUtils.serialize(chestplate));
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".leggings", ItemUtils.serialize(leggings));
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".boots", ItemUtils.serialize(boots));
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".armor", ItemUtils.serialize(armor));
         Practice.getKitsConfig().save();
     }
 

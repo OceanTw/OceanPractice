@@ -3,10 +3,8 @@ package lol.oce.hercules.listeners;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.gui.Menu;
 import lol.oce.hercules.kits.Kit;
-import lol.oce.hercules.lobby.LobbyItemManager;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
-import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -87,7 +85,7 @@ public class ItemListener implements Listener {
                 player.closeInventory();
                 if (kit != null) {
                     player.sendMessage(StringUtils.handle("&5&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getQueueManager().joinQueue(UserManager.getUser(player.getUniqueId()), kit, false);
+                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, false);
                 }
             }
             event.setCancelled(true);
@@ -98,7 +96,7 @@ public class ItemListener implements Listener {
                 player.closeInventory();
                 if (kit != null) {
                     player.sendMessage(StringUtils.handle("&5&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getQueueManager().joinQueue(UserManager.getUser(player.getUniqueId()), kit, true);
+                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, true);
                 }
             }
         } else if (event.getInventory().getName().contains("Duel Request to ")) {
@@ -107,9 +105,9 @@ public class ItemListener implements Listener {
                 player.closeInventory();
                 if (kit != null) {
                     String targetName = event.getInventory().getName().replace("Duel Request to ", "");
-                    User target = UserManager.getUser(Bukkit.getPlayer(targetName).getUniqueId());
+                    User target = Practice.getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
                     player.sendMessage(StringUtils.handle("&5&oYou have sent a duel request"));
-                    Practice.getRequestManager().sendRequest(UserManager.getUser(player.getUniqueId()), target, kit);
+                    Practice.getRequestManager().sendRequest(Practice.getUserManager().getUser(player.getUniqueId()), target, kit);
                 }
             }
         }

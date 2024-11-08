@@ -4,7 +4,6 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.arenas.Arena;
 import lol.oce.hercules.kits.Kit;
 import lol.oce.hercules.kits.KitManager;
-import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

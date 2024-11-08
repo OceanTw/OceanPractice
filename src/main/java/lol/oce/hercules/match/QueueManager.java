@@ -6,7 +6,6 @@ import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserStatus;
 import lol.oce.hercules.utils.StringUtils;
 import lombok.Getter;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -70,7 +69,7 @@ public class QueueManager {
                 user.setQueue(null);
                 q.getUser().setQueue(null);
 
-                Practice.getMatchManager().startMatch(MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
+                Practice.getMatchManager().startSolo(MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
                 break;
             }
         }

@@ -43,7 +43,7 @@ public class RequestManager implements Listener {
         if (request != null) {
             request.getSender().getPlayer().sendMessage(StringUtils.handle("&7&oYour request has been accepted"));
             request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&7&oYou have accepted the request"));
-            Practice.getMatchManager().startMatch(MatchType.DUEL, request.getKit(), new User[]{request.getSender(), request.getReceiver()}, new User[]{request.getReceiver(), request.getSender()}, false);
+            Practice.getMatchManager().startSolo(MatchType.DUEL, request.getKit(), new User[]{request.getSender(), request.getReceiver()}, new User[]{request.getReceiver(), request.getSender()}, false);
             requests.remove(request);
         }
     }

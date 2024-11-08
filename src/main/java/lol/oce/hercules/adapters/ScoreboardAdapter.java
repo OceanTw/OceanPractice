@@ -3,7 +3,6 @@ package lol.oce.hercules.adapters;
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
-import lol.oce.hercules.players.UserStatus;
 import lol.oce.hercules.utils.StringUtils;
 import lol.oce.hercules.utils.TimeUtils;
 import lol.oce.hercules.utils.scoreboards.AssembleAdapter;
@@ -16,7 +15,7 @@ import java.util.logging.Level;
 public class ScoreboardAdapter implements AssembleAdapter {
 
     private User getUser(Player player) {
-        User user = UserManager.getUser(player.getUniqueId());
+        User user = Practice.getUserManager().getUser(player.getUniqueId());
         if (user == null) {
             Practice.getInstance().getLogger().log(Level.SEVERE, "Error loading user for player " + player.getName());
         }
@@ -82,6 +81,17 @@ public class ScoreboardAdapter implements AssembleAdapter {
         lines.add(StringUtils.handle("&f  Kit: &5" + user.getQueue().getKit().getDisplayName()));
         lines.add(StringUtils.handle("&f  Type: &5" + (user.getQueue().isRanked() ? "Ranked" : "Unranked")));
         lines.add(StringUtils.handle("&f  Duration: &5" + TimeUtils.formatTime(user.getQueue().getQueueTime())));
+        lines.add(StringUtils.handle("&5aether.rip"));
+        lines.add(StringUtils.line("&7", 15));
+        return lines;
+    }
+
+    private List<String> getMatchLines(User user) {
+        List<String> lines = new ArrayList<>();
+        lines.add(StringUtils.line("&7", 15));
+        lines.add(StringUtils.handle("&f  Opponent: &5" + user.getMatch().getP().getPlayer().getName()));
+        lines.add(StringUtils.handle("&f  Duration: &5" + TimeUtils.formatTime(user.getMatch().getMatchTime())));
+        lines.add(StringUtils.handle("&7"));
         lines.add(StringUtils.handle("&5aether.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
