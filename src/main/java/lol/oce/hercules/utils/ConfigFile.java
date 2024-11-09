@@ -36,6 +36,14 @@ public class ConfigFile {
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
     }
 
+    public void reload() {
+        try {
+            configuration.load(file);
+        } catch (Exception e) {
+            ConsoleUtils.error("Error occurred reloading config: " + e);
+        }
+    }
+
     public void save() {
         try {
             configuration.save(file);

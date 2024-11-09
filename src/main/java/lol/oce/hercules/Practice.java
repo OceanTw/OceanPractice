@@ -46,6 +46,8 @@ public class Practice extends JavaPlugin {
     private static MatchManager matchManager;
 
     @Getter
+    private static ConfigFile settingsConfig;
+    @Getter
     private static ConfigFile databaseConfig;
     @Getter
     private static ConfigFile arenasConfig;
@@ -66,6 +68,12 @@ public class Practice extends JavaPlugin {
         arenasConfig = new ConfigFile("arenas");
         kitsConfig = new ConfigFile("kits");
         databaseConfig = new ConfigFile("database");
+        settingsConfig = new ConfigFile("settings");
+
+        databaseConfig.getConfiguration().options().copyDefaults(true);
+        databaseConfig.save();
+        settingsConfig.getConfiguration().options().copyDefaults(true);
+        settingsConfig.save();
 
         kitManager = new KitManager();
         userManager = new UserManager();
@@ -90,7 +98,7 @@ public class Practice extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MatchListeners(), this);
 
         Assemble assemble = new Assemble(this, new ScoreboardAdapter());
-        assemble.setTicks(2);
+        assemble.setTicks(5);
         assemble.setup();
     }
 

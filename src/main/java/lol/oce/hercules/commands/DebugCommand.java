@@ -25,6 +25,10 @@ public class DebugCommand implements CommandExecutor {
                 // Leave the queue
                 Practice.getQueueManager().leaveQueue(user);
                 break;
+            case "reload":
+                // Reload the config
+                Practice.getSettingsConfig().reload();
+                break;
             default:
                 break;
         }

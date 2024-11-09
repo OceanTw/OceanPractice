@@ -4,15 +4,14 @@ import lol.oce.hercules.Practice;
 import lol.oce.hercules.match.Participant;
 import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserManager;
+import lol.oce.hercules.players.UserStatus;
+import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.VisualUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -60,8 +59,9 @@ public class PlayerListener implements Listener {
             if (!(entityEvent.getDamager() instanceof Player)) {
                 return;
             }
-            damager = Practice.getUserManager().getUser(((Player) entityEvent.getDamager()).getUniqueId());
-            if (damager.getMatch() == null || user.getMatch() == null) {
+            damager = Practice.getUserManager().getUser((entityEvent.getDamager()).getUniqueId());
+            if (damager.getStatus() != UserStatus.IN_MATCH) {
+                event.setCancelled(true);
                 return;
             }
             Participant killer = damager.getMatch().getParticipant(damager);
@@ -70,14 +70,17 @@ public class PlayerListener implements Listener {
                 if (player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
                     damager.getMatch().onDeath(killer, killed);
+                    killed.getPlayer().getInventory().clear();
                     player.setHealth(20);
                     VisualUtils.playDeathAnimation(player, (Player) entityEvent.getDamager());
                 }
 
             }
+            return;
         }
         if (event instanceof EntityDamageByBlockEvent) {
             if (user.getMatch() == null) {
+                event.setCancelled(true);
                 return;
             }
             Participant killed = user.getMatch().getParticipant(user);
@@ -88,17 +91,18 @@ public class PlayerListener implements Listener {
                     player.setHealth(20);
                 }
             }
+            return;
         }
         if (event.getFinalDamage() >= player.getHealth()) {
             User damaged = Practice.getUserManager().getUser(((Player) event).getUniqueId());
-            if (damaged.getMatch() == null || user.getMatch() == null) {
+            if (damaged.getStatus() != UserStatus.IN_MATCH) {
+                event.setCancelled(true);
                 return;
             }
             event.setCancelled(true);
             player.setHealth(20);
             damaged.getMatch().onDeath(null, damaged.getMatch().getParticipant(damaged));
         }
-
     }
 
     @EventHandler
@@ -110,7 +114,7 @@ public class PlayerListener implements Listener {
         }
         User dead = Practice.getUserManager().getUser(deadPlayer.getUniqueId());
         User killer = Practice.getUserManager().getUser(killerPlayer.getUniqueId());
-        if (dead.getMatch() == null || killer.getMatch() == null) {
+        if (dead.getStatus() != UserStatus.IN_MATCH) {
             return;
         }
         Participant killerParticipant = killer.getMatch().getParticipant(killer);
@@ -120,8 +124,8 @@ public class PlayerListener implements Listener {
         }
 
         deadPlayer.spigot().respawn();
+        ConsoleUtils.debug(deadPlayer.getName() + " death");
 
         event.getDrops().clear();
     }
-
 }

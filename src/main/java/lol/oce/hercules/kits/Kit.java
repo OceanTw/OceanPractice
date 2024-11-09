@@ -10,9 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -30,7 +28,7 @@ public class Kit {
     private boolean build;
     private boolean sumo;
     private boolean mapDestroyable;
-    private boolean hunger;
+    private boolean noHunger;
     private boolean healthRegen;
     private boolean bedFight;
     private boolean fireball;
@@ -50,7 +48,7 @@ public class Kit {
         this.build = build;
         this.sumo = sumo;
         this.mapDestroyable = mapDestroyable;
-        this.hunger = hunger;
+        this.noHunger = hunger;
         this.healthRegen = healthRegen;
         this.bedFight = bedFight;
         this.fireball = fireball;
@@ -63,6 +61,7 @@ public class Kit {
 
     public void save() {
         // Save the kit to the config file
+        name = name.toLowerCase();
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".displayName", displayName);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".description", description);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".enabled", enabled);
@@ -71,7 +70,7 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".build", build);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".sumo", sumo);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".mapDestroyable", mapDestroyable);
-        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".hunger", hunger);
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".hunger", noHunger);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".healthRegen", healthRegen);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".bedfight", bedFight);
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".fireball", fireball);

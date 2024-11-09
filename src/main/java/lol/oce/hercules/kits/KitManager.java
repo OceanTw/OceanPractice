@@ -46,10 +46,8 @@ public class KitManager {
             boolean ranked = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".ranked");
             boolean freezeOnStart = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".freezeOnStart");
             Material icon = Material.getMaterial(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".icon"));
-            List<ItemStack> armor = ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".armor"));
 
             Kit kit = new Kit(key, displayName, description, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, freezeOnStart, ranked, icon);
-            addKit(kit);
             if (EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects")) != null) {
                 for (PotionEffect potionEffect : EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects"))) {
                     kit.getPotionEffects().add(potionEffect);
@@ -57,7 +55,7 @@ public class KitManager {
             }
             if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas") != null) {
                 for (String arena : Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
-                    kit.getArenas().add(Practice.getArenaManager().getArena(arena));
+                    kit.addArena(Practice.getArenaManager().getArena(arena));
                 }
             }
             if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".contents") != null) {
@@ -70,6 +68,7 @@ public class KitManager {
                     kit.getArmor().add(item);
                 }
             }
+            addKit(kit);
         }
     }
 

@@ -11,8 +11,10 @@ import lol.oce.hercules.players.User;
 import lol.oce.hercules.players.UserStatus;
 import lol.oce.hercules.utils.ConsoleUtils;
 import lol.oce.hercules.utils.StringUtils;
+import lol.oce.hercules.utils.TimeUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -50,6 +52,8 @@ public class OneVersusOneMatch extends Match {
     @Override
     public void onStart() {
 
+        ConsoleUtils.debug("Processing match start for " + red.getPlayer().getName() + " and " + blue.getPlayer().getName());
+
         final int[] countdown = {5};
 
         new BukkitRunnable() {
@@ -70,6 +74,7 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void end(Participant winner) {
+        ConsoleUtils.debug(winner.getPlayer().getName() + " won the match against " + getOpponent(winner).getPlayer().getName());
         for (Participant participant : getParticipants()) {
             participant.getUser().setStatus(UserStatus.IN_POST_MATCH);
             if (participant.getColor().equals(winner.getColor())) {
@@ -105,20 +110,37 @@ public class OneVersusOneMatch extends Match {
     @Override
     public void onDeath(Participant killer, Participant killed) {
         if (killer == null) {
-            killer = killed.getColor().equals(Color.RED) ? blue : red;
+            killer = getOpponent(killed);
         }
         for (Participant participant : getParticipants()) {
             participant.getPlayer().sendMessage(StringUtils.handle("&d" + killed.getPlayer().getName() + " &7was killed by &d" + killer.getPlayer().getName() + "!"));
-            killer.getPlayer().hidePlayer(killed.getPlayer());
-            killed.getPlayer().setAllowFlight(true);
-            killed.getPlayer().setFlying(true);
         }
+        killer.getPlayer().hidePlayer(killed.getPlayer());
+        killed.getPlayer().setAllowFlight(true);
+        killed.getPlayer().setFlying(true);
+        ConsoleUtils.debug(killed.getPlayer().getName() + " died to " + killer.getPlayer().getName());
         end(killer);
     }
 
     @Override
     public List<String> getLines(Participant participant) {
-        return Collections.emptyList();
+        Participant opponent = getOpponent(participant);
+        List<String> lines = new ArrayList<>();
+        lines.add(StringUtils.handle("&fOpponent: &5" + getOpponent(participant).getPlayer().getName()));
+        lines.add(StringUtils.handle("&fDuration: &5" + TimeUtils.formatTime(getTime())));
+        if (getKit().isBoxing()) {
+            lines.add(StringUtils.handle("&5Hits: &5"));
+            lines.add(StringUtils.handle("&f You: &5" + hits.getOrDefault(participant.getPlayer(), 0)
+                    + " &7/ &f100"));
+            lines.add(StringUtils.handle("&f Opponent: &5" + hits.getOrDefault(getOpponent(participant).getPlayer(), 0) + " &7/ &f100"));
+        }
+
+        lines.add(StringUtils.handle("&7"));
+        lines.add(StringUtils.handle("&fYour ping: &5" + ((CraftPlayer) participant.getPlayer()).getHandle().ping) + " ms");
+        lines.add(StringUtils.handle("&fTheir ping: &5" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping) + " ms");
+        lines.add(StringUtils.handle("&7"));
+        lines.add(StringUtils.handle("&5aether.rip"));
+        return lines;
     }
 
     @Override
@@ -213,7 +235,11 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public Participant getParticipant(User user) {
-        return user.equals(red.getPlayer()) ? red : blue;
+        return user.equals(red.getUser()) ? red : blue;
+    }
+
+    private Participant getOpponent(Participant participant) {
+        return participant.equals(red) ? blue : red;
     }
 
 

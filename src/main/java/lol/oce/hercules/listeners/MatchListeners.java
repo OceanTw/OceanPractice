@@ -2,9 +2,7 @@ package lol.oce.hercules.listeners;
 
 import lol.oce.hercules.Practice;
 import lol.oce.hercules.players.User;
-import lol.oce.hercules.players.UserManager;
 import lol.oce.hercules.players.UserStatus;
-import lol.oce.hercules.utils.ConsoleUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,8 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerHealthChangeEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class MatchListeners implements Listener {
@@ -57,11 +54,15 @@ public class MatchListeners implements Listener {
     }
 
     @EventHandler
-    public void onEat(PlayerItemConsumeEvent event) {
-        Player player = event.getPlayer();
+    public void onPlayerHungerChange(FoodLevelChangeEvent event) {
+        Player player = (Player) event.getEntity();
         User user = Practice.getUserManager().getUser(player.getUniqueId());
         if (user.getStatus() == UserStatus.IN_MATCH) {
-            user.getMatch().onEat(event);
+            if (!user.getMatch().getKit().isNoHunger()) {
+                event.setCancelled(false);
+                return;
+            }
         }
+        event.setCancelled(true);
     }
 }

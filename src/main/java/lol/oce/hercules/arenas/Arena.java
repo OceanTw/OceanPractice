@@ -39,6 +39,7 @@ public class Arena {
 
     public void save() {
         // Save the arena to the config file
+        name = name.toLowerCase();
         String redSpawnLoc = LocationUtils.serialize(redSpawn);
         String blueSpawnLoc = LocationUtils.serialize(blueSpawn);
         String corner1Loc = LocationUtils.serialize(corner1);

@@ -111,10 +111,6 @@ public class KitCommand implements CommandExecutor {
                 return true;
             }
             // Set the kit properties
-            if (!strings[3].equalsIgnoreCase("true") && !strings[3].equalsIgnoreCase("false")) {
-                commandSender.sendMessage(StringUtils.handle("&cInvalid value"));
-                return true;
-            }
             switch (strings[2]) {
                 case "name":
                     Practice.getKitManager().getKit(strings[1]).setName(strings[3]);
@@ -157,7 +153,7 @@ public class KitCommand implements CommandExecutor {
                     player.sendMessage(StringUtils.handle("&aKit map destroyable set successfully"));
                     break;
                 case "hunger":
-                    Practice.getKitManager().getKit(strings[1]).setHunger(Boolean.parseBoolean(strings[3]));
+                    Practice.getKitManager().getKit(strings[1]).setNoHunger(Boolean.parseBoolean(strings[3]));
                     player.sendMessage(StringUtils.handle("&aKit hunger set successfully"));
                     break;
                 case "healthregen":

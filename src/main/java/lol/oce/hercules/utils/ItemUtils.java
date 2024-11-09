@@ -57,6 +57,7 @@ public class ItemUtils {
         return builder.toString();
     }
 
+    // TODO: Fix issues with enchanted items
     public static ItemStack deserialize(String serialized) {
         // Deserialize an inventory
         String[] parts = serialized.split(":");
