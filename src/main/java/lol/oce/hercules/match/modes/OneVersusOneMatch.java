@@ -94,6 +94,8 @@ public class OneVersusOneMatch extends Match {
                     participant.getPlayer().sendMessage(StringUtils.handle("&fMatch has ended!"));
                     Practice.getUserManager().resetUser(participant.getUser());
                     Practice.getMatchManager().endMatch(OneVersusOneMatch.this);
+                    participant.getPlayer().setAllowFlight(false);
+                    participant.getPlayer().setFlying(false);
                 }
                 cancel();
             }
@@ -106,10 +108,10 @@ public class OneVersusOneMatch extends Match {
             killer = killed.getColor().equals(Color.RED) ? blue : red;
         }
         for (Participant participant : getParticipants()) {
-            participant.getPlayer().sendMessage(StringUtils.handle("&f" + killed.getPlayer().getName() + " &7was killed by" + killer.getPlayer().getName() + "!"));
-            if (participant.isAlive()) {
-                participant.getPlayer().hidePlayer(killed.getPlayer());
-            }
+            participant.getPlayer().sendMessage(StringUtils.handle("&d" + killed.getPlayer().getName() + " &7was killed by &d" + killer.getPlayer().getName() + "!"));
+            killer.getPlayer().hidePlayer(killed.getPlayer());
+            killed.getPlayer().setAllowFlight(true);
+            killed.getPlayer().setFlying(true);
         }
         end(killer);
     }
@@ -165,7 +167,6 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void onHit(EntityDamageByEntityEvent event) {
-        ConsoleUtils.debug("Hit event");
         if (!isStarted()) {
             event.setCancelled(true);
             return;
@@ -175,7 +176,7 @@ public class OneVersusOneMatch extends Match {
             hits.put((Player) event.getDamager(), hits.getOrDefault(damager, 0) + 1);
             damager.sendMessage(StringUtils.handle("&fHits: &5" + hits.get(damager)));
             event.setDamage(0);
-            if (hits.get(damager) >= 100) {
+            if (hits.get(damager) == 15) {
                 Participant killer = getParticipant(Practice.getUserManager().getUser(damager.getUniqueId()));
                 Participant killed = getParticipant(Practice.getUserManager().getUser(event.getEntity().getUniqueId()));
                 onDeath(killer, killed);

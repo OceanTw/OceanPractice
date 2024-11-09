@@ -89,6 +89,15 @@ public class PlayerListener implements Listener {
                 }
             }
         }
+        if (event.getFinalDamage() >= player.getHealth()) {
+            User damaged = Practice.getUserManager().getUser(((Player) event).getUniqueId());
+            if (damaged.getMatch() == null || user.getMatch() == null) {
+                return;
+            }
+            event.setCancelled(true);
+            player.setHealth(20);
+            damaged.getMatch().onDeath(null, damaged.getMatch().getParticipant(damaged));
+        }
 
     }
 
