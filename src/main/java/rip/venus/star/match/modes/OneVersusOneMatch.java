@@ -161,7 +161,7 @@ public class OneVersusOneMatch extends Match {
             lines.add(StringUtils.handle("&fYour ping: &c" + ((CraftPlayer) participant.getPlayer()).getHandle().ping) + " ms");
             lines.add(StringUtils.handle("&fTheir ping: &c" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping) + " ms");
             lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&caether.rip"));
+            lines.add(StringUtils.handle("&cvenus.rip"));
         } else {
             lines.add(StringUtils.handle("&7"));
             boolean isWinner = isWinner(participant);
@@ -169,7 +169,7 @@ public class OneVersusOneMatch extends Match {
             lines.add(StringUtils.handle("&7"));
             lines.add(StringUtils.handle("&fDuration: &c" + TimeUtils.formatTime(getTime())));
             lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&caether.rip"));
+            lines.add(StringUtils.handle("&cvenus.rip"));
         }
         return lines;
     }

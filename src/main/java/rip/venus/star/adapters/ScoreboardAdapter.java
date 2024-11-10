@@ -65,7 +65,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         lines.add(StringUtils.handle("&fPlaying: &c" + Practice.getMatchManager().getMatches().size() * 2));
         lines.add(StringUtils.handle("&fIn Queue: &c" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&caether.rip"));
+        lines.add(StringUtils.handle("&cvenus.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
     }
@@ -82,7 +82,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         lines.add(StringUtils.handle("&f  Type: &c" + (user.getQueue().isRanked() ? "Ranked" : "Unranked")));
         lines.add(StringUtils.handle("&f  Duration: &c" + TimeUtils.formatTime(user.getQueue().getQueueTime())));
         lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&caether.rip"));
+        lines.add(StringUtils.handle("&cvenus.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
     }
