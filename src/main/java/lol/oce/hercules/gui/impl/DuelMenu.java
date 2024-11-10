@@ -41,7 +41,7 @@ public class DuelMenu extends Gui {
                 Kit kit = Practice.getKitManager().getEnabledKits().get(i);
                 ItemStack item = new ItemStack(kit.getIcon());
                 ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(StringUtils.handle("&5&l" + kit.getDisplayName()));
+                meta.setDisplayName(StringUtils.handle("&c&l" + kit.getDisplayName()));
                 List<String> lore = new ArrayList<>();
                 lore.add(StringUtils.handle("&7"));
                 lore.add(StringUtils.line("&7"));

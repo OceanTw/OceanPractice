@@ -60,7 +60,7 @@ public class OneVersusOneMatch extends Match {
             @Override
             public void run() {
                 for (Participant participant : getParticipants()) {
-                    participant.getPlayer().sendMessage(StringUtils.handle("&fMatch starting in &5" + countdown[0] + " &fseconds!"));
+                    participant.getPlayer().sendMessage(StringUtils.handle("&fMatch starting in &c" + countdown[0] + " &fseconds!"));
                 }
                 if (countdown[0] == 0) {
                     setStarted(true);
@@ -73,23 +73,26 @@ public class OneVersusOneMatch extends Match {
     }
 
     @Override
-    public void end(Participant winner) {
-        ConsoleUtils.debug(winner.getPlayer().getName() + " won the match against " + getOpponent(winner).getPlayer().getName());
-        for (Participant participant : getParticipants()) {
-            participant.getUser().setStatus(UserStatus.IN_POST_MATCH);
-            if (participant.getColor().equals(winner.getColor())) {
-                TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&a&lYOU WON", "&a" + winner.getPlayer().getName() + " &fhas won the match!");
-            } else {
-                TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&c&lYOU LOST", "&a" + winner.getPlayer().getName() + " &fhas won the match!");
-            }
-        }
-
-        if (winner == null) {
+    public void end(Participant won) {
+        if (won == null) {
             for (Participant participant : getParticipants()) {
                 participant.getPlayer().sendMessage(StringUtils.handle("&fMatch has been voided!"));
                 Practice.getUserManager().resetUser(participant.getUser());
+                return;
             }
         }
+        setWinner(won);
+        ConsoleUtils.debug(won.getPlayer().getName() + " won the match against " + getOpponent(won).getPlayer().getName());
+        for (Participant participant : getParticipants()) {
+            participant.getUser().setStatus(UserStatus.IN_POST_MATCH);
+            if (participant.getColor().equals(won.getColor())) {
+                TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&a&lYOU WON", "&a" + won.getPlayer().getName() + " &fhas won the match!");
+            } else {
+                TitleAPI.sendTitle(participant.getPlayer(), 20, 40, 20, "&c&lYOU LOST", "&a" + won.getPlayer().getName() + " &fhas won the match!");
+            }
+        }
+        stopTime();
+        setEnded(true);
 
         new BukkitRunnable() {
             @Override
@@ -126,20 +129,30 @@ public class OneVersusOneMatch extends Match {
     public List<String> getLines(Participant participant) {
         Participant opponent = getOpponent(participant);
         List<String> lines = new ArrayList<>();
-        lines.add(StringUtils.handle("&fOpponent: &5" + getOpponent(participant).getPlayer().getName()));
-        lines.add(StringUtils.handle("&fDuration: &5" + TimeUtils.formatTime(getTime())));
-        if (getKit().isBoxing()) {
-            lines.add(StringUtils.handle("&5Hits: &5"));
-            lines.add(StringUtils.handle("&f You: &5" + hits.getOrDefault(participant.getPlayer(), 0)
-                    + " &7/ &f100"));
-            lines.add(StringUtils.handle("&f Opponent: &5" + hits.getOrDefault(getOpponent(participant).getPlayer(), 0) + " &7/ &f100"));
-        }
+        if (!isEnded()) {
+            lines.add(StringUtils.handle("&fOpponent: &c" + getOpponent(participant).getPlayer().getName()));
+            lines.add(StringUtils.handle("&fDuration: &c" + TimeUtils.formatTime(getTime())));
+            if (getKit().isBoxing()) {
+                lines.add(StringUtils.handle("&cHits: &c"));
+                lines.add(StringUtils.handle("&f You: &c" + hits.getOrDefault(participant.getPlayer(), 0)
+                        + " &7/ &f100"));
+                lines.add(StringUtils.handle("&f Opponent: &c" + hits.getOrDefault(getOpponent(participant).getPlayer(), 0) + " &7/ &f100"));
+            }
 
-        lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&fYour ping: &5" + ((CraftPlayer) participant.getPlayer()).getHandle().ping) + " ms");
-        lines.add(StringUtils.handle("&fTheir ping: &5" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping) + " ms");
-        lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&5aether.rip"));
+            lines.add(StringUtils.handle("&7"));
+            lines.add(StringUtils.handle("&fYour ping: &c" + ((CraftPlayer) participant.getPlayer()).getHandle().ping) + " ms");
+            lines.add(StringUtils.handle("&fTheir ping: &c" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping) + " ms");
+            lines.add(StringUtils.handle("&7"));
+            lines.add(StringUtils.handle("&caether.rip"));
+        } else {
+            lines.add(StringUtils.handle("&7"));
+            boolean isWinner = isWinner(participant);
+            lines.add(StringUtils.handle(isWinner ? "&a&lVICTORY" : "&c&lDEFEAT"));
+            lines.add(StringUtils.handle("&7"));
+            lines.add(StringUtils.handle("&fDuration: &c" + TimeUtils.formatTime(getTime())));
+            lines.add(StringUtils.handle("&7"));
+            lines.add(StringUtils.handle("&caether.rip"));
+        }
         return lines;
     }
 
@@ -196,7 +209,7 @@ public class OneVersusOneMatch extends Match {
         if (getKit().isBoxing()) {
             Player damager = (Player) event.getDamager();
             hits.put((Player) event.getDamager(), hits.getOrDefault(damager, 0) + 1);
-            damager.sendMessage(StringUtils.handle("&fHits: &5" + hits.get(damager)));
+            damager.sendMessage(StringUtils.handle("&fHits: &c" + hits.get(damager)));
             event.setDamage(0);
             if (hits.get(damager) == 15) {
                 Participant killer = getParticipant(Practice.getUserManager().getUser(damager.getUniqueId()));
@@ -242,5 +255,8 @@ public class OneVersusOneMatch extends Match {
         return participant.equals(red) ? blue : red;
     }
 
+    private boolean isWinner(Participant participant) {
+        return participant.equals(red) ? isEnded() && red.equals(getWinner()) : isEnded() && blue.equals(getWinner());
+    }
 
 }

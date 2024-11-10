@@ -81,9 +81,11 @@ public class Kit {
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".contents", ItemUtils.serialize(contents));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".potionEffects", EffectUtils.serialize(potionEffects));
         Practice.getKitsConfig().getConfiguration().set("kits." + name + ".armor", ItemUtils.serialize(armor));
-        for (Arena arena : arenas) {
-            Practice.getKitsConfig().getConfiguration().set("kits." + name + ".arenas", arena.getName());
+        List<String> arenaList = new ArrayList<>();
+        for (Arena arena : this.arenas) {
+            arenaList.add(arena.getName());
         }
+        Practice.getKitsConfig().getConfiguration().set("kits." + name + ".arenas", arenaList);
         Practice.getKitsConfig().save();
     }
 

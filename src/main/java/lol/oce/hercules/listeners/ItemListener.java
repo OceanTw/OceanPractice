@@ -54,10 +54,10 @@ public class ItemListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (event.getInventory().getName().equals("Select your queue")) {
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(StringUtils.handle("&5&lUnranked"))) {
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(StringUtils.handle("&c&lUnranked"))) {
                     menu.getQueueUnrankedMenu().open(player);
                     event.setCancelled(true);
-                } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&5&lRanked"))) {
+                } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(StringUtils.handle("&c&lRanked"))) {
                     player.sendMessage(StringUtils.handle("&7&oYou have selected the ranked queue"));
                     player.closeInventory();
                     event.setCancelled(true);
@@ -84,7 +84,7 @@ public class ItemListener implements Listener {
                 Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
                 player.closeInventory();
                 if (kit != null) {
-                    player.sendMessage(StringUtils.handle("&5&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
+                    player.sendMessage(StringUtils.handle("&c&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
                     Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, false);
                 }
             }
@@ -95,7 +95,7 @@ public class ItemListener implements Listener {
                 Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
                 player.closeInventory();
                 if (kit != null) {
-                    player.sendMessage(StringUtils.handle("&5&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
+                    player.sendMessage(StringUtils.handle("&c&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
                     Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, true);
                 }
             }
@@ -106,7 +106,7 @@ public class ItemListener implements Listener {
                 if (kit != null) {
                     String targetName = event.getInventory().getName().replace("Duel Request to ", "");
                     User target = Practice.getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
-                    player.sendMessage(StringUtils.handle("&5&oYou have sent a duel request"));
+                    player.sendMessage(StringUtils.handle("&c&oYou have sent a duel request"));
                     Practice.getRequestManager().sendRequest(Practice.getUserManager().getUser(player.getUniqueId()), target, kit);
                 }
             }

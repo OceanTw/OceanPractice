@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.Time;
 import java.util.List;
@@ -31,6 +32,9 @@ public abstract class Match {
     private final MatchType type;
     private int time = 0;
     private boolean started = false;
+    private boolean ended = false;
+    private Participant winner = null;
+    private BukkitTask runnable;
 
     public void start() {
         if (getKit().isBuild()) getArena().takeChunkSnapshots();
@@ -51,12 +55,18 @@ public abstract class Match {
     }
 
     public void startTime() {
-        new BukkitRunnable() {
+        runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 time++;
             }
         }.runTaskTimer(Practice.getInstance(), 0, 20);
+    }
+
+    public void stopTime() {
+        if (runnable != null) {
+            runnable.cancel();
+        }
     }
 
     public abstract List<Participant> getParticipants();

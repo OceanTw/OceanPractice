@@ -25,7 +25,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
     @Override
     public String getTitle(Player player) {
-        return StringUtils.handle("&5&lPractice &7[NA]");
+        return StringUtils.handle("&c&lPractice &7[NA]");
     }
 
     @Override
@@ -48,10 +48,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 lines = getInQueueLines(user);
                 break;
             case IN_MATCH:
-                lines = getMatchLines(user);
-                break;
             case IN_POST_MATCH:
-                lines = getPostMatchLines();
+                lines = getMatchLines(user);
                 break;
             default:
                 lines.add("Error loading scoreboard");
@@ -65,11 +63,11 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getLobbyLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&fOnline: &5" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&fPlaying: &5" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&fIn Queue: &5" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fOnline: &c" + user.getPlayer().getServer().getOnlinePlayers().size()));
+        lines.add(StringUtils.handle("&fPlaying: &c" + Practice.getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &c" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&5aether.rip"));
+        lines.add(StringUtils.handle("&caether.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
     }
@@ -77,30 +75,21 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getInQueueLines(User user) {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
-        lines.add(StringUtils.handle("&fOnline: &5" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&fPlaying: &5" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&fIn Queue: &5" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fOnline: &c" + user.getPlayer().getServer().getOnlinePlayers().size()));
+        lines.add(StringUtils.handle("&fPlaying: &c" + Practice.getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &c" + Practice.getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
-        lines.add(StringUtils.handle("&5&lQueue"));
-        lines.add(StringUtils.handle("&f  Kit: &5" + user.getQueue().getKit().getDisplayName()));
-        lines.add(StringUtils.handle("&f  Type: &5" + (user.getQueue().isRanked() ? "Ranked" : "Unranked")));
-        lines.add(StringUtils.handle("&f  Duration: &5" + TimeUtils.formatTime(user.getQueue().getQueueTime())));
-        lines.add(StringUtils.handle("&5aether.rip"));
+        lines.add(StringUtils.handle("&c&lQueue"));
+        lines.add(StringUtils.handle("&f  Kit: &c" + user.getQueue().getKit().getDisplayName()));
+        lines.add(StringUtils.handle("&f  Type: &c" + (user.getQueue().isRanked() ? "Ranked" : "Unranked")));
+        lines.add(StringUtils.handle("&f  Duration: &c" + TimeUtils.formatTime(user.getQueue().getQueueTime())));
+        lines.add(StringUtils.handle("&7"));
+        lines.add(StringUtils.handle("&caether.rip"));
         lines.add(StringUtils.line("&7", 15));
         return lines;
     }
 
     private List<String> getMatchLines(User user) {
         return user.getMatch().getLines(user.getMatch().getParticipant(user));
-    }
-
-    private List<String> getPostMatchLines() {
-        List<String> lines = new ArrayList<>();
-        lines.add(StringUtils.line("&7", 15));
-        lines.add("Match has ended");
-        lines.add("&7");
-        lines.add(StringUtils.handle("&5aether.rip"));
-        lines.add(StringUtils.line("&7", 15));
-        return lines;
     }
 }

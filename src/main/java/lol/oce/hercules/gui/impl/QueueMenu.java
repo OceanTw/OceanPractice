@@ -29,7 +29,7 @@ public class QueueMenu extends Gui {
 
         ItemStack unranked = new ItemStack(Material.IRON_SWORD);
         ItemMeta unrankedMeta = unranked.getItemMeta();
-        unrankedMeta.setDisplayName(StringUtils.handle("&5&lUnranked"));
+        unrankedMeta.setDisplayName(StringUtils.handle("&c&lUnranked"));
         List<String> unrankedLore = new ArrayList<>();
         unrankedLore.add(StringUtils.handle("&7"));
         unrankedLore.add(StringUtils.line("&7"));
@@ -37,14 +37,14 @@ public class QueueMenu extends Gui {
         unrankedLore.add(StringUtils.handle("&fwithout losing or gaining rank"));
         unrankedLore.add(StringUtils.line("&7"));
         unrankedLore.add(StringUtils.handle("&7"));
-        unrankedLore.add(StringUtils.handle("&5&lClick to view more options"));
+        unrankedLore.add(StringUtils.handle("&c&lClick to view more options"));
         unrankedMeta.setLore(unrankedLore);
         unrankedMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         unranked.setItemMeta(unrankedMeta);
 
         ItemStack ranked = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta rankedMeta = ranked.getItemMeta();
-        rankedMeta.setDisplayName(StringUtils.handle("&5&lRanked"));
+        rankedMeta.setDisplayName(StringUtils.handle("&c&lRanked"));
         List<String> rankedLore = new ArrayList<>();
         rankedLore.add(StringUtils.handle("&7"));
         rankedLore.add(StringUtils.line("&7"));
@@ -52,7 +52,7 @@ public class QueueMenu extends Gui {
         rankedLore.add(StringUtils.handle("&fagainst other skilled players"));
         rankedLore.add(StringUtils.line("&7"));
         rankedLore.add(StringUtils.handle("&7"));
-        rankedLore.add(StringUtils.handle("&5&lClick to view more options"));
+        rankedLore.add(StringUtils.handle("&c&lClick to view more options"));
         rankedMeta.setLore(rankedLore);
         rankedMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ranked.setItemMeta(rankedMeta);

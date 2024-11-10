@@ -53,9 +53,19 @@ public class KitManager {
                     kit.getPotionEffects().add(potionEffect);
                 }
             }
-            if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas") != null) {
-                for (String arena : Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
-                    kit.addArena(Practice.getArenaManager().getArena(arena));
+            if (!(Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() <= 1)) {
+                for (String arenaName : Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
+                    Arena arena = Practice.getArenaManager().getArena(arenaName);
+                    if (arena != null) {
+                        kit.getArenas().add(arena);
+                    }
+                }
+            } else {
+                if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() == 1) {
+                    Arena arena = Practice.getArenaManager().getArena(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".arenas"));
+                    if (arena != null) {
+                        kit.getArenas().add(arena);
+                    }
                 }
             }
             if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".contents") != null) {
