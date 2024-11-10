@@ -1,6 +1,9 @@
 package rip.venus.star.match.modes;
 
 import com.connorlinfoot.titleapi.TitleAPI;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import rip.venus.star.Practice;
 import rip.venus.star.arenas.Arena;
 import rip.venus.star.kits.Kit;
@@ -94,12 +97,27 @@ public class OneVersusOneMatch extends Match {
         stopTime();
         setEnded(true);
 
+        for (Participant participant : getParticipants()) {
+            int hits = this.hits.getOrDefault(participant.getPlayer(), 0);
+            int blockedHits = this.blockedHits.getOrDefault(participant.getPlayer(), 0);
+            double damage = this.damage.getOrDefault(participant.getPlayer(), 0.0);
+            int gapsEaten = this.gapsEaten.getOrDefault(participant.getPlayer(), 0);
+            double healthRegen = this.healthRegen.getOrDefault(participant.getPlayer(), 0.0);
+        }
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Participant participant : getParticipants()) {
-                    // TODO: Post match inventory
-                    participant.getPlayer().sendMessage(StringUtils.handle("&fMatch has ended!"));
+                    participant.getPlayer().sendMessage(StringUtils.handle("&7 "));
+                    participant.getPlayer().sendMessage(StringUtils.handle("&c&lMatch result:"));
+                    participant.getPlayer().sendMessage(StringUtils.handle("&aWinner: &e" + won.getPlayer().getName() + " &7| &cLoser: &e" + getOpponent(won).getPlayer().getName()));
+                    if (!getSpectators().isEmpty()) {
+                        for (User spectator : getSpectators()) {
+                            participant.getPlayer().sendMessage(StringUtils.handle("&7Spectator: &e" + spectator.getPlayer().getName()));
+                        }
+                    }
+                    participant.getPlayer().sendMessage(StringUtils.handle("&7 "));
                     Practice.getUserManager().resetUser(participant.getUser());
                     Practice.getMatchManager().endMatch(OneVersusOneMatch.this);
                     participant.getPlayer().setAllowFlight(false);
