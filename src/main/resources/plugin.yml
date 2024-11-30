@@ -1,6 +1,6 @@
-name: Hercules
+name: Marine
 version: 1.0
-main: lol.oce.hercules.Practice
+main: lol.oce.marine.Practice
 depend:
   - TitleAPI
 commands:
