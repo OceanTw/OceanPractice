@@ -19,3 +19,4 @@ A Minecraft Practice / Duels plugin
 - Bridges kit setting
 - Modern versions support
 - Combo kit settings
+- Completely customizable config (because this plugin was made for a server so i didnt add configs)
