@@ -1,4 +1,4 @@
-# Marine
+# Marine (Ocean Practice)
 A Minecraft Practice / Duels plugin
 
 ## Current Features
