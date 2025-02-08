@@ -3,6 +3,8 @@ package lol.oce.marine.match.modes;
 import com.connorlinfoot.titleapi.TitleAPI;
 import lol.oce.marine.Practice;
 import lol.oce.marine.arenas.Arena;
+import lol.oce.marine.configs.ConfigService;
+import lol.oce.marine.configs.impl.SettingsLocale;
 import lol.oce.marine.kits.Kit;
 import lol.oce.marine.match.Match;
 import lol.oce.marine.match.MatchType;
@@ -32,9 +34,7 @@ public class OneVersusOneMatch extends Match {
 
     private final Participant red;
     private final Participant blue;
-    private final HashMap<UUID, Integer> hits;
-    private final HashMap<UUID, Integer> gapsEaten;
-    private final HashMap<UUID, Double> healthRegen;
+    int hits;
 
 
     public OneVersusOneMatch(User player1, User player2, Arena arena, List<User> spectators, boolean ranked, Kit kit, MatchType type) {
@@ -42,9 +42,6 @@ public class OneVersusOneMatch extends Match {
 
         this.red = new Participant(player1, Color.RED);
         this.blue = new Participant(player2, Color.BLUE);
-        this.hits = new HashMap<>();
-        this.gapsEaten = new HashMap<>();
-        this.healthRegen = new HashMap<>();
     }
 
     @Override
@@ -56,18 +53,27 @@ public class OneVersusOneMatch extends Match {
     public void onStart() {
 
         ConsoleUtils.debug("Processing match start for " + red.getPlayer().getName() + " and " + blue.getPlayer().getName());
-
         final int[] countdown = {5};
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Participant participant : getParticipants()) {
-                    participant.getPlayer().sendMessage(StringUtils.handle("&fMatch starting in &c" + countdown[0] + " &fseconds!"));
+                    participant.getPlayer().sendMessage(StringUtils.handle("&fMatch starting in &b" + countdown[0] + " &fseconds!"));
+                }
+                if (SettingsLocale.DEBUG.getBoolean()) {
+                    hits = 15;
+                } else {
+                    hits = 100;
                 }
                 if (countdown[0] == 0) {
                     setStarted(true);
                     startTime();
+                    for (Participant participant : getParticipants()) {
+                        if (getKit().isBoxing() && SettingsLocale.DEBUG.getBoolean()) {
+                            participant.getPlayer().sendMessage(StringUtils.handle("&eWARNING: Since debug mode is enabled, the match will end after 15 hits."));
+                        }
+                    }
                     cancel();
                 }
                 countdown[0]--;
@@ -102,15 +108,15 @@ public class OneVersusOneMatch extends Match {
             @Override
             public void run() {
                 for (Participant participant : getParticipants()) {
-                    participant.getPlayer().sendMessage(StringUtils.handle("&7 "));
+                    participant.getPlayer().sendMessage(" ");
                     participant.getPlayer().sendMessage(StringUtils.handle("&b&lMatch result:"));
-                    participant.getPlayer().sendMessage(StringUtils.handle("&aWinner: &e" + won.getPlayer().getName() + " &7| &bLoser: &e" + getOpponent(won).getPlayer().getName()));
+                    participant.getPlayer().sendMessage(StringUtils.handle("&aWinner: &e" + won.getPlayer().getName() + " &7| &cLoser: &e" + getOpponent(won).getPlayer().getName()));
                     if (!getSpectators().isEmpty()) {
-                        for (User spectator : getSpectators()) {
-                            participant.getPlayer().sendMessage(StringUtils.handle("&7Spectator: &e" + spectator.getPlayer().getName()));
-                        }
+                        participant.getPlayer().sendMessage(StringUtils.handle("&7"));
+                        participant.getPlayer().sendMessage(StringUtils.handle("&bSpectators:"));
+                        participant.getPlayer().sendMessage(StringUtils.handle("&7" + getSpectators().toString()));
                     }
-                    participant.getPlayer().sendMessage(StringUtils.handle("&7 "));
+                    participant.getPlayer().sendMessage(" ");
                     Practice.getInstance().getUserManager().resetUser(participant.getUser());
                     Practice.getInstance().getMatchManager().endMatch(OneVersusOneMatch.this);
                     participant.getPlayer().setAllowFlight(false);
@@ -141,29 +147,30 @@ public class OneVersusOneMatch extends Match {
         Participant opponent = getOpponent(participant);
         List<String> lines = new ArrayList<>();
         if (!isEnded()) {
+            lines.add(StringUtils.line("&7", 15));
             lines.add(StringUtils.handle("&fOpponent: &b" + getOpponent(participant).getPlayer().getName()));
             lines.add(StringUtils.handle("&fDuration: &b" + TimeUtils.formatTime(getTime())));
+            lines.add(StringUtils.handle("&7"));
             if (getKit().isBoxing()) {
-                lines.add(StringUtils.handle("&bHits: &b"));
-                lines.add(StringUtils.handle("&f You: &b" + hits.getOrDefault(participant.getPlayer().getUniqueId(), 0)
-                        + " &7/ &f100"));
-                lines.add(StringUtils.handle("&f Opponent: &b" + hits.getOrDefault(getOpponent(participant).getPlayer().getUniqueId(), 0) + " &7/ &f100"));
+                lines.add(StringUtils.handle("&fHits: &b"));
+                lines.add(StringUtils.handle("&f You: &b" + participant.getMatchSnapshot().getHits()
+                        + " &7/ &f" + hits));
+                lines.add(StringUtils.handle("&f Opponent: &b" + opponent.getMatchSnapshot().getHits() + " &7/ &f" + hits));
             }
 
             lines.add(StringUtils.handle("&7"));
             lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer()).getHandle().ping + " ms"));
             lines.add(StringUtils.handle("&fOpponent's ping: &b" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping + " ms"));
-            lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&bMade by Ocean"));
         } else {
             lines.add(StringUtils.handle("&7"));
             boolean isWinner = isWinner(participant);
             lines.add(StringUtils.handle(isWinner ? "&a&lVICTORY" : "&c&lDEFEAT"));
             lines.add(StringUtils.handle("&7"));
             lines.add(StringUtils.handle("&fDuration: &b" + TimeUtils.formatTime(getTime())));
-            lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&bMade by Ocean"));
         }
+        lines.add(StringUtils.handle("&7"));
+        lines.add(StringUtils.handle("&bMade by Ocean"));
+        lines.add(StringUtils.line("&7", 15));
         return lines;
     }
 
@@ -213,17 +220,16 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void onHit(EntityDamageByEntityEvent event) {
-        getParticipant((User) event.getEntity()).getMatchSnapshot().handleHits(this);
+        getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().handleHits(this);
         if (!isStarted()) {
             event.setCancelled(true);
             return;
         }
         if (getKit().isBoxing()) {
             Player damager = (Player) event.getDamager();
-            hits.put(event.getDamager().getUniqueId(), hits.getOrDefault(damager.getUniqueId(), 0) + 1);
-            damager.sendMessage(StringUtils.handle("&fHits: &b" + hits.get(damager.getUniqueId())));
             event.setDamage(0);
-            if (hits.get(damager.getUniqueId()) == 15) {
+
+            if (getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().getHits() >= hits) {
                 Participant killer = getParticipant(Practice.getInstance().getUserManager().getUser(damager.getUniqueId()));
                 Participant killed = getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId()));
                 onDeath(killer, killed);
@@ -247,13 +253,13 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void onRegen(EntityRegainHealthEvent event) {
-        healthRegen.put(event.getEntity().getUniqueId(), healthRegen.getOrDefault(event.getEntity().getUniqueId(), 0.0) + event.getAmount());
+        getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().handleRegen();
     }
 
     @Override
     public void onEat(PlayerItemConsumeEvent event) {
         if (event.getItem().getType() == Material.GOLDEN_APPLE) {
-            gapsEaten.put(event.getPlayer().getUniqueId(), gapsEaten.getOrDefault(event.getPlayer().getUniqueId(), 0) + 1);
+            getParticipant(Practice.getInstance().getUserManager().getUser(event.getPlayer().getUniqueId())).getMatchSnapshot().addGaps();
         }
     }
 

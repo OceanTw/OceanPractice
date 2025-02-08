@@ -133,5 +133,6 @@ public class KitManager {
         kits.remove(kit);
         enabledKits.remove(kit);
         Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().set("kits." + kit.getName(), null);
+        Practice.getInstance().getConfigService().getKitsConfig().save();
     }
 }

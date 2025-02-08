@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class MatchSnapshot {
     private final ItemStack[] inv;
     private final ItemStack[] armour;
-    private final double health;
+    private double health;
     private int pots;
     private int hits;
     private int gaps;
@@ -17,7 +17,7 @@ public class MatchSnapshot {
     public MatchSnapshot(Player player) {
         this.inv = player.getInventory().getContents();
         this.armour = player.getInventory().getArmorContents();
-        this.health = player.getHealth();
+        this.health = 0;
         this.pots = 0;
         this.hits = 0;
         this.gaps = 0;
@@ -27,16 +27,15 @@ public class MatchSnapshot {
         pots++;
     }
 
-    //TODO: ADD YOUR COMBO LOGIC INSIDE HERE AND YOU CAN HANDLE BOXING STUFF
     public void handleHits(Match match) {
         hits++;
-
-        if (match.getKit().isBoxing()) {
-            //TODO FINISH
-        }
     }
 
     public void addGaps() {
         gaps++;
+    }
+
+    public void handleRegen() {
+        health += 1;
     }
 }

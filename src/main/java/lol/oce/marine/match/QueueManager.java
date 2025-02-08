@@ -3,6 +3,7 @@ package lol.oce.marine.match;
 import lol.oce.marine.Practice;
 import lol.oce.marine.arenas.Arena;
 import lol.oce.marine.kits.Kit;
+import lol.oce.marine.lobby.LobbyManager;
 import lol.oce.marine.players.User;
 import lol.oce.marine.players.UserStatus;
 import lol.oce.marine.utils.StringUtils;
@@ -50,7 +51,9 @@ public class QueueManager {
 
         queues.add(queue);
         user.setQueue(queue);
+        user.setStatus(UserStatus.IN_QUEUE);
 
+        Practice.getInstance().getLobbyManager().giveItems(user.getPlayer());
         startQueueTimer(queue);
 
         if (queues.size() == 1) {
@@ -74,6 +77,10 @@ public class QueueManager {
                 if (arena == null) {
                     user.getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
                     q.getUser().getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
+                    user.setStatus(UserStatus.IN_LOBBY);
+                    q.getUser().setStatus(UserStatus.IN_LOBBY);
+                    Practice.getInstance().getLobbyManager().giveItems(user.getPlayer());
+                    Practice.getInstance().getLobbyManager().giveItems(q.getUser().getPlayer());
                     return;
                 }
 
@@ -93,9 +100,10 @@ public class QueueManager {
 
         Queue queue = user.getQueue();
         stopQueueTimer(queue);
+        user.setStatus(UserStatus.IN_LOBBY);
         queues.remove(queue);
         user.setQueue(null);
-        user.getPlayer().sendMessage(StringUtils.handle("&aYou have left the queue!"));
+        Practice.getInstance().getLobbyManager().giveItems(user.getPlayer());
     }
 
     public void startQueueTimer(Queue queue) {

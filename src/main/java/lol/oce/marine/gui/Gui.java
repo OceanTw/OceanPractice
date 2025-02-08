@@ -5,7 +5,7 @@ import org.bukkit.inventory.Inventory;
 
 public abstract class Gui {
     public void open(Player player, Object... args) {
-        player.openInventory(getInventory(player));
+        player.openInventory(getInventory(player, args));
     }
 
     public abstract Inventory getInventory(Player player, Object... args);

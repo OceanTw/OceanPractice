@@ -19,7 +19,7 @@ public class MatchManager {
         List<User> players = new ArrayList<>();
         players.addAll(Arrays.asList(red));
         players.addAll(Arrays.asList(blue));
-        OneVersusOneMatch match = new OneVersusOneMatch(players.get(0), players.get(1), arena, null, ranked, kit, type);
+        OneVersusOneMatch match = new OneVersusOneMatch(players.get(0), players.get(1), arena, new ArrayList<>(), ranked, kit, type);
         matches.add(match);
         match.start();
         for (User user : players) {

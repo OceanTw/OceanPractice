@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class KitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!commandSender.hasPermission("star.admin")) {
+        if (!commandSender.hasPermission("practice.admin")) {
             commandSender.sendMessage(StringUtils.handle("&cYou do not have permission to execute this command."));
             return true;
         }
@@ -66,6 +66,7 @@ public class KitCommand implements CommandExecutor {
             Kit kit = Practice.getInstance().getKitManager().getKit(strings[1]);
             Practice.getInstance().getKitManager().setKitInventory(kit, player);
             player.sendMessage(StringUtils.handle("&aKit inventory set successfully"));
+            kit.save();
             return true;
         }
 
@@ -82,22 +83,7 @@ public class KitCommand implements CommandExecutor {
 
             Practice.getInstance().getKitManager().getKit(strings[1]).addArena(arena);
             player.sendMessage(StringUtils.handle("&aArena added to kit successfully"));
-        }
-
-        if (strings[0].equalsIgnoreCase("save")) {
-            if (length < 2) {
-                commandSender.sendMessage(StringUtils.handle("&cInvalid usage"));
-                return true;
-            }
-
-            if (Practice.getInstance().getKitManager().getKit(strings[1]) == null) {
-                commandSender.sendMessage(StringUtils.handle("&cKit not found"));
-                return true;
-            }
-            // Save the kit
-            Practice.getInstance().getKitManager().getKit(strings[1]).save();
-            player.sendMessage(StringUtils.handle("&aKit saved successfully"));
-            return true;
+            Practice.getInstance().getArenaManager().save();
         }
 
         if (strings[0].equalsIgnoreCase("set")) {
@@ -112,6 +98,10 @@ public class KitCommand implements CommandExecutor {
             }
             // Set the kit properties
             switch (strings[2]) {
+                case "icon":
+                    Practice.getInstance().getKitManager().getKit(strings[1]).setIcon(player.getItemInHand().getType());
+                    player.sendMessage(StringUtils.handle("&aKit icon set successfully"));
+                    break;
                 case "name":
                     Practice.getInstance().getKitManager().getKit(strings[1]).setName(strings[3]);
                     player.sendMessage(StringUtils.handle("&aKit name set successfully"));
@@ -180,6 +170,7 @@ public class KitCommand implements CommandExecutor {
                     commandSender.sendMessage(StringUtils.handle("&cInvalid usage"));
                     return true;
             }
+            Practice.getInstance().getKitManager().getKit(strings[1]).save();
             return true;
         }
         return false;

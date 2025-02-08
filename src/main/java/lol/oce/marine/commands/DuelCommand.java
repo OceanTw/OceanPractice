@@ -27,7 +27,7 @@ public class DuelCommand implements CommandExecutor {
             return false;
         }
 
-        Player target = Practice.getInstance().getInstance().getServer().getPlayer(strings[0]);
+        Player target = Practice.getInstance().getServer().getPlayer(strings[0]);
         if (target == null || !target.isOnline()) {
             player.sendMessage(StringUtils.handle("&cPlayer not found!"));
             return false;

@@ -15,7 +15,7 @@ public class Participant {
     private final UUID uuid;
     private final boolean alive;
     private final Color color;
-    private MatchSnapshot matchSnapshot;
+    private final MatchSnapshot matchSnapshot;
 
     public Participant(UUID uuid, Color color) {
         this.uuid = uuid;
@@ -28,6 +28,7 @@ public class Participant {
         this.uuid = user.getUuid();
         this.alive = true;
         this.color = color;
+        this.matchSnapshot = new MatchSnapshot(getPlayer());
     }
 
     public User getUser() {

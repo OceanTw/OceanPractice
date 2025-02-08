@@ -3,7 +3,9 @@ package lol.oce.marine.listeners;
 import lol.oce.marine.Practice;
 import lol.oce.marine.gui.Menu;
 import lol.oce.marine.kits.Kit;
+import lol.oce.marine.lobby.LobbyManager;
 import lol.oce.marine.players.User;
+import lol.oce.marine.players.UserStatus;
 import lol.oce.marine.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -45,6 +49,22 @@ public class ItemListener implements Listener {
         if (event.getItem().getItemMeta().getDisplayName().equals(
                 Practice.getInstance().getLobbyItemManager().getSettingsName())) {
             // TODO: Implement settings UI
+        }
+
+        if (event.getItem().getItemMeta().getDisplayName().equals(
+                Practice.getInstance().getLobbyItemManager().getLeaveQueueName())) {
+            User user = Practice.getInstance().getUserManager().getUser(event.getPlayer().getUniqueId());
+            if (user.getStatus() == UserStatus.IN_QUEUE) {
+                Practice.getInstance().getQueueManager().leaveQueue(user);
+                event.getPlayer().sendMessage(StringUtils.handle("&c&oYou have left the queue"));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onItemInventoryClick(InventoryClickEvent event) {
+        if (Practice.getInstance().getUserManager().getUser(event.getWhoClicked().getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+            event.setCancelled(true);
         }
     }
 
@@ -115,7 +135,16 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
-        event.setCancelled(true);
+        if (Practice.getInstance().getUserManager().getUser(event.getPlayer().getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemMove(InventoryMoveItemEvent event) {
+        if (Practice.getInstance().getUserManager().getUser(((Player) event.getDestination().getHolder()).getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+            event.setCancelled(true);
+        }
     }
 
 }

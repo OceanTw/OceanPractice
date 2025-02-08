@@ -83,13 +83,7 @@ public class Practice extends JavaPlugin {
         assemble.setup();
 
         ConsoleUtils.info("OceanPractice has been enabled! Waiting 5 seconds for plugin to load...");
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                pluginLoaded = true;
-                ConsoleUtils.info("Players can now join the server!");
-            }
-        }.runTaskLater(this, 100);
+        pluginLoaded = true;
     }
 
     @Override
