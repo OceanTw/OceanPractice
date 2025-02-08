@@ -74,16 +74,16 @@ public class KitCommand implements CommandExecutor {
             Arena arena = Practice.getInstance().getArenaManager().getArena(strings[2]);
             if (arena == null) {
                 commandSender.sendMessage(StringUtils.handle("&cArena not found"));
-                return true;
+                return false;
             }
             if (Practice.getInstance().getKitManager().getKit(strings[1]) == null) {
                 commandSender.sendMessage(StringUtils.handle("&cKit not found"));
-                return true;
+                return false;
             }
 
             Practice.getInstance().getKitManager().getKit(strings[1]).addArena(arena);
             player.sendMessage(StringUtils.handle("&aArena added to kit successfully"));
-            Practice.getInstance().getArenaManager().save();
+            Practice.getInstance().getKitManager().getKit(strings[1]).save();
         }
 
         if (strings[0].equalsIgnoreCase("set")) {

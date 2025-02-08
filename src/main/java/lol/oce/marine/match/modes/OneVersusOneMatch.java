@@ -220,16 +220,16 @@ public class OneVersusOneMatch extends Match {
 
     @Override
     public void onHit(EntityDamageByEntityEvent event) {
-        getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().handleHits(this);
         if (!isStarted()) {
             event.setCancelled(true);
             return;
         }
+        getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().handleHits(this);
         if (getKit().isBoxing()) {
             Player damager = (Player) event.getDamager();
             event.setDamage(0);
 
-            if (getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().getHits() >= hits) {
+            if (getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().getHits() == hits) {
                 Participant killer = getParticipant(Practice.getInstance().getUserManager().getUser(damager.getUniqueId()));
                 Participant killed = getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId()));
                 onDeath(killer, killed);

@@ -1,5 +1,6 @@
 package lol.oce.marine.match.impl;
 
+import lol.oce.marine.Practice;
 import lol.oce.marine.match.Match;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ public class MatchSnapshot {
     }
 
     public void handleHits(Match match) {
+        Practice.getInstance().getLogger().info("Handling hits: " + hits);
         hits++;
     }
 
