@@ -31,7 +31,7 @@ public class Participant {
     }
 
     public User getUser() {
-        return Practice.getUserManager().getUser(uuid);
+        return Practice.getInstance().getUserManager().getUser(uuid);
     }
 
     public Player getPlayer() {

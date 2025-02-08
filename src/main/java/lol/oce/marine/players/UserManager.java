@@ -52,7 +52,7 @@ public class UserManager {
             player.showPlayer(user.getPlayer());
         }
 
-        Practice.getLobbyManager().giveItems(user.getPlayer());
+        Practice.getInstance().getLobbyManager().giveItems(user.getPlayer());
     }
 
     public void unload(UUID uuid) {
@@ -62,7 +62,7 @@ public class UserManager {
                 user.getMatch().forfeit(user.getMatch().getParticipant(user));
             }
             if (user.getQueue() != null) {
-                Practice.getQueueManager().leaveQueue(user);
+                Practice.getInstance().getQueueManager().leaveQueue(user);
             }
             userRepository.saveUser(user);
             users.remove(user);

@@ -31,7 +31,7 @@ public class LocationUtils {
 
         String[] split = source.split(":");
 
-        World world = Practice.getInstance().getServer().getWorld(split[0]);
+        World world = Practice.getInstance().getInstance().getServer().getWorld(split[0]);
         if (world == null) {
             ConsoleUtils.error("World: " + split[0] + " not found!");
             return null;

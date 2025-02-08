@@ -39,7 +39,7 @@ public class ArenaManager {
 
         // Check how many arenas are already duplicated
         int duplicated = 0;
-        for (Arena arenas : Practice.getArenaManager().getArenas()) {
+        for (Arena arenas : Practice.getInstance().getArenaManager().getArenas()) {
             if (arenas.getName().startsWith(arena.getName() + "#")) {
                 duplicated++;
             }
@@ -59,24 +59,24 @@ public class ArenaManager {
 
             String newName = arena.getName() + "#" + (duplicated + i + 1);
             Arena newArena = new Arena(newName, arena.getDisplayName(), arena.getType(), arena.isEnabled(), newRedSpawn, newBlueSpawn, newCorner1, newCorner2);
-            Practice.getArenaManager().addArena(newArena);
+            Practice.getInstance().getArenaManager().addArena(newArena);
         }
     }
 
     public void load() {
-        if (Practice.getArenasConfig().getConfiguration().getConfigurationSection("arenas") == null) {
+        if (Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getConfigurationSection("arenas") == null) {
             ConsoleUtils.info("&cNo arenas found in arenas.yml, skipping arena load process...");
             return;
         }
         // Load the arenas from the config file
-        for (String key : Practice.getArenasConfig().getConfiguration().getConfigurationSection("arenas").getKeys(false)) {
-            String displayName = Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".displayName");
-            ArenaType type = ArenaType.valueOf(Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".type"));
-            boolean enabled = Practice.getArenasConfig().getConfiguration().getBoolean("arenas." + key + ".enabled");
-            Location redSpawn = LocationUtils.deserialize(Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".redSpawn"));
-            Location blueSpawn = LocationUtils.deserialize(Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".blueSpawn"));
-            Location corner1 = LocationUtils.deserialize(Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".corner1"));
-            Location corner2 = LocationUtils.deserialize(Practice.getArenasConfig().getConfiguration().getString("arenas." + key + ".corner2"));
+        for (String key : Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getConfigurationSection("arenas").getKeys(false)) {
+            String displayName = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".displayName");
+            ArenaType type = ArenaType.valueOf(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".type"));
+            boolean enabled = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getBoolean("arenas." + key + ".enabled");
+            Location redSpawn = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".redSpawn"));
+            Location blueSpawn = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".blueSpawn"));
+            Location corner1 = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".corner1"));
+            Location corner2 = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".corner2"));
 
 
             Arena arena = new Arena(key, displayName, type, enabled, redSpawn, blueSpawn, corner1, corner2);

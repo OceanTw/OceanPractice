@@ -16,7 +16,7 @@ public class DuelCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
-        User user = Practice.getUserManager().getUser(player.getUniqueId());
+        User user = Practice.getInstance().getUserManager().getUser(player.getUniqueId());
         if (user.getStatus() != UserStatus.IN_LOBBY) {
             player.sendMessage(StringUtils.handle("&cYou are not in the lobby!"));
             return false;
@@ -27,13 +27,13 @@ public class DuelCommand implements CommandExecutor {
             return false;
         }
 
-        Player target = Practice.getInstance().getServer().getPlayer(strings[0]);
+        Player target = Practice.getInstance().getInstance().getServer().getPlayer(strings[0]);
         if (target == null || !target.isOnline()) {
             player.sendMessage(StringUtils.handle("&cPlayer not found!"));
             return false;
         }
 
-        User targetUser = Practice.getUserManager().getUser(target.getUniqueId());
+        User targetUser = Practice.getInstance().getUserManager().getUser(target.getUniqueId());
 
         if (targetUser.getStatus() != UserStatus.IN_LOBBY) {
             player.sendMessage(StringUtils.handle("&cThat player is not in the lobby!"));

@@ -30,7 +30,7 @@ public class RequestManager implements Listener {
 
         requests.add(request);
 
-        BukkitTask task = Practice.getInstance().getServer().getScheduler().runTaskLater(Practice.getInstance(), () -> {
+        BukkitTask task = Practice.getInstance().getInstance().getServer().getScheduler().runTaskLater(Practice.getInstance().getInstance(), () -> {
             requests.remove(request);
         }, 20 * 60);
     }
@@ -44,14 +44,14 @@ public class RequestManager implements Listener {
         if (request != null) {
             request.getSender().getPlayer().sendMessage(StringUtils.handle("&7&oYour request has been accepted"));
             request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&7&oYou have accepted the request"));
-            Arena arena = Practice.getArenaManager().getRandomArena(request.getKit());
+            Arena arena = Practice.getInstance().getArenaManager().getRandomArena(request.getKit());
             if (arena == null) {
                 request.getSender().getPlayer().sendMessage(StringUtils.handle("&bNo arenas available"));
                 request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&bNo arenas available"));
                 requests.remove(request);
                 return;
             }
-            Practice.getMatchManager().startSolo(arena, MatchType.DUEL, request.getKit(), new User[]{request.getSender(), request.getReceiver()}, new User[]{request.getReceiver(), request.getSender()}, false);
+            Practice.getInstance().getMatchManager().startSolo(arena, MatchType.DUEL, request.getKit(), new User[]{request.getSender(), request.getReceiver()}, new User[]{request.getReceiver(), request.getSender()}, false);
             requests.remove(request);
         }
     }

@@ -1,9 +1,9 @@
 package lol.oce.marine.match.impl;
 
+import lol.oce.marine.match.Match;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import lol.oce.marine.match.Match;
 
 @Getter
 public class MatchSnapshot {

@@ -14,9 +14,9 @@ import java.util.logging.Level;
 public class ScoreboardAdapter implements AssembleAdapter {
 
     private User getUser(Player player) {
-        User user = Practice.getUserManager().getUser(player.getUniqueId());
+        User user = Practice.getInstance().getUserManager().getUser(player.getUniqueId());
         if (user == null) {
-            Practice.getInstance().getLogger().log(Level.SEVERE, "Error loading user for player " + player.getName());
+            Practice.getInstance().getInstance().getLogger().log(Level.SEVERE, "Error loading user for player " + player.getName());
         }
         return user;
     }
@@ -62,8 +62,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
         lines.add(StringUtils.handle("&fOnline: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getInstance().getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getInstance().getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
         lines.add(StringUtils.handle("&bMade by Ocean"));
         lines.add(StringUtils.line("&7", 15));
@@ -74,8 +74,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
         List<String> lines = new ArrayList<>();
         lines.add(StringUtils.line("&7", 15));
         lines.add(StringUtils.handle("&fOnline: &b" + user.getPlayer().getServer().getOnlinePlayers().size()));
-        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getMatchManager().getMatches().size() * 2));
-        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getQueueManager().getQueues().size()));
+        lines.add(StringUtils.handle("&fPlaying: &b" + Practice.getInstance().getMatchManager().getMatches().size() * 2));
+        lines.add(StringUtils.handle("&fIn Queue: &b" + Practice.getInstance().getQueueManager().getQueues().size()));
         lines.add(StringUtils.handle("&7"));
         lines.add(StringUtils.handle("&b&lQueue"));
         lines.add(StringUtils.handle("&f  Kit: &b" + user.getQueue().getKit().getDisplayName()));

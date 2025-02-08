@@ -33,17 +33,17 @@ public class ItemListener implements Listener {
             return;
         }
 
-        if (event.getItem().getItemMeta().getDisplayName().equals(Practice.getLobbyItemManager().getQueueItemName())) {
+        if (event.getItem().getItemMeta().getDisplayName().equals(Practice.getInstance().getLobbyItemManager().getQueueItemName())) {
             menu.getQueueMenu().open(event.getPlayer());
         }
 
         if (event.getItem().getItemMeta().getDisplayName().equals(
-                Practice.getLobbyItemManager().getCreatePartyName())) {
+                Practice.getInstance().getLobbyItemManager().getCreatePartyName())) {
             // TODO: Implement party system
         }
 
         if (event.getItem().getItemMeta().getDisplayName().equals(
-                Practice.getLobbyItemManager().getSettingsName())) {
+                Practice.getInstance().getLobbyItemManager().getSettingsName())) {
             // TODO: Implement settings UI
         }
     }
@@ -80,33 +80,33 @@ public class ItemListener implements Listener {
             player.closeInventory();
             event.setCancelled(true);
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                Kit kit = Practice.getInstance().getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
                 player.closeInventory();
                 if (kit != null) {
                     player.sendMessage(StringUtils.handle("&b&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, false);
+                    Practice.getInstance().getQueueManager().joinQueue(Practice.getInstance().getUserManager().getUser(player.getUniqueId()), kit, false);
                 }
             }
             event.setCancelled(true);
         } else if (event.getInventory().getName().equals("Ranked Queue")) {
             player.closeInventory();
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                Kit kit = Practice.getInstance().getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
                 player.closeInventory();
                 if (kit != null) {
                     player.sendMessage(StringUtils.handle("&b&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getQueueManager().joinQueue(Practice.getUserManager().getUser(player.getUniqueId()), kit, true);
+                    Practice.getInstance().getQueueManager().joinQueue(Practice.getInstance().getUserManager().getUser(player.getUniqueId()), kit, true);
                 }
             }
         } else if (event.getInventory().getName().contains("Duel Request to ")) {
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                Kit kit = Practice.getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                Kit kit = Practice.getInstance().getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
                 player.closeInventory();
                 if (kit != null) {
                     String targetName = event.getInventory().getName().replace("Duel Request to ", "");
-                    User target = Practice.getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
+                    User target = Practice.getInstance().getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
                     player.sendMessage(StringUtils.handle("&b&oYou have sent a duel request"));
-                    Practice.getRequestManager().sendRequest(Practice.getUserManager().getUser(player.getUniqueId()), target, kit);
+                    Practice.getInstance().getRequestManager().sendRequest(Practice.getInstance().getUserManager().getUser(player.getUniqueId()), target, kit);
                 }
             }
         }

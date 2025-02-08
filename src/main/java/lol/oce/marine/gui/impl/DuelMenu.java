@@ -27,7 +27,7 @@ public class DuelMenu extends Gui {
             duel.setItem(i, item);
         }
 
-        KitManager kitManager = Practice.getKitManager();
+        KitManager kitManager = Practice.getInstance().getKitManager();
         List<Kit> kits = kitManager.getEnabledKits();
         int[] slots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34,
                 37, 38, 39, 40, 41, 42, 43};
@@ -36,9 +36,9 @@ public class DuelMenu extends Gui {
             return duel;
         }
         for (int i = 0; i < slots.length; i++) {
-            if (i < Practice.getKitManager().getEnabledKits().size()) {
+            if (i < Practice.getInstance().getKitManager().getEnabledKits().size()) {
                 // TODO: Show current in queue amount
-                Kit kit = Practice.getKitManager().getEnabledKits().get(i);
+                Kit kit = Practice.getInstance().getKitManager().getEnabledKits().get(i);
                 ItemStack item = new ItemStack(kit.getIcon());
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(StringUtils.handle("&b&l" + kit.getDisplayName()));

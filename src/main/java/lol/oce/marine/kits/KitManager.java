@@ -22,56 +22,56 @@ public class KitManager {
 
     public void load() {
         // Load kits from config
-        if (Practice.getKitsConfig().getConfiguration().getConfigurationSection("kits") == null) {
+        if (Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getConfigurationSection("kits") == null) {
             ConsoleUtils.info("&cNo kits found in kits.yml, skipping kit load process...");
             return;
         }
-        for (String key : Practice.getKitsConfig().getConfiguration().getConfigurationSection("kits").getKeys(false)) {
-            String displayName = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".displayName");
-            String description = Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".description");
-            boolean enabled = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enabled");
-            boolean editable = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".editable");
-            boolean boxing = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".boxing");
-            boolean build = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".build");
-            boolean sumo = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".sumo");
-            boolean mapDestroyable = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".mapDestroyable");
-            boolean hunger = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".hunger");
-            boolean healthRegen = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".healthRegen");
-            boolean bedfight = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".bedfight");
-            boolean fireball = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".fireball");
-            boolean enderpearlcd = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enderpearlcd");
-            boolean ranked = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".ranked");
-            boolean freezeOnStart = Practice.getKitsConfig().getConfiguration().getBoolean("kits." + key + ".freezeOnStart");
-            Material icon = Material.getMaterial(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".icon"));
+        for (String key : Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getConfigurationSection("kits").getKeys(false)) {
+            String displayName = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".displayName");
+            String description = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".description");
+            boolean enabled = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enabled");
+            boolean editable = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".editable");
+            boolean boxing = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".boxing");
+            boolean build = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".build");
+            boolean sumo = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".sumo");
+            boolean mapDestroyable = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".mapDestroyable");
+            boolean hunger = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".hunger");
+            boolean healthRegen = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".healthRegen");
+            boolean bedfight = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".bedfight");
+            boolean fireball = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".fireball");
+            boolean enderpearlcd = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".enderpearlcd");
+            boolean ranked = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".ranked");
+            boolean freezeOnStart = Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getBoolean("kits." + key + ".freezeOnStart");
+            Material icon = Material.getMaterial(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".icon"));
 
             Kit kit = new Kit(key, displayName, description, enabled, editable, boxing, build, sumo, mapDestroyable, hunger, healthRegen, bedfight, fireball, enderpearlcd, freezeOnStart, ranked, icon);
-            if (EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects")) != null) {
-                for (PotionEffect potionEffect : EffectUtils.deserialize(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects"))) {
+            if (EffectUtils.deserialize(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects")) != null) {
+                for (PotionEffect potionEffect : EffectUtils.deserialize(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".potionEffects"))) {
                     kit.getPotionEffects().add(potionEffect);
                 }
             }
-            if (!(Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() <= 1)) {
-                for (String arenaName : Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
-                    Arena arena = Practice.getArenaManager().getArena(arenaName);
+            if (!(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() <= 1)) {
+                for (String arenaName : Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
+                    Arena arena = Practice.getInstance().getArenaManager().getArena(arenaName);
                     if (arena != null) {
                         kit.getArenas().add(arena);
                     }
                 }
             } else {
-                if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() == 1) {
-                    Arena arena = Practice.getArenaManager().getArena(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".arenas"));
+                if (Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() == 1) {
+                    Arena arena = Practice.getInstance().getArenaManager().getArena(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".arenas"));
                     if (arena != null) {
                         kit.getArenas().add(arena);
                     }
                 }
             }
-            if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".contents") != null) {
-                for (ItemStack item : ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".contents"))) {
+            if (Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".contents") != null) {
+                for (ItemStack item : ItemUtils.deserializeArray(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".contents"))) {
                     kit.getContents().add(item);
                 }
             }
-            if (Practice.getKitsConfig().getConfiguration().getStringList("kits." + key + ".armor") != null) {
-                for (ItemStack item : ItemUtils.deserializeArray(Practice.getKitsConfig().getConfiguration().getString("kits." + key + ".armor"))) {
+            if (Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".armor") != null) {
+                for (ItemStack item : ItemUtils.deserializeArray(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".armor"))) {
                     kit.getArmor().add(item);
                 }
             }
@@ -132,6 +132,6 @@ public class KitManager {
     public void removeKit(Kit kit) {
         kits.remove(kit);
         enabledKits.remove(kit);
-        Practice.getKitsConfig().getConfiguration().set("kits." + kit.getName(), null);
+        Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().set("kits." + kit.getName(), null);
     }
 }

@@ -13,10 +13,10 @@ public class AcceptCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length == 1) {
             Player player = (Player) commandSender;
-            User receiver = Practice.getUserManager().getUser(player.getUniqueId());
-            User sender = Practice.getUserManager().getUser(Bukkit.getPlayer(strings[0]).getUniqueId());
-            if (Practice.getRequestManager().getRequest(sender, receiver) != null) {
-                Practice.getRequestManager().acceptRequest(sender, receiver);
+            User receiver = Practice.getInstance().getUserManager().getUser(player.getUniqueId());
+            User sender = Practice.getInstance().getUserManager().getUser(Bukkit.getPlayer(strings[0]).getUniqueId());
+            if (Practice.getInstance().getRequestManager().getRequest(sender, receiver) != null) {
+                Practice.getInstance().getRequestManager().acceptRequest(sender, receiver);
             }
         }
         return false;

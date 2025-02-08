@@ -1,4 +1,4 @@
-# Marine (Ocean Practice)
+# Ocean Practice
 A Minecraft Practice / Duels plugin
 
 ## Current Features
@@ -15,8 +15,12 @@ A Minecraft Practice / Duels plugin
 - No health regen
 
 ## To-Do List
+- Bot Fight
 - BedFight kit setting
 - Bridges kit setting
 - Modern versions support
 - Combo kit settings
-- Completely customizable config (because this plugin was made for a server so i didnt add configs)
+- Completely customizable config
+
+## Credits
+- [**@Devlrxxh**](https://github.com/Devlrxxh) - Helped me with the matches system & configs

@@ -3,6 +3,7 @@ package lol.oce.marine.listeners;
 import lol.oce.marine.Practice;
 import lol.oce.marine.match.Participant;
 import lol.oce.marine.players.User;
+import lol.oce.marine.players.UserManager;
 import lol.oce.marine.players.UserStatus;
 import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.VisualUtils;
@@ -10,33 +11,43 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 
 public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Practice.getLobbyManager().giveItems(player);
+        Practice.getInstance().getLobbyManager().giveItems(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
-        // if the server is not loaded, don't load the user
-        if (!Practice.getInstance().isEnabled()) {
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if (!Practice.isPluginLoaded()) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Server is still loading");
             return;
         }
-        Practice.getUserManager().load(event.getUniqueId());
+        Practice.getInstance().getUserManager().load(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(PlayerQuitEvent event) {
         // if the server is not loaded, don't load the user
-        Practice.getUserManager().unload(event.getPlayer().getUniqueId());
+        Practice.getInstance().getUserManager().unload(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onPlayerPlaceBlock(BlockPlaceEvent event) {
+        if (Practice.getInstance().getUserManager().getUser(event.getPlayer().getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+            if (event.getPlayer().getGameMode() != org.bukkit.GameMode.CREATIVE) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
@@ -50,14 +61,18 @@ public class PlayerListener implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        User user = Practice.getUserManager().getUser(player.getUniqueId());
+        User user = Practice.getInstance().getUserManager().getUser(player.getUniqueId());
         User damager;
+        if (user.getStatus() != UserStatus.IN_MATCH) {
+            event.setCancelled(true);
+            return;
+        }
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
             if (!(entityEvent.getDamager() instanceof Player)) {
                 return;
             }
-            damager = Practice.getUserManager().getUser((entityEvent.getDamager()).getUniqueId());
+            damager = Practice.getInstance().getUserManager().getUser((entityEvent.getDamager()).getUniqueId());
             if (damager.getStatus() != UserStatus.IN_MATCH) {
                 event.setCancelled(true);
                 return;
@@ -92,7 +107,7 @@ public class PlayerListener implements Listener {
             return;
         }
         if (event.getFinalDamage() >= player.getHealth()) {
-            User damaged = Practice.getUserManager().getUser(((Player) event).getUniqueId());
+            User damaged = Practice.getInstance().getUserManager().getUser(((Player) event).getUniqueId());
             if (damaged.getStatus() != UserStatus.IN_MATCH) {
                 event.setCancelled(true);
                 return;
@@ -110,8 +125,8 @@ public class PlayerListener implements Listener {
         if (killerPlayer == null) {
             return;
         }
-        User dead = Practice.getUserManager().getUser(deadPlayer.getUniqueId());
-        User killer = Practice.getUserManager().getUser(killerPlayer.getUniqueId());
+        User dead = Practice.getInstance().getUserManager().getUser(deadPlayer.getUniqueId());
+        User killer = Practice.getInstance().getUserManager().getUser(killerPlayer.getUniqueId());
         if (dead.getStatus() != UserStatus.IN_MATCH) {
             return;
         }

@@ -70,14 +70,14 @@ public class QueueManager {
                 user.setQueue(null);
                 q.getUser().setQueue(null);
 
-                Arena arena = Practice.getArenaManager().getRandomArena(kit);
+                Arena arena = Practice.getInstance().getArenaManager().getRandomArena(kit);
                 if (arena == null) {
                     user.getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
                     q.getUser().getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
                     return;
                 }
 
-                Practice.getMatchManager().startSolo(arena, MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
+                Practice.getInstance().getMatchManager().startSolo(arena, MatchType.QUEUE, kit, new User[]{q.getUser()}, new User[]{user}, ranked);
                 break;
             }
         }
@@ -105,7 +105,7 @@ public class QueueManager {
             public void run() {
                 queue.setQueueTime(queue.getQueueTime() + 1);
             }
-        }.runTaskTimerAsynchronously(Practice.getPlugin(), 0, 20);
+        }.runTaskTimerAsynchronously(Practice.getInstance().getPlugin(), 0, 20);
         queueTimeMap.put(queue, runnable);
     }
 

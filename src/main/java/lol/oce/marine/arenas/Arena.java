@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import xyz.refinedev.spigot.api.chunk.ChunkAPI;
-import xyz.refinedev.spigot.api.chunk.ChunkSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +21,9 @@ public class Arena {
     Location blueSpawn;
     Location corner1;
     Location corner2;
-    final List<ChunkSnapshot> snapshots = new ArrayList<>();
-
-    final ChunkAPI chunkAPI = ChunkAPI.getInstance();
 
     public void restore() {
-        for (ChunkSnapshot snapshot : snapshots) {
-            for (Chunk chunk : getChunks()) {
-                if (chunk != null) {
-                    ChunkAPI.getInstance().restoreSnapshot(chunk, snapshot);
-                }
-            }
-        }
+        // TODO: Implement this method
     }
 
     public void save() {
@@ -44,15 +33,15 @@ public class Arena {
         String blueSpawnLoc = LocationUtils.serialize(blueSpawn);
         String corner1Loc = LocationUtils.serialize(corner1);
         String corner2Loc = LocationUtils.serialize(corner2);
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".displayName", displayName);
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".type", type.name());
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".enabled", enabled);
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".redSpawn", redSpawnLoc);
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".blueSpawn", blueSpawnLoc);
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".corner1", corner1Loc);
-        Practice.getArenasConfig().getConfiguration().set("arenas." + name + ".corner2", corner2Loc);
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".displayName", displayName);
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".type", type.name());
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".enabled", enabled);
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".redSpawn", redSpawnLoc);
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".blueSpawn", blueSpawnLoc);
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".corner1", corner1Loc);
+        Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().set("arenas." + name + ".corner2", corner2Loc);
 
-        Practice.getArenasConfig().save();
+        Practice.getInstance().getConfigService().getArenasConfig().save();
     }
 
     public Chunk[] getChunks() {
@@ -78,23 +67,5 @@ public class Arena {
             }
         }
         return chunks.toArray(new Chunk[0]);
-    }
-
-    public void takeChunkSnapshots() {
-        if (chunkAPI == null) {
-            throw new IllegalStateException("ChunkAPI instance is not initialized.");
-        }
-
-        if (corner1 == null || corner2 == null) {
-            throw new IllegalStateException("Corner locations are not set for the arena.");
-        }
-
-        Chunk[] chunks = getChunks();
-        for (Chunk chunk : chunks) {
-            if (chunk != null) {
-                ChunkSnapshot snapshot = chunkAPI.takeSnapshot(chunk);
-                snapshots.add(snapshot);
-            }
-        }
     }
 }

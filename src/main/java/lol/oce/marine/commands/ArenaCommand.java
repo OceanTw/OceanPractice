@@ -48,7 +48,7 @@ public class ArenaCommand implements CommandExecutor {
                     type = ArenaType.STANDALONE;
                 }
                 Arena arena = new Arena(arenaName, displayName, type, true, null, null, null, null);
-                Practice.getArenaManager().addArena(arena);
+                Practice.getInstance().getArenaManager().addArena(arena);
                 arena.save();
                 player.sendMessage("Arena " + displayName + " created with the type " + type.name() + ". Now set the locations using /arena set <red|blue|c1|c2>.");
                 break;
@@ -58,7 +58,7 @@ public class ArenaCommand implements CommandExecutor {
                     player.sendMessage("Usage: /arena set <red|blue|c1|c2> <name>");
                     return true;
                 }
-                Arena setupArena = Practice.getArenaManager().getArena(arenaName);
+                Arena setupArena = Practice.getInstance().getArenaManager().getArena(arenaName);
                 if (setupArena == null) {
                     player.sendMessage("No arena found with the name " + arenaName + ". Create it first using /arena create.");
                     return true;
@@ -86,7 +86,7 @@ public class ArenaCommand implements CommandExecutor {
                         return true;
                 }
                 if (setupArena.getRedSpawn() != null && setupArena.getBlueSpawn() != null && setupArena.getCorner1() != null && setupArena.getCorner2() != null) {
-                    Practice.getArenaManager().addArena(setupArena);
+                    Practice.getInstance().getArenaManager().addArena(setupArena);
                     setupArena.save();
                     player.sendMessage("Arena " + setupArena.getDisplayName() + " setup complete and saved.");
                 }

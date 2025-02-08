@@ -1,6 +1,7 @@
 package lol.oce.marine.utils;
 
 import lol.oce.marine.Practice;
+import lol.oce.marine.configs.impl.SettingsLocale;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ public class ConsoleUtils {
     }
 
     public static void debug(String message) {
-        if (Practice.getSettingsConfig().getConfiguration().getBoolean("debug")) {
+        if (SettingsLocale.DEBUG.getBoolean()) {
             log(ChatColor.GRAY + "[DEBUG] " + message);
         }
     }

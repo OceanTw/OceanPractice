@@ -3,10 +3,11 @@ package lol.oce.marine;
 import lol.oce.marine.adapters.ScoreboardAdapter;
 import lol.oce.marine.arenas.ArenaManager;
 import lol.oce.marine.commands.ArenaCommand;
-import lol.oce.marine.commands.DebugCommand;
 import lol.oce.marine.commands.DuelCommand;
 import lol.oce.marine.commands.KitCommand;
+import lol.oce.marine.commands.MainCommand;
 import lol.oce.marine.commands.troll.DropCommand;
+import lol.oce.marine.configs.ConfigService;
 import lol.oce.marine.duels.RequestManager;
 import lol.oce.marine.kits.KitManager;
 import lol.oce.marine.listeners.ItemListener;
@@ -19,61 +20,41 @@ import lol.oce.marine.match.MatchManager;
 import lol.oce.marine.match.QueueManager;
 import lol.oce.marine.players.UserManager;
 import lol.oce.marine.utils.ConfigFile;
+import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.scoreboards.Assemble;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.refinedev.spigot.api.chunk.ChunkAPI;
+import org.bukkit.scheduler.BukkitRunnable;
 
+@Getter
 public class Practice extends JavaPlugin {
 
     @Getter
     private static Practice instance;
-    @Getter
-    private static KitManager kitManager;
-    @Getter
-    private static UserManager userManager;
-    @Getter
-    private static ArenaManager arenaManager;
-    @Getter
-    private static LobbyManager lobbyManager;
-    @Getter
-    private static LobbyItemManager lobbyItemManager;
-    @Getter
-    private static QueueManager queueManager;
-    @Getter
-    private static RequestManager requestManager;
-    @Getter
-    private static MatchManager matchManager;
 
-    @Getter
-    private static ConfigFile settingsConfig;
-    @Getter
-    private static ConfigFile databaseConfig;
-    @Getter
-    private static ConfigFile arenasConfig;
-    @Getter
-    private static ConfigFile kitsConfig;
-
-    @Getter
-    private static ChunkAPI chunkAPI;
+    private ConfigService configService;
+    private KitManager kitManager;
+    private UserManager userManager;
+    private ArenaManager arenaManager;
+    private LobbyManager lobbyManager;
+    private LobbyItemManager lobbyItemManager;
+    private QueueManager queueManager;
+    private RequestManager requestManager;
+    private MatchManager matchManager;
 
     @Getter
     private static JavaPlugin plugin;
+
+    @Getter
+    private static boolean pluginLoaded = false;
 
     @Override
     public void onEnable() {
         instance = this;
         plugin = this;
-        chunkAPI = ChunkAPI.getInstance();
-        arenasConfig = new ConfigFile("arenas");
-        kitsConfig = new ConfigFile("kits");
-        databaseConfig = new ConfigFile("database");
-        settingsConfig = new ConfigFile("settings");
 
-        databaseConfig.getConfiguration().options().copyDefaults(true);
-        databaseConfig.save();
-        settingsConfig.getConfiguration().options().copyDefaults(true);
-        settingsConfig.save();
+        configService = new ConfigService();
+        configService.load();
 
         kitManager = new KitManager();
         userManager = new UserManager();
@@ -90,7 +71,7 @@ public class Practice extends JavaPlugin {
         getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("kit").setExecutor(new KitCommand());
         getCommand("duel").setExecutor(new DuelCommand());
-        getCommand("debug").setExecutor(new DebugCommand());
+        getCommand("practice").setExecutor(new MainCommand());
         getCommand("drop").setExecutor(new DropCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
@@ -100,6 +81,15 @@ public class Practice extends JavaPlugin {
         Assemble assemble = new Assemble(this, new ScoreboardAdapter());
         assemble.setTicks(5);
         assemble.setup();
+
+        ConsoleUtils.info("OceanPractice has been enabled! Waiting 5 seconds for plugin to load...");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                pluginLoaded = true;
+                ConsoleUtils.info("Players can now join the server!");
+            }
+        }.runTaskLater(this, 100);
     }
 
     @Override

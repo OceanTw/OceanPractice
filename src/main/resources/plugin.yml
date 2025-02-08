@@ -8,5 +8,6 @@ commands:
   kit:
   duel:
     aliases: [d]
-  debug:
+  practice:
+    aliases: ["practice", "oprac", "oceanpractice"]
   drop:

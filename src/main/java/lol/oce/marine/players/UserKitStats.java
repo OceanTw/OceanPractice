@@ -40,7 +40,7 @@ public class UserKitStats {
         }
         for (String kit : kitData) {
             String[] kitStats = kit.split(":");
-            Kit kitObj = Practice.getKitManager().getKit(kitStats[0]);
+            Kit kitObj = Practice.getInstance().getKitManager().getKit(kitStats[0]);
             elo.put(kitObj, Integer.parseInt(kitStats[1]));
             wins.put(kitObj, Integer.parseInt(kitStats[2]));
             losses.put(kitObj, Integer.parseInt(kitStats[3]));

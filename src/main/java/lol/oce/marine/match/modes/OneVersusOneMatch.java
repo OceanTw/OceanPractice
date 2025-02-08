@@ -1,7 +1,6 @@
 package lol.oce.marine.match.modes;
 
 import com.connorlinfoot.titleapi.TitleAPI;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import lol.oce.marine.Practice;
 import lol.oce.marine.arenas.Arena;
 import lol.oce.marine.kits.Kit;
@@ -20,7 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerHealthChangeEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
@@ -32,9 +32,9 @@ public class OneVersusOneMatch extends Match {
 
     private final Participant red;
     private final Participant blue;
-    private final HashMap<Player, Integer> hits;
-    private final HashMap<Player, Integer> gapsEaten;
-    private final HashMap<Player, Double> healthRegen;
+    private final HashMap<UUID, Integer> hits;
+    private final HashMap<UUID, Integer> gapsEaten;
+    private final HashMap<UUID, Double> healthRegen;
 
 
     public OneVersusOneMatch(User player1, User player2, Arena arena, List<User> spectators, boolean ranked, Kit kit, MatchType type) {
@@ -80,7 +80,7 @@ public class OneVersusOneMatch extends Match {
         if (won == null) {
             for (Participant participant : getParticipants()) {
                 participant.getPlayer().sendMessage(StringUtils.handle("&fMatch has been voided!"));
-                Practice.getUserManager().resetUser(participant.getUser());
+                Practice.getInstance().getUserManager().resetUser(participant.getUser());
                 return;
             }
         }
@@ -111,14 +111,14 @@ public class OneVersusOneMatch extends Match {
                         }
                     }
                     participant.getPlayer().sendMessage(StringUtils.handle("&7 "));
-                    Practice.getUserManager().resetUser(participant.getUser());
-                    Practice.getMatchManager().endMatch(OneVersusOneMatch.this);
+                    Practice.getInstance().getUserManager().resetUser(participant.getUser());
+                    Practice.getInstance().getMatchManager().endMatch(OneVersusOneMatch.this);
                     participant.getPlayer().setAllowFlight(false);
                     participant.getPlayer().setFlying(false);
                 }
                 cancel();
             }
-        }.runTaskLater(Practice.getPlugin(), 20 * 5);
+        }.runTaskLater(Practice.getInstance(), 20 * 5);
     }
 
     @Override
@@ -145,14 +145,14 @@ public class OneVersusOneMatch extends Match {
             lines.add(StringUtils.handle("&fDuration: &b" + TimeUtils.formatTime(getTime())));
             if (getKit().isBoxing()) {
                 lines.add(StringUtils.handle("&bHits: &b"));
-                lines.add(StringUtils.handle("&f You: &b" + hits.getOrDefault(participant.getPlayer(), 0)
+                lines.add(StringUtils.handle("&f You: &b" + hits.getOrDefault(participant.getPlayer().getUniqueId(), 0)
                         + " &7/ &f100"));
-                lines.add(StringUtils.handle("&f Opponent: &b" + hits.getOrDefault(getOpponent(participant).getPlayer(), 0) + " &7/ &f100"));
+                lines.add(StringUtils.handle("&f Opponent: &b" + hits.getOrDefault(getOpponent(participant).getPlayer().getUniqueId(), 0) + " &7/ &f100"));
             }
 
             lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer()).getHandle().ping) + " ms");
-            lines.add(StringUtils.handle("&fTheir ping: &b" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping) + " ms");
+            lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer()).getHandle().ping + " ms"));
+            lines.add(StringUtils.handle("&fOpponent's ping: &b" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping + " ms"));
             lines.add(StringUtils.handle("&7"));
             lines.add(StringUtils.handle("&bMade by Ocean"));
         } else {
@@ -220,12 +220,12 @@ public class OneVersusOneMatch extends Match {
         }
         if (getKit().isBoxing()) {
             Player damager = (Player) event.getDamager();
-            hits.put((Player) event.getDamager(), hits.getOrDefault(damager, 0) + 1);
-            damager.sendMessage(StringUtils.handle("&fHits: &b" + hits.get(damager)));
+            hits.put(event.getDamager().getUniqueId(), hits.getOrDefault(damager.getUniqueId(), 0) + 1);
+            damager.sendMessage(StringUtils.handle("&fHits: &b" + hits.get(damager.getUniqueId())));
             event.setDamage(0);
-            if (hits.get(damager) == 15) {
-                Participant killer = getParticipant(Practice.getUserManager().getUser(damager.getUniqueId()));
-                Participant killed = getParticipant(Practice.getUserManager().getUser(event.getEntity().getUniqueId()));
+            if (hits.get(damager.getUniqueId()) == 15) {
+                Participant killer = getParticipant(Practice.getInstance().getUserManager().getUser(damager.getUniqueId()));
+                Participant killed = getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId()));
                 onDeath(killer, killed);
                 event.setCancelled(true);
             }
@@ -246,15 +246,14 @@ public class OneVersusOneMatch extends Match {
     }
 
     @Override
-    public void onRegen(PlayerHealthChangeEvent event) {
-        double changes = event.getNewHealth() - event.getPreviousHealth();
-        healthRegen.put(event.getPlayer(), healthRegen.getOrDefault(event.getPlayer(), 0.0) + changes);
+    public void onRegen(EntityRegainHealthEvent event) {
+        healthRegen.put(event.getEntity().getUniqueId(), healthRegen.getOrDefault(event.getEntity().getUniqueId(), 0.0) + event.getAmount());
     }
 
     @Override
     public void onEat(PlayerItemConsumeEvent event) {
         if (event.getItem().getType() == Material.GOLDEN_APPLE) {
-            gapsEaten.put(event.getPlayer(), gapsEaten.getOrDefault(event.getPlayer(), 0) + 1);
+            gapsEaten.put(event.getPlayer().getUniqueId(), gapsEaten.getOrDefault(event.getPlayer().getUniqueId(), 0) + 1);
         }
     }
 
