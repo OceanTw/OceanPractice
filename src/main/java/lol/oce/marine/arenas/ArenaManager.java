@@ -1,15 +1,18 @@
 package lol.oce.marine.arenas;
 
+import com.mongodb.lang.Nullable;
 import lol.oce.marine.Practice;
 import lol.oce.marine.kits.Kit;
 import lol.oce.marine.utils.BlockChanger;
 import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.LocationUtils;
+import lol.oce.marine.utils.StringUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -36,7 +39,7 @@ public class ArenaManager {
         }
     }
 
-    public void duplicate(Arena arena, int amount, int offsetX, int offsetZ) {
+    public void duplicate(Arena arena, int amount, int offsetX, int offsetZ, @Nullable Player player) {
         if (arena.getType() == ArenaType.SHARED) {
             ConsoleUtils.info("&cYou cannot duplicate a shared arena.");
             return;
@@ -81,6 +84,9 @@ public class ArenaManager {
             }
             BlockChanger.setBlocks(arena.redSpawn.getWorld(), blocks);
             ConsoleUtils.info("&aSuccessfully duplicated the arena.");
+            if (player != null) {
+                player.sendMessage(StringUtils.handle("&aSuccessfully duplicated the arena."));
+            }
         });
     }
 

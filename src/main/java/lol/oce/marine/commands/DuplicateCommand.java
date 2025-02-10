@@ -6,6 +6,7 @@ import lol.oce.marine.utils.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class DuplicateCommand implements CommandExecutor {
     @Override
@@ -16,7 +17,8 @@ public class DuplicateCommand implements CommandExecutor {
         }
         ArenaManager arenaManager = Practice.getInstance().getArenaManager();
         // name, amount, x, z
-        arenaManager.duplicate(arenaManager.getArena(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]), Integer.parseInt(strings[3]));
+        commandSender.sendMessage(StringUtils.handle("&aDuplicating arena..."));
+        arenaManager.duplicate(arenaManager.getArena(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]), Integer.parseInt(strings[3]), (Player) commandSender);
         return false;
     }
 }
