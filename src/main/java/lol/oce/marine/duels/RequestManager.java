@@ -30,7 +30,7 @@ public class RequestManager implements Listener {
 
         requests.add(request);
 
-        BukkitTask task = Practice.getInstance().getInstance().getServer().getScheduler().runTaskLater(Practice.getInstance().getInstance(), () -> {
+        BukkitTask task = Practice.getInstance().getServer().getScheduler().runTaskLater(Practice.getInstance(), () -> {
             requests.remove(request);
         }, 20 * 60);
     }

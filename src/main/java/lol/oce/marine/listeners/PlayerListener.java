@@ -43,6 +43,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerPlaceBlock(BlockPlaceEvent event) {
+        if (event.getPlayer().getGameMode() == org.bukkit.GameMode.CREATIVE) {
+            return;
+        }
         if (Practice.getInstance().getUserManager().getUser(event.getPlayer().getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
             event.setCancelled(true);
         }

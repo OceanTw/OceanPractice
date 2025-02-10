@@ -6,9 +6,13 @@ import lol.oce.marine.utils.BlockChanger;
 import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.LocationUtils;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -27,7 +31,7 @@ public class ArenaManager {
 
     public void addArena(Arena arena) {
         arenas.add(arena);
-        if (arena.isEnabled()) {
+        if (arena.isEnabled() && !enabledArenas.contains(arena)) {
             enabledArenas.add(arena);
         }
     }
@@ -46,22 +50,38 @@ public class ArenaManager {
         int maxY = Math.max(arena.corner1.getBlockY(), arena.corner2.getBlockY());
         int maxZ = Math.max(arena.corner1.getBlockZ(), arena.corner2.getBlockZ());
 
-        Map<Location, ItemStack> blocks = new HashMap<>();
-        for (int i = 0; i < amount; i++) {
-            for (int x = minX; x <= maxX; x++) {
-                for (int y = minY; y <= maxY; y++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        Location location = new Location(arena.redSpawn.getWorld(), x + (i * offsetX), y, z + (i * offsetZ));
-                        Block block = arena.redSpawn.getWorld().getBlockAt(location);
-                        ItemStack itemStack = new ItemStack(block.getType());
-                        itemStack.setData(block.getState().getData());
-                        blocks.put(location, itemStack);
+        Bukkit.getScheduler().runTaskAsynchronously(Practice.getInstance(), () -> {
+            Map<Location, ItemStack> blocks = new HashMap<>();
+            for (int i = 0; i < amount; i++) {
+                for (int x = minX; x <= maxX; x++) {
+                    for (int y = minY; y <= maxY; y++) {
+                        for (int z = minZ; z <= maxZ; z++) {
+                            Location original = new Location(arena.redSpawn.getWorld(), x, y, z);
+                            Location location = new Location(arena.redSpawn.getWorld(), x + (i * offsetX), y, z + (i * offsetZ));
+                            Block block = arena.redSpawn.getWorld().getBlockAt(original);
+                            ItemStack itemStack = new ItemStack(block.getType());
+                            itemStack.setData(block.getState().getData());
+                            blocks.put(location, itemStack);
+                            if (block.getType() != Material.AIR) {
+                                ConsoleUtils.debug(location + " " + itemStack);
+                            }
+                        }
                     }
                 }
+                int redX = arena.redSpawn.getBlockX() + (i * offsetX);
+                int redZ = arena.redSpawn.getBlockZ() + (i * offsetZ);
+                int blueX = arena.blueSpawn.getBlockX() + (i * offsetX);
+                int blueZ = arena.blueSpawn.getBlockZ() + (i * offsetZ);
+                Location redSpawn = new Location(arena.redSpawn.getWorld(), redX, arena.redSpawn.getBlockY(), redZ);
+                Location blueSpawn = new Location(arena.blueSpawn.getWorld(), blueX, arena.blueSpawn.getBlockY(), blueZ);
+                Arena duplicatedArena = new Arena(arena.getName() + "#" + i, arena.getDisplayName(), arena.getType(), arena.isEnabled(), redSpawn, blueSpawn, arena.corner1, arena.corner2);
+                addArena(duplicatedArena);
+                duplicatedArena.save();
+                ConsoleUtils.info("&bDuplicated arena " + arena.getName() + " " + i + " times. Location: " + (minX + (i * offsetX)) + ", " + minY + ", " + (minZ + (i * offsetZ)));
             }
-        }
-        BlockChanger.setBlocks(arena.redSpawn.getWorld(), blocks);
-        ConsoleUtils.info("&aSuccessfully duplicated the arena.");
+            BlockChanger.setBlocks(arena.redSpawn.getWorld(), blocks);
+            ConsoleUtils.info("&aSuccessfully duplicated the arena.");
+        });
     }
 
     public void load() {

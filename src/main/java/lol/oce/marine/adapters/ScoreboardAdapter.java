@@ -16,7 +16,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private User getUser(Player player) {
         User user = Practice.getInstance().getUserManager().getUser(player.getUniqueId());
         if (user == null) {
-            Practice.getInstance().getInstance().getLogger().log(Level.SEVERE, "Error loading user for player " + player.getName());
+            player.kickPlayer("Error loading user data, please rejoin the server");
         }
         return user;
     }

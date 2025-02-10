@@ -8,6 +8,7 @@ import lol.oce.marine.players.User;
 import lol.oce.marine.players.UserStatus;
 import lol.oce.marine.utils.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -23,8 +23,15 @@ public class ItemListener implements Listener {
 
     Menu menu = new Menu();
 
+    private boolean isInCreative(Player player) {
+        return player.getGameMode() == GameMode.CREATIVE;
+    }
+
     @EventHandler
     public void onItemRightClick(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (isInCreative(player)) return;
+
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             return;
         }
@@ -63,7 +70,10 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onItemInventoryClick(InventoryClickEvent event) {
-        if (Practice.getInstance().getUserManager().getUser(event.getWhoClicked().getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+        Player player = (Player) event.getWhoClicked();
+        if (isInCreative(player)) return;
+
+        if (Practice.getInstance().getUserManager().getUser(player.getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
             event.setCancelled(true);
         }
     }
@@ -71,6 +81,8 @@ public class ItemListener implements Listener {
     @EventHandler
     public void onQueueMenuClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
+        if (isInCreative(player)) return;
+
         if (event.getInventory().getName().equals("Select your queue")) {
             if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
                 if (event.getCurrentItem().getItemMeta().getDisplayName().equals(StringUtils.handle("&b&lUnranked"))) {
@@ -89,6 +101,8 @@ public class ItemListener implements Listener {
     @EventHandler
     public void onQueueKitMenuClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
+        if (isInCreative(player)) return;
+
         if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null) {
             return;
         }
@@ -132,19 +146,23 @@ public class ItemListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
-        if (Practice.getInstance().getUserManager().getUser(event.getPlayer().getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+        Player player = event.getPlayer();
+        if (isInCreative(player)) return;
+
+        if (Practice.getInstance().getUserManager().getUser(player.getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onItemMove(InventoryMoveItemEvent event) {
-        if (Practice.getInstance().getUserManager().getUser(((Player) event.getDestination().getHolder()).getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
+        Player player = (Player) event.getDestination().getHolder();
+        if (isInCreative(player)) return;
+
+        if (Practice.getInstance().getUserManager().getUser(player.getUniqueId()).getStatus() != UserStatus.IN_MATCH) {
             event.setCancelled(true);
         }
     }
-
 }

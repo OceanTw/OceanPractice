@@ -78,7 +78,7 @@ public abstract class Match {
             public void run() {
                 time++;
             }
-        }.runTaskTimer(Practice.getInstance().getInstance(), 0, 20);
+        }.runTaskTimer(Practice.getInstance(), 0, 20);
     }
 
     public void stopTime() {
