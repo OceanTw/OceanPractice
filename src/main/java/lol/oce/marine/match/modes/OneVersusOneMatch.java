@@ -16,7 +16,6 @@ import lol.oce.marine.utils.StringUtils;
 import lol.oce.marine.utils.TimeUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -159,8 +158,8 @@ public class OneVersusOneMatch extends Match {
             }
 
             lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer()).getHandle().ping + " ms"));
-            lines.add(StringUtils.handle("&fOpponent's ping: &b" + ((CraftPlayer) opponent.getPlayer()).getHandle().ping + " ms"));
+            lines.add(StringUtils.handle("&fYour ping: &b" + "0" + " ms"));
+            lines.add(StringUtils.handle("&fOpponent's ping: &b" + "0" + " ms"));
         } else {
             lines.add(StringUtils.handle("&7"));
             boolean isWinner = isWinner(participant);

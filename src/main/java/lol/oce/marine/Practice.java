@@ -2,10 +2,7 @@ package lol.oce.marine;
 
 import lol.oce.marine.adapters.ScoreboardAdapter;
 import lol.oce.marine.arenas.ArenaManager;
-import lol.oce.marine.commands.ArenaCommand;
-import lol.oce.marine.commands.DuelCommand;
-import lol.oce.marine.commands.KitCommand;
-import lol.oce.marine.commands.MainCommand;
+import lol.oce.marine.commands.*;
 import lol.oce.marine.commands.troll.DropCommand;
 import lol.oce.marine.configs.ConfigService;
 import lol.oce.marine.duels.RequestManager;
@@ -19,6 +16,7 @@ import lol.oce.marine.match.Match;
 import lol.oce.marine.match.MatchManager;
 import lol.oce.marine.match.QueueManager;
 import lol.oce.marine.players.UserManager;
+import lol.oce.marine.utils.BlockChanger;
 import lol.oce.marine.utils.ConfigFile;
 import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.scoreboards.Assemble;
@@ -65,6 +63,8 @@ public class Practice extends JavaPlugin {
         matchManager = new MatchManager();
         requestManager = new RequestManager();
 
+        BlockChanger.load(this, false);
+
         kitManager.load();
         arenaManager.load();
 
@@ -73,6 +73,7 @@ public class Practice extends JavaPlugin {
         getCommand("duel").setExecutor(new DuelCommand());
         getCommand("practice").setExecutor(new MainCommand());
         getCommand("drop").setExecutor(new DropCommand());
+        getCommand("duplicate").setExecutor(new DuplicateCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

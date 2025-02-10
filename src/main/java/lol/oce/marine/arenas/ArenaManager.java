@@ -2,14 +2,15 @@ package lol.oce.marine.arenas;
 
 import lol.oce.marine.Practice;
 import lol.oce.marine.kits.Kit;
+import lol.oce.marine.utils.BlockChanger;
 import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.LocationUtils;
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Getter
 public class ArenaManager {
@@ -32,35 +33,35 @@ public class ArenaManager {
     }
 
     public void duplicate(Arena arena, int amount, int offsetX, int offsetZ) {
-        // Ensure only SHARED arenas are duplicated
-        if (arena.getType() != ArenaType.SHARED) {
-            throw new IllegalStateException("Cannot duplicate a SHARED arena");
+        if (arena.getType() == ArenaType.SHARED) {
+            ConsoleUtils.info("&cYou cannot duplicate a shared arena.");
+            return;
         }
 
-        // Check how many arenas are already duplicated
-        int duplicated = 0;
-        for (Arena arenas : Practice.getInstance().getArenaManager().getArenas()) {
-            if (arenas.getName().startsWith(arena.getName() + "#")) {
-                duplicated++;
+        int minX = Math.min(arena.corner1.getBlockX(), arena.corner2.getBlockX());
+        int minY = Math.min(arena.corner1.getBlockY(), arena.corner2.getBlockY());
+        int minZ = Math.min(arena.corner1.getBlockZ(), arena.corner2.getBlockZ());
+
+        int maxX = Math.max(arena.corner1.getBlockX(), arena.corner2.getBlockX());
+        int maxY = Math.max(arena.corner1.getBlockY(), arena.corner2.getBlockY());
+        int maxZ = Math.max(arena.corner1.getBlockZ(), arena.corner2.getBlockZ());
+
+        Map<Location, ItemStack> blocks = new HashMap<>();
+        for (int i = 0; i < amount; i++) {
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
+                        Location location = new Location(arena.redSpawn.getWorld(), x + (i * offsetX), y, z + (i * offsetZ));
+                        Block block = arena.redSpawn.getWorld().getBlockAt(location);
+                        ItemStack itemStack = new ItemStack(block.getType());
+                        itemStack.setData(block.getState().getData());
+                        blocks.put(location, itemStack);
+                    }
+                }
             }
         }
-
-        // Duplicate the arena
-        for (int i = 0; i < amount; i++) {
-            // Calculate offset for each duplicate
-            int currentOffsetX = offsetX * (duplicated + i + 1);
-            int currentOffsetZ = offsetZ * (duplicated + i + 1);
-
-            // Create new locations with the offset applied
-            Location newRedSpawn = arena.getRedSpawn().clone().add(currentOffsetX, 0, currentOffsetZ);
-            Location newBlueSpawn = arena.getBlueSpawn().clone().add(currentOffsetX, 0, currentOffsetZ);
-            Location newCorner1 = arena.getCorner1().clone().add(currentOffsetX, 0, currentOffsetZ);
-            Location newCorner2 = arena.getCorner2().clone().add(currentOffsetX, 0, currentOffsetZ);
-
-            String newName = arena.getName() + "#" + (duplicated + i + 1);
-            Arena newArena = new Arena(newName, arena.getDisplayName(), arena.getType(), arena.isEnabled(), newRedSpawn, newBlueSpawn, newCorner1, newCorner2);
-            Practice.getInstance().getArenaManager().addArena(newArena);
-        }
+        BlockChanger.setBlocks(arena.redSpawn.getWorld(), blocks);
+        ConsoleUtils.info("&aSuccessfully duplicated the arena.");
     }
 
     public void load() {
