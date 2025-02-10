@@ -120,7 +120,7 @@ public class KitManager {
         for (ItemStack item : player.getInventory().getContents()) {
             kit.addContents(item);
         }
-        for (PotionEffect potionEffect : kit.getPotionEffects()) {
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
             PotionEffect newPotionEffect = new PotionEffect(potionEffect.getType(), 99999, potionEffect.getAmplifier());
             kit.addPotionEffect(newPotionEffect);
         }
