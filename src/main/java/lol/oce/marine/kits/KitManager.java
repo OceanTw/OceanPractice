@@ -50,19 +50,13 @@ public class KitManager {
                     kit.getPotionEffects().add(potionEffect);
                 }
             }
-            if (!(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() <= 1)) {
-                for (String arenaName : Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
-                    Arena arena = Practice.getInstance().getArenaManager().getArena(arenaName);
-                    if (arena != null) {
-                        kit.getArenas().add(arena);
-                    }
-                }
-            } else {
-                if (Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas").size() == 1) {
-                    Arena arena = Practice.getInstance().getArenaManager().getArena(Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getString("kits." + key + ".arenas"));
-                    if (arena != null) {
-                        kit.getArenas().add(arena);
-                    }
+            for (String arenaName : Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".arenas")) {
+                Arena arena = Practice.getInstance().getArenaManager().getArena(arenaName);
+                if (arena != null) {
+                    ConsoleUtils.info("&aAdding arena " + arena.getName() + " to kit " + kit.getName());
+                    kit.getArenas().add(arena);
+                } else {
+                    ConsoleUtils.info("&cArena " + arenaName + " not found for kit " + kit.getName());
                 }
             }
             if (Practice.getInstance().getConfigService().getKitsConfig().getConfiguration().getStringList("kits." + key + ".contents") != null) {

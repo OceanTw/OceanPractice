@@ -65,8 +65,8 @@ public class Practice extends JavaPlugin {
 
         BlockChanger.load(this, false);
 
-        kitManager.load();
         arenaManager.load();
+        kitManager.load();
 
         getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("kit").setExecutor(new KitCommand());

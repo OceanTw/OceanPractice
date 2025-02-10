@@ -46,6 +46,10 @@ public class UserManager {
         if (user.getStatus() == UserStatus.IN_MATCH) {
             user.getMatch().forfeit(user.getMatch().getParticipant(user));
         }
+        if (user.getQueue() != null) {
+            Practice.getInstance().getQueueManager().leaveQueue(user);
+        }
+        user.getPlayer().teleport(LocationUtils.deserialize(SettingsLocale.LOBBY_LOCATION.getString()));
         user.getPlayer().getInventory().clear();
         user.getPlayer().getInventory().setArmorContents(null);
         user.getPlayer().setHealth(20);
