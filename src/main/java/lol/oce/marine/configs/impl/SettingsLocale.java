@@ -4,7 +4,10 @@ import lol.oce.marine.configs.ConfigService;
 import lol.oce.marine.configs.impl.handler.DataType;
 import lol.oce.marine.configs.impl.handler.IDataAccessor;
 import lol.oce.marine.utils.ConfigFile;
+import lol.oce.marine.utils.LocationUtils;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -13,8 +16,9 @@ import java.util.List;
 
 @Getter
 public enum SettingsLocale implements IDataAccessor {
-    MONGO("mongo-url", DataType.STRING, "mongodb://localhost:27017"),
     DEBUG("debug", DataType.BOOLEAN, "false"),
+    MONGO("mongo-url", DataType.STRING, "mongodb://localhost:27017"),
+    LOBBY_LOCATION("lobby-location", DataType.STRING, LocationUtils.serialize(new Location(Bukkit.getWorld("world"), 0, 100, 0, 0, 0)))
     ;
 
     private final String path;

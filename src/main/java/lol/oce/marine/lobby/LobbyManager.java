@@ -1,7 +1,10 @@
 package lol.oce.marine.lobby;
 
 import lol.oce.marine.Practice;
+import lol.oce.marine.configs.impl.SettingsLocale;
 import lol.oce.marine.players.UserManager;
+import lol.oce.marine.utils.LocationUtils;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class LobbyManager {
@@ -18,5 +21,10 @@ public class LobbyManager {
                 player.getInventory().setItem(8, new LobbyItemManager().getLeaveQueueItem());
                 break;
         }
+    }
+
+    public void setSpawn(Location location) {
+        Practice.getInstance().getConfigService().getSettingsConfig().getConfiguration().set("lobby-location", LocationUtils.serialize(location));
+        Practice.getInstance().getConfigService().getSettingsConfig().save();
     }
 }

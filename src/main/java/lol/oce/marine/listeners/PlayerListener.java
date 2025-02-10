@@ -1,11 +1,13 @@
 package lol.oce.marine.listeners;
 
 import lol.oce.marine.Practice;
+import lol.oce.marine.configs.impl.SettingsLocale;
 import lol.oce.marine.match.Participant;
 import lol.oce.marine.players.User;
 import lol.oce.marine.players.UserManager;
 import lol.oce.marine.players.UserStatus;
 import lol.oce.marine.utils.ConsoleUtils;
+import lol.oce.marine.utils.LocationUtils;
 import lol.oce.marine.utils.VisualUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +26,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Practice.getInstance().getLobbyManager().giveItems(player);
+        player.teleport(LocationUtils.deserialize(SettingsLocale.LOBBY_LOCATION.getString()));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

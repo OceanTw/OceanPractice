@@ -2,13 +2,19 @@ package lol.oce.marine.players;
 
 import com.mongodb.client.MongoCollection;
 import lol.oce.marine.Practice;
+import lol.oce.marine.configs.impl.SettingsLocale;
 import lol.oce.marine.database.MongoDB;
+import lol.oce.marine.match.Participant;
 import lol.oce.marine.utils.ConsoleUtils;
+import lol.oce.marine.utils.LocationUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class UserManager {
@@ -37,7 +43,9 @@ public class UserManager {
     }
 
     public void resetUser(User user) {
-        // TODO: Teleport to set lobby location
+        if (user.getStatus() == UserStatus.IN_MATCH) {
+            user.getMatch().forfeit(user.getMatch().getParticipant(user));
+        }
         user.getPlayer().getInventory().clear();
         user.getPlayer().getInventory().setArmorContents(null);
         user.getPlayer().setHealth(20);
@@ -46,11 +54,16 @@ public class UserManager {
         user.getPlayer().setFireTicks(0);
         user.setStatus(UserStatus.IN_LOBBY);
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            // TODO: If player is vanished, do nothing
+        List<Player> matchPlayers = new ArrayList<>();
+        if (user.getMatch() != null) {
+            user.getMatch().getParticipants().forEach(participant -> matchPlayers.add(participant.getPlayer()));
+            user.getMatch().getSpectators().forEach(player -> matchPlayers.add(player.getPlayer()));
+        }
+        for (Player player : matchPlayers) {
             user.getPlayer().showPlayer(player);
             player.showPlayer(user.getPlayer());
         }
+        user.setMatch(null);
 
         Practice.getInstance().getLobbyManager().giveItems(user.getPlayer());
     }
