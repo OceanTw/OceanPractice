@@ -18,7 +18,7 @@ public class UserData {
     public void saveUser(User user) {
         Document original = collection.find(new Document("player", user.getUuid().toString())).first();
         Document doc = new Document("player", user.getUuid().toString())
-        .append("stats", user.getKitStats().serialize());
+            .append("stats", user.getKitStats().serialize());
 
         if (original == null) {
             collection.insertOne(doc);
