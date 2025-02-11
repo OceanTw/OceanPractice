@@ -158,7 +158,7 @@ public class OneVersusOneMatch extends Match {
             }
 
             lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&fYour ping: &b" + "0" + " ms"));
+            lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer).getHandle().ping + " ms"));
             lines.add(StringUtils.handle("&fOpponent's ping: &b" + "0" + " ms"));
         } else {
             lines.add(StringUtils.handle("&7"));
