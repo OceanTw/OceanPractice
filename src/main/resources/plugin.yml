@@ -12,3 +12,4 @@ commands:
     aliases: ["practice", "oprac", "oceanpractice"]
   drop:
   duplicate:
+  test:

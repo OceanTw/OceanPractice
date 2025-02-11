@@ -136,14 +136,14 @@ public class TeamVersusTeamMatch extends Match {
     public void onDeath(Participant killer, Participant killed) {
         getParticipants().remove(killed);
         for (Participant participant : getParticipants()) {
-            participant.getPlayer().sendMessage(StringUtils.handle("&d" + killed.getPlayer().getName() + " &7was killed by &d" + killer.getPlayer().getName() + "!"));
+            participant.getPlayer().sendMessage(StringUtils.handle("&b" + killed.getPlayer().getName() + " &7was killed by &b" + killer.getPlayer().getName() + "!"));
             participant.getPlayer().hidePlayer(killed.getPlayer());
         }
         getSpectators().add(killed.getUser());
         killed.getPlayer().setAllowFlight(true);
         killed.getPlayer().setFlying(true);
         ConsoleUtils.debug(killed.getPlayer().getName() + " died to " + killer.getPlayer().getName());
-        if (killer.getColor().equals(Color.RED)) {
+        if (killed.getColor().equals(Color.RED)) {
             red.remove(killed);
         } else {
             blue.remove(killed);
@@ -155,6 +155,7 @@ public class TeamVersusTeamMatch extends Match {
 
     @Override
     public List<String> getLines(Participant participant) {
+        List<Participant> team = participant.getColor().equals(Color.RED) ? red : blue;
         List<Participant> opponent = getOpponent(participant);
         List<String> lines = new ArrayList<>();
         if (!isEnded()) {
@@ -165,7 +166,7 @@ public class TeamVersusTeamMatch extends Match {
             int requiredHits = participant.getColor().equals(Color.RED) ? redHits : blueHits;
             int opponentRequiredHits = participant.getColor().equals(Color.RED) ? blueHits : redHits;
             int hits = 0;
-            for (Participant p : getParticipants()) {
+            for (Participant p : team) {
                 hits += p.getMatchSnapshot().getHits();
             }
             int opponentHits = 0;

@@ -17,12 +17,10 @@ import lol.oce.marine.match.MatchManager;
 import lol.oce.marine.match.QueueManager;
 import lol.oce.marine.players.UserManager;
 import lol.oce.marine.utils.BlockChanger;
-import lol.oce.marine.utils.ConfigFile;
 import lol.oce.marine.utils.ConsoleUtils;
 import lol.oce.marine.utils.scoreboards.Assemble;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
 public class Practice extends JavaPlugin {
@@ -71,9 +69,10 @@ public class Practice extends JavaPlugin {
         getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("kit").setExecutor(new KitCommand());
         getCommand("duel").setExecutor(new DuelCommand());
-        getCommand("practice").setExecutor(new MainCommand());
+        getCommand("practice").setExecutor(new TestCommand());
         getCommand("drop").setExecutor(new DropCommand());
         getCommand("duplicate").setExecutor(new DuplicateCommand());
+        getCommand("test").setExecutor(new TestCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
