@@ -252,7 +252,7 @@ public class TeamVersusTeamMatch extends Match {
             event.setCancelled(true);
             return;
         }
-        getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().handleHits(this);
+        getParticipant(Practice.getInstance().getUserManager().getUser(event.getDamager().getUniqueId())).getMatchSnapshot().handleHits(this);
         if (getKit().isBoxing()) {
             Player damager = (Player) event.getDamager();
             event.setDamage(0);
