@@ -16,6 +16,7 @@ import lol.oce.marine.utils.StringUtils;
 import lol.oce.marine.utils.TimeUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -158,7 +159,7 @@ public class OneVersusOneMatch extends Match {
             }
 
             lines.add(StringUtils.handle("&7"));
-            lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer).getHandle().ping + " ms"));
+            lines.add(StringUtils.handle("&fYour ping: &b" + ((CraftPlayer) participant.getPlayer()).getHandle().ping + " ms"));
             lines.add(StringUtils.handle("&fOpponent's ping: &b" + "0" + " ms"));
         } else {
             lines.add(StringUtils.handle("&7"));
@@ -228,7 +229,7 @@ public class OneVersusOneMatch extends Match {
             Player damager = (Player) event.getDamager();
             event.setDamage(0);
 
-            if (getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId())).getMatchSnapshot().getHits() == hits) {
+            if (getParticipant(Practice.getInstance().getUserManager().getUser(event.getDamager().getUniqueId())).getMatchSnapshot().getHits() == hits) {
                 Participant killer = getParticipant(Practice.getInstance().getUserManager().getUser(damager.getUniqueId()));
                 Participant killed = getParticipant(Practice.getInstance().getUserManager().getUser(event.getEntity().getUniqueId()));
                 onDeath(killer, killed);

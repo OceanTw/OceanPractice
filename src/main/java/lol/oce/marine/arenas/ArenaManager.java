@@ -35,7 +35,7 @@ public class ArenaManager {
     public void addArena(Arena arena) {
         arenas.add(arena);
         if (arena.isEnabled() && !enabledArenas.contains(arena)) {
-        	if (arena.getType == ArenaType.STANDALONE && !arena.getName().contains("#")) {
+        	if (arena.getType() == ArenaType.STANDALONE && !arena.getName().contains("#")) {
         		return;
         	}
             enabledArenas.add(arena);
@@ -56,9 +56,9 @@ public class ArenaManager {
         int maxY = Math.max(arena.corner1.getBlockY(), arena.corner2.getBlockY());
         int maxZ = Math.max(arena.corner1.getBlockZ(), arena.corner2.getBlockZ());
 
-        Bukkit.getScheduler().runTaskAsynchronously(Practice.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(Practice.getInstance(), () -> {
             Map<Location, ItemStack> blocks = new HashMap<>();
-            for (int i = 0; i < amount; i++) {
+            for (int i = 1; i < amount; i++) {
                 for (int x = minX; x <= maxX; x++) {
                     for (int y = minY; y <= maxY; y++) {
                         for (int z = minZ; z <= maxZ; z++) {
