@@ -17,7 +17,8 @@ public class UserData {
 
     public void saveUser(User user) {
         Document original = collection.find(new Document("player", user.getUuid().toString())).first();
-        Document doc = new Document("player", user.getUuid().toString());
+        Document doc = new Document("player", user.getUuid().toString())
+        .append("stats", user.getKitStats().serialize());
 
         if (original == null) {
             collection.insertOne(doc);
@@ -35,7 +36,7 @@ public class UserData {
                 .setMatch(null)
                 .setUuid(uuid)
                 .setStatus(UserStatus.IN_LOBBY)
-//                .setKitStats(new UserKitStats().deserialize(doc.getString("kitStats")))
+                .setKitStats(new UserKitStats().deserialize(doc.getString("stats")))
                 .build();
     }
 
@@ -44,9 +45,8 @@ public class UserData {
                 .setUuid(uuid)
                 .setMatch(null)
                 .setStatus(UserStatus.IN_LOBBY)
-//                .setKitStats(new UserKitStats())
+                .setKitStats(new UserKitStats())
                 .build();
-//        user.kitStats = new UserKitStats();
         user.status = UserStatus.IN_LOBBY;
         saveUser(user);
         return user;

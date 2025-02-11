@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder(setterPrefix = "set")
 public class User {
     UUID uuid;
-//    UserKitStats kitStats;
+    UserKitStats kitStats;
     UserStatus status;
     Match match;
     Queue queue;
