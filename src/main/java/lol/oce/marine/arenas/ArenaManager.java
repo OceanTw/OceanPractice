@@ -35,6 +35,7 @@ public class ArenaManager {
     public void addArena(Arena arena) {
         arenas.add(arena);
         if (arena.isEnabled() && !enabledArenas.contains(arena)) {
+        	if (arena.getType == ArenaType.STANDALONE && !arena.getName().contains("#")) return;
             enabledArenas.add(arena);
         }
     }
