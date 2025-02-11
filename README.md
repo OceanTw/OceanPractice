@@ -5,7 +5,8 @@ A Minecraft Practice / Duels plugin
 - 1v1 matches
 - Unranked queues
 - Kits
-- Shared Arenas
+- Shared Arenas (for non-build kits)
+- Stabdalone Arenas (for build kits)
 
 ## Kit Settings
 - Boxing
@@ -15,11 +16,13 @@ A Minecraft Practice / Duels plugin
 - No health regen
 
 ## To-Do List
+- Party system
+- Settings system
+- Replay system
 - Bot Fight
 - BedFight kit setting
 - Bridges kit setting
 - Modern versions support
-- Combo kit settings
 - Completely customizable config
 
 ## Credits
