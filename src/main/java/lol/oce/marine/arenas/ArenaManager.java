@@ -14,8 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -57,7 +55,7 @@ public class ArenaManager {
         int maxZ = Math.max(arena.corner1.getBlockZ(), arena.corner2.getBlockZ());
 
         Bukkit.getScheduler().runTask(Practice.getInstance(), () -> {
-            Map<Location, ItemStack> blocks = new HashMap<>();
+            List<BlockChanger.BlockSnapshot> blocks = new ArrayList<>();
             for (int i = 1; i < amount; i++) {
                 for (int x = minX; x <= maxX; x++) {
                     for (int y = minY; y <= maxY; y++) {
@@ -67,7 +65,7 @@ public class ArenaManager {
                             Block block = arena.redSpawn.getWorld().getBlockAt(original);
                             ItemStack itemStack = new ItemStack(block.getType());
                             itemStack.setData(block.getState().getData());
-                            blocks.put(location, itemStack);
+                            blocks.add(new BlockChanger.BlockSnapshot(location, itemStack));
                             if (block.getType() != Material.AIR) {
                                 ConsoleUtils.debug(location + " " + itemStack);
                             }
@@ -80,7 +78,7 @@ public class ArenaManager {
                 int blueZ = arena.blueSpawn.getBlockZ() + (i * offsetZ);
                 Location redSpawn = new Location(arena.redSpawn.getWorld(), redX, arena.redSpawn.getBlockY(), redZ);
                 Location blueSpawn = new Location(arena.blueSpawn.getWorld(), blueX, arena.blueSpawn.getBlockY(), blueZ);
-                Arena duplicatedArena = new Arena(arena.getName() + "#" + i, arena.getDisplayName(), arena.getType(), arena.isEnabled(), redSpawn, blueSpawn, arena.corner1, arena.corner2);
+                Arena duplicatedArena = new Arena(arena.getName() + "#" + i, arena.getDisplayName(), arena.getType(), arena, arena.isEnabled(), redSpawn, blueSpawn, arena.corner1, arena.corner2);
                 addArena(duplicatedArena);
                 duplicatedArena.save();
                 ConsoleUtils.info("&bDuplicated arena " + arena.getName() + " " + i + " times. Location: " + (minX + (i * offsetX)) + ", " + minY + ", " + (minZ + (i * offsetZ)));
@@ -95,21 +93,31 @@ public class ArenaManager {
 
     public void load() {
         if (Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getConfigurationSection("arenas") == null) {
-            ConsoleUtils.info("&cNo arenas found in arenas.yml, skipping arena load process...");
+            ConsoleUtils.warn("No arenas found in arenas.yml, skipping arena load process...");
             return;
         }
         // Load the arenas from the config file
         for (String key : Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getConfigurationSection("arenas").getKeys(false)) {
             String displayName = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".displayName");
             ArenaType type = ArenaType.valueOf(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".type"));
+            Arena parent;
+            if (type == ArenaType.STANDALONE) {
+                String parentName = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".parent");
+                parent = getArena(parentName);
+                if (parent == null) {
+                    ConsoleUtils.warn("Parent arena not found for arena " + key + ", skipping...");
+                    continue;
+                }
+            } else {
+                parent = null;
+            }
             boolean enabled = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getBoolean("arenas." + key + ".enabled");
             Location redSpawn = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".redSpawn"));
             Location blueSpawn = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".blueSpawn"));
             Location corner1 = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".corner1"));
             Location corner2 = LocationUtils.deserialize(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".corner2"));
 
-
-            Arena arena = new Arena(key, displayName, type, enabled, redSpawn, blueSpawn, corner1, corner2);
+            Arena arena = new Arena(key, displayName, type, parent, enabled, redSpawn, blueSpawn, corner1, corner2);
             arenas.add(arena);
             if (enabled) {
                 enabledArenas.add(arena);
@@ -126,11 +134,11 @@ public class ArenaManager {
         return null;
     }
 
-    public Arena getRandomArena(Kit kit) {
+    public Arena getAvailableArena(Kit kit) {
         List<Arena> availableArenas = new ArrayList<>();
         List<Arena> kitAllowedArenas = kit.getArenas();
         for (Arena arena : enabledArenas) {
-            if (kitAllowedArenas.contains(arena)) {
+            if (kitAllowedArenas.contains(arena) || kitAllowedArenas.contains(arena.getParent())) {
                 availableArenas.add(arena);
             }
         }
