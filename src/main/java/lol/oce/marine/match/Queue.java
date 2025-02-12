@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Queue {
-    User user;
-    boolean ranked;
-    Kit kit;
-    int queueRange;
-    int queueTime;
+    public User user;
+    public boolean ranked;
+    public Kit kit;
+    public int queueRange;
+    public int queueTime;
 }

@@ -42,12 +42,12 @@ public class ArenaCommand implements CommandExecutor {
                 }
                 String displayName = args[2];
                 ArenaType type;
-                if (args[3].equals("SHARED")) {
-                    type = ArenaType.SHARED;
-                } else {
+                if (args[3].equals("STANDALONE")) {
                     type = ArenaType.STANDALONE;
+                } else {
+                    type = ArenaType.SHARED;
                 }
-                Arena arena = new Arena(arenaName, displayName, type, true, null, null, null, null);
+                Arena arena = new Arena(arenaName, displayName, type, null, true, null, null, null, null);
                 Practice.getInstance().getArenaManager().addArena(arena);
                 arena.save();
                 player.sendMessage(StringUtils.handle("&aArena " + displayName + " created with the type " + type.name() + ". Now set the locations using /arena set <red|blue|c1|c2>."));

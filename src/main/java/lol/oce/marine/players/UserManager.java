@@ -43,6 +43,18 @@ public class UserManager {
         return users.get(uuid);
     }
 
+    public List<User> getUsers(int startIndex, int amount) {
+        return userRepository.getUsers(startIndex, amount);
+    }
+
+    public List<User> getUsers(String filter) {
+        return userRepository.getUsers(filter);
+    }
+
+    public List<User> getUsers() {
+        return userRepository.getUsers(0, Integer.MAX_VALUE);
+    }
+
     public void resetUser(User user) {
         if (user.getStatus() == UserStatus.IN_MATCH) {
             user.getMatch().forfeit(user.getMatch().getParticipant(user));

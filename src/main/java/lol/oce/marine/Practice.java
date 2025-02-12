@@ -9,6 +9,7 @@ import lol.oce.marine.duels.RequestManager;
 import lol.oce.marine.kits.KitManager;
 import lol.oce.marine.listeners.ItemListener;
 import lol.oce.marine.listeners.MatchListeners;
+import lol.oce.marine.listeners.MenuListener;
 import lol.oce.marine.listeners.PlayerListener;
 import lol.oce.marine.lobby.LobbyItemManager;
 import lol.oce.marine.lobby.LobbyManager;
@@ -72,10 +73,12 @@ public class Practice extends JavaPlugin {
         getCommand("practice").setExecutor(new MainCommand());
         getCommand("drop").setExecutor(new DropCommand());
         getCommand("duplicate").setExecutor(new DuplicateCommand());
+        getCommand("user").setExecutor(new UserCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new MatchListeners(), this);
+        getServer().getPluginManager().registerEvents(new MenuListener(), this);
 
         Assemble assemble = new Assemble(this, new ScoreboardAdapter());
         assemble.setTicks(5);

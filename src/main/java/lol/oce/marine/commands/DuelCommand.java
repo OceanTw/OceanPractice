@@ -22,7 +22,7 @@ public class DuelCommand implements CommandExecutor {
             return false;
         }
 
-        if (strings.length != 1) {
+        if (strings.length < 1) {
             player.sendMessage(StringUtils.handle("&cUsage: /duel <player>"));
             return false;
         }

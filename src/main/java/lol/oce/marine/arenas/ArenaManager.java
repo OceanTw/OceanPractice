@@ -33,7 +33,7 @@ public class ArenaManager {
     public void addArena(Arena arena) {
         arenas.add(arena);
         if (arena.isEnabled() && !enabledArenas.contains(arena)) {
-        	if (arena.getType() == ArenaType.STANDALONE && !arena.getName().contains("#")) {
+        	if (arena.getType() == ArenaType.STANDALONE) {
         		return;
         	}
             enabledArenas.add(arena);
@@ -78,7 +78,7 @@ public class ArenaManager {
                 int blueZ = arena.blueSpawn.getBlockZ() + (i * offsetZ);
                 Location redSpawn = new Location(arena.redSpawn.getWorld(), redX, arena.redSpawn.getBlockY(), redZ);
                 Location blueSpawn = new Location(arena.blueSpawn.getWorld(), blueX, arena.blueSpawn.getBlockY(), blueZ);
-                Arena duplicatedArena = new Arena(arena.getName() + "#" + i, arena.getDisplayName(), arena.getType(), arena, arena.isEnabled(), redSpawn, blueSpawn, arena.corner1, arena.corner2);
+                Arena duplicatedArena = new Arena(arena.getName() + "#" + i, arena.getDisplayName(), ArenaType.DUPLICATE, arena, arena.isEnabled(), redSpawn, blueSpawn, arena.corner1, arena.corner2);
                 addArena(duplicatedArena);
                 duplicatedArena.save();
                 ConsoleUtils.info("&bDuplicated arena " + arena.getName() + " " + i + " times. Location: " + (minX + (i * offsetX)) + ", " + minY + ", " + (minZ + (i * offsetZ)));
@@ -101,7 +101,7 @@ public class ArenaManager {
             String displayName = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".displayName");
             ArenaType type = ArenaType.valueOf(Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".type"));
             Arena parent;
-            if (type == ArenaType.STANDALONE) {
+            if (type == ArenaType.DUPLICATE) {
                 String parentName = Practice.getInstance().getConfigService().getArenasConfig().getConfiguration().getString("arenas." + key + ".parent");
                 parent = getArena(parentName);
                 if (parent == null) {

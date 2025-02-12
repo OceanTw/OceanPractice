@@ -99,54 +99,6 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
-    public void onQueueKitMenuClick(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        if (isInCreative(player)) return;
-
-        if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null) {
-            return;
-        }
-        if (event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
-            event.setCancelled(true);
-            return;
-        }
-        if (event.getInventory().getName().equals("Unranked Queue")) {
-            player.closeInventory();
-            event.setCancelled(true);
-            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                Kit kit = Practice.getInstance().getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
-                player.closeInventory();
-                if (kit != null) {
-                    player.sendMessage(StringUtils.handle("&b&oYou are now queueing a match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getInstance().getQueueManager().joinQueue(Practice.getInstance().getUserManager().getUser(player.getUniqueId()), kit, false);
-                }
-            }
-            event.setCancelled(true);
-        } else if (event.getInventory().getName().equals("Ranked Queue")) {
-            player.closeInventory();
-            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                Kit kit = Practice.getInstance().getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
-                player.closeInventory();
-                if (kit != null) {
-                    player.sendMessage(StringUtils.handle("&b&oYou are now queueing a Ranked match with the " + kit.getDisplayName() + " kit"));
-                    Practice.getInstance().getQueueManager().joinQueue(Practice.getInstance().getUserManager().getUser(player.getUniqueId()), kit, true);
-                }
-            }
-        } else if (event.getInventory().getName().contains("Duel Request to ")) {
-            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                Kit kit = Practice.getInstance().getKitManager().getKitByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
-                player.closeInventory();
-                if (kit != null) {
-                    String targetName = event.getInventory().getName().replace("Duel Request to ", "");
-                    User target = Practice.getInstance().getUserManager().getUser(Bukkit.getPlayer(targetName).getUniqueId());
-                    player.sendMessage(StringUtils.handle("&b&oYou have sent a duel request"));
-                    Practice.getInstance().getRequestManager().sendRequest(Practice.getInstance().getUserManager().getUser(player.getUniqueId()), target, kit);
-                }
-            }
-        }
-    }
-
-    @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         if (isInCreative(player)) return;

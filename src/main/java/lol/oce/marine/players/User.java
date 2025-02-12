@@ -39,4 +39,8 @@ public class User {
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
     }
+
+    public void resetStats() {
+        kitStats = new UserKitStats();
+    }
 }
