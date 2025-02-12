@@ -44,7 +44,7 @@ public class RequestManager implements Listener {
         if (request != null) {
             request.getSender().getPlayer().sendMessage(StringUtils.handle("&7&oYour request has been accepted"));
             request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&7&oYou have accepted the request"));
-            Arena arena = Practice.getInstance().getArenaManager().getRandomArena(request.getKit());
+            Arena arena = Practice.getInstance().getArenaManager().getAvailableArena(request.getKit());
             if (arena == null) {
                 request.getSender().getPlayer().sendMessage(StringUtils.handle("&bNo arenas available"));
                 request.getReceiver().getPlayer().sendMessage(StringUtils.handle("&bNo arenas available"));

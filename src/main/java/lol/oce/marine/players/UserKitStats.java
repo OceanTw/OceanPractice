@@ -25,6 +25,7 @@ public class UserKitStats {
         return losses.get(kit);
     }
 
+    // TODO: Convert this to JSON
     public String serialize() {
         StringBuilder sb = new StringBuilder();
         for (Kit kit : elo.keySet()) {
@@ -41,6 +42,9 @@ public class UserKitStats {
         for (String kit : kitData) {
             String[] kitStats = kit.split(":");
             Kit kitObj = Practice.getInstance().getKitManager().getKit(kitStats[0]);
+            if (kitStats.length != 4 || kitObj == null) {
+                continue;
+            }
             elo.put(kitObj, Integer.parseInt(kitStats[1]));
             wins.put(kitObj, Integer.parseInt(kitStats[2]));
             losses.put(kitObj, Integer.parseInt(kitStats[3]));

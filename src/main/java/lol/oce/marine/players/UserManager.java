@@ -30,6 +30,7 @@ public class UserManager {
         }
 
         User user = userRepository.loadUser(uuid);
+
         if (user != null) {
             users.put(uuid, user);
             ConsoleUtils.info("User loaded and added to list: " + uuid);

@@ -3,7 +3,6 @@ package lol.oce.marine.match;
 import lol.oce.marine.Practice;
 import lol.oce.marine.arenas.Arena;
 import lol.oce.marine.kits.Kit;
-import lol.oce.marine.lobby.LobbyManager;
 import lol.oce.marine.players.User;
 import lol.oce.marine.players.UserStatus;
 import lol.oce.marine.utils.StringUtils;
@@ -73,7 +72,7 @@ public class QueueManager {
                 user.setQueue(null);
                 q.getUser().setQueue(null);
 
-                Arena arena = Practice.getInstance().getArenaManager().getRandomArena(kit);
+                Arena arena = Practice.getInstance().getArenaManager().getAvailableArena(kit);
                 if (arena == null) {
                     user.getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));
                     q.getUser().getPlayer().sendMessage(StringUtils.handle("&cNo arenas available!"));

@@ -69,10 +69,9 @@ public class Practice extends JavaPlugin {
         getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("kit").setExecutor(new KitCommand());
         getCommand("duel").setExecutor(new DuelCommand());
-        getCommand("practice").setExecutor(new TestCommand());
+        getCommand("practice").setExecutor(new MainCommand());
         getCommand("drop").setExecutor(new DropCommand());
         getCommand("duplicate").setExecutor(new DuplicateCommand());
-        getCommand("test").setExecutor(new TestCommand());
 
         getServer().getPluginManager().registerEvents(new ItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
