@@ -1,17 +1,23 @@
 package lol.oce.marine.players;
 
 import com.mongodb.lang.Nullable;
+import lol.oce.marine.Practice;
+import lol.oce.marine.configs.impl.MessageLocale;
 import lol.oce.marine.match.Match;
 import lol.oce.marine.match.Queue;
+import lol.oce.marine.utils.ConsoleUtils;
+import lol.oce.marine.utils.StringUtils;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.io.Console;
 import java.util.UUID;
 
 @Data
-@Builder(setterPrefix = "set")
+@AllArgsConstructor
 public class User {
     UUID uuid;
     UserKitStats kitStats;
@@ -37,10 +43,16 @@ public class User {
 
     @Nullable
     public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+        return (Player) Bukkit.getOfflinePlayer(uuid);
     }
 
     public void resetStats() {
         kitStats = new UserKitStats();
+        ConsoleUtils.info("Resetting stats for " + uuid + "...");
+        if (Bukkit.getPlayer(uuid) != null) {
+            for (String message : MessageLocale.STATS_RESET.getStringList()) {
+                Bukkit.getPlayer(uuid).sendMessage(StringUtils.handle(message));
+            }
+        }
     }
 }

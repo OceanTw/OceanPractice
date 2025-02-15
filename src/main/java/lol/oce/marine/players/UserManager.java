@@ -43,6 +43,10 @@ public class UserManager {
         return users.get(uuid);
     }
 
+    public User getUserFromDatabase(UUID uuid) {
+        return userRepository.loadUser(uuid);
+    }
+
     public List<User> getUsers(int startIndex, int amount) {
         return userRepository.getUsers(startIndex, amount);
     }

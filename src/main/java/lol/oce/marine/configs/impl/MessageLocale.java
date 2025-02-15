@@ -1,5 +1,6 @@
 package lol.oce.marine.configs.impl;
 
+import com.google.common.collect.Lists;
 import lol.oce.marine.configs.ConfigService;
 import lol.oce.marine.configs.impl.handler.DataType;
 import lol.oce.marine.configs.impl.handler.IDataAccessor;
@@ -13,7 +14,12 @@ import java.util.List;
 
 @Getter
 public enum MessageLocale implements IDataAccessor {
-    DEBUG("test", DataType.BOOLEAN, "Test","false"),
+    STATS_RESET("user.stats-reset", DataType.STRING_LIST,
+            "&7",
+            "&e&lATTENTION!",
+            "&fYour stats have been reset as requested or by a staff member!",
+            "&fYour ELO, Wins, Losses, and other stats have been reset!",
+            "&7"),
     ;
 
     private final String path;
@@ -33,6 +39,6 @@ public enum MessageLocale implements IDataAccessor {
 
     @Override
     public ConfigFile getConfigFile() {
-        return ConfigService.getInstance().getSettingsConfig();
+        return ConfigService.getInstance().getMessagesConfig();
     }
 }

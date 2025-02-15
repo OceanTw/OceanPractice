@@ -39,22 +39,17 @@ public class UserData {
         if (doc == null) {
             return createUser(uuid);
         }
-        return User.builder()
-                .setMatch(null)
-                .setUuid(uuid)
-                .setStatus(UserStatus.IN_LOBBY)
-                .setKitStats(new UserKitStats().deserialize(doc.getString("stats")))
-                .build();
+        return new User(
+            uuid,
+            new UserKitStats().deserialize(doc.getString("stats")),
+            UserStatus.IN_LOBBY,
+            null,
+            null
+        );
     }
 
     public User createUser(UUID uuid) {
-        User user = User.builder()
-                .setUuid(uuid)
-                .setMatch(null)
-                .setStatus(UserStatus.IN_LOBBY)
-                .setKitStats(new UserKitStats())
-                .build();
-        user.status = UserStatus.IN_LOBBY;
+        User user = new User(uuid, new UserKitStats(), UserStatus.IN_LOBBY, null, null);
         saveUser(user);
         return user;
     }
@@ -65,12 +60,13 @@ public class UserData {
             if (Practice.getInstance().getUserManager().getUser(UUID.fromString(doc.getString("player"))) != null) {
                 users.add(Practice.getInstance().getUserManager().getUser(UUID.fromString(doc.getString("player"))));
             } else {
-                users.add(User.builder()
-                        .setMatch(null)
-                        .setUuid(UUID.fromString(doc.getString("player")))
-                        .setStatus(UserStatus.OFFLINE)
-                        .setKitStats(new UserKitStats().deserialize(doc.getString("stats")))
-                        .build());
+                users.add(new User(
+                        UUID.fromString(doc.getString("player")),
+                        new UserKitStats().deserialize(doc.getString("stats")),
+                        UserStatus.OFFLINE,
+                        null,
+                        null
+                ));
             }
         }
         return users;
@@ -82,12 +78,13 @@ public class UserData {
             if (Practice.getInstance().getUserManager().getUser(UUID.fromString(doc.getString("player"))) != null) {
                 users.add(Practice.getInstance().getUserManager().getUser(UUID.fromString(doc.getString("player"))));
             } else {
-                users.add(User.builder()
-                        .setMatch(null)
-                        .setUuid(UUID.fromString(doc.getString("player")))
-                        .setStatus(UserStatus.OFFLINE)
-                        .setKitStats(new UserKitStats().deserialize(doc.getString("stats")))
-                        .build());
+                users.add(new User(
+                        UUID.fromString(doc.getString("player")),
+                        new UserKitStats().deserialize(doc.getString("stats")),
+                        UserStatus.OFFLINE,
+                        null,
+                        null
+                ));
             }
         }
         return users;

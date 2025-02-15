@@ -2,6 +2,7 @@ package lol.oce.marine.players;
 
 import lol.oce.marine.Practice;
 import lol.oce.marine.kits.Kit;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -9,9 +10,15 @@ import java.util.HashMap;
 @Data
 public class UserKitStats {
 
-    final HashMap<Kit, Integer> elo = new HashMap<>();
-    final HashMap<Kit, Integer> wins = new HashMap<>();
-    final HashMap<Kit, Integer> losses = new HashMap<>();
+    HashMap<Kit, Integer> elo;
+    HashMap<Kit, Integer> wins;
+    HashMap<Kit, Integer> losses;
+
+    public UserKitStats() {
+        elo = new HashMap<>();
+        wins = new HashMap<>();
+        losses = new HashMap<>();
+    }
 
     public int getElo(Kit kit) {
         return elo.get(kit);
@@ -35,6 +42,9 @@ public class UserKitStats {
     }
 
     public UserKitStats deserialize(String data) {
+        if (data.isEmpty()) {
+            return this;
+        }
         String[] kitData = data.split(",");
         if (kitData.length == 0) {
             return this;

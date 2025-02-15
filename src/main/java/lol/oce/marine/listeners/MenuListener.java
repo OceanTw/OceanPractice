@@ -2,8 +2,10 @@ package lol.oce.marine.listeners;
 
 import lol.oce.marine.Practice;
 import lol.oce.marine.gui.impl.UserManagementMenu;
+import lol.oce.marine.gui.impl.UserMenu;
 import lol.oce.marine.kits.Kit;
 import lol.oce.marine.players.User;
+import lol.oce.marine.players.UserManager;
 import lol.oce.marine.utils.StringUtils;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -84,10 +86,40 @@ public class MenuListener implements Listener {
             event.setCancelled(true);
             String name = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
             if (name.contains("Search for a user")) {
+                // TODO: Implement search
 //                openSearch(player);
                 return;
             }
+            User user = Practice.getInstance().getUserManager().getUserFromDatabase(Bukkit.getOfflinePlayer(name).getUniqueId());
+            if (user != null) {
+                new UserMenu().open(player, user);
+            }
             player.sendMessage(StringUtils.handle("&b&oOpened management menu of " + name));
+        }
+    }
+
+    @EventHandler
+    public void onUserMenuClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+
+        if (event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null) {
+            return;
+        }
+        if (event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getInventory().getName().contains("User: ")) {
+            player.closeInventory();
+            event.setCancelled(true);
+            String name = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+            if (name.contains("Reset Stats")) {
+                Player target = (Player) Bukkit.getOfflinePlayer(name.replace("Reset Stats for ", ""));
+                User user = Practice.getInstance().getUserManager().getUser(target.getUniqueId());
+                user.resetStats();
+                player.sendMessage(StringUtils.handle("&b&oStats for" + target.getName() + " has been reset."));
+            }
         }
     }
 
