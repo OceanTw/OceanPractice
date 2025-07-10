@@ -6,7 +6,7 @@ A Minecraft Practice / Duels plugin
 - Unranked queues
 - Kits
 - Shared Arenas (for non-build kits)
-- Stabdalone Arenas (for build kits)
+- Standalone Arenas (for build kits)
 
 ## Kit Settings
 - Boxing
